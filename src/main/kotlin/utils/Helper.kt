@@ -52,11 +52,11 @@ object Helper {
         return password != rePassword
     }
 
-    fun generateOTP(): Int {
-        return Random.nextInt(100000,1000000)
+    fun generateOTP(): String {
+        return Random.nextInt(100000,1000000).toString()
     }
 
-    fun verifyOtp(currentOtp: Int, generatedOtp: Int): Boolean {
+    fun verifyOtp(currentOtp: String, generatedOtp: String): Boolean {
         return currentOtp == generatedOtp
     }
 

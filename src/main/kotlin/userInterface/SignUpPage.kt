@@ -21,11 +21,22 @@ class SignUpPage: OnboardingServices {
             while (true) {
                 if (Helper.confirm()) {
                         if(verifyAccount()) {
-                            val userAccountActivities = UserAccountActivities()
-                            userAccountActivities.createAccount(name, mobile, email, password)
-                            println("Successful SignUp!")
-                            val homePage = HomePage()
-                          //  homePage.showDashBoard()
+                            val otp = Helper.generateOTP()
+                            println("OTP : $otp")
+                            while(true) {
+                                println("Enter the OTP: ")
+                                val currentOtp = readLine()!!
+                                if(Helper.verifyOtp(currentOtp, otp)) {
+                                    val userAccountActivities = UserAccountActivities()
+                                    userAccountActivities.createAccount(name, mobile, email, password)
+                                    println("Successful SignUp!")
+                                    val homePage = HomePage()
+                                    //  homePage.showDashBoard()
+                                    break
+                                } else {
+                                    println("Incorrect OTP! Try again!")
+                                }
+                            }
                         } else {
                             println("User already exists!")
                         }

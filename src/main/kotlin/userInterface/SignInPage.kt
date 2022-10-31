@@ -27,7 +27,6 @@ class SignInPage: OnboardingServices {
                         break
                     }
             }
-
         } catch (exception: Exception) {
             println("Class SignInPage: signIn(): Exception: $exception")
         }
@@ -41,8 +40,8 @@ class SignInPage: OnboardingServices {
         } while(Helper.fieldValidation(email) || !Helper.validateEmail(email))
 
         do{
-            println("Enter password: " +
-                    "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]" +
+            println("Enter password: \n" +
+                    "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]\n" +
                     "[It should contain atleast 4 to 8 characters]")
             password = readLine()!!
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
