@@ -4,56 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/backend/CartActivities.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/backend/ShopActivities.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/backend/UserAccountActivities.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/Address.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/Cart.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/Database.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/Order.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistory.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/Product.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/Products.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/User.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/WishList.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/WishLists.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/AddressSelectionOptions.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/CartActivitiesDashboard.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/Confirmation.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/Entry.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/HomePageDashboard.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/ProductActivitiesDashboard.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/UserAccountActivitiesDashboard.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/interfaces/DashboardServices.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/interfaces/OnboardingServices.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/BuyNowPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/CartPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/EntryPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/HomePage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/PaymentPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignInPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignUpPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/UserAccountPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Helper.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Utility.kt" afterDir="false" />
-    </list>
+    <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="Commit!" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
