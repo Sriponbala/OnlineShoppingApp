@@ -1,6 +1,6 @@
 package enums
 
-enum class UserAccountActivitiesDashboard {
+enum class UserAccountDashboard {
     VIEW_WISHLIST,
     VIEW_ORDERS_HISTORY,
     EDIT_ACCOUNT,

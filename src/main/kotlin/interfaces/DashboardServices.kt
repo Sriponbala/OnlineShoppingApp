@@ -2,5 +2,5 @@ package interfaces
 
 interface DashboardServices {
     fun showDashboard()
-    fun <E: Enum<E>> doDashboardActivities(enum: Enum<E>): Boolean
+    fun <E: Enum<E>> doDashboardActivities(enumConstant: Enum<E>): Boolean
 }

@@ -31,9 +31,9 @@ class EntryPage: DashboardServices {
         }
     }
 
-    override fun <E : Enum<E>> doDashboardActivities(entry: Enum<E>): Boolean {
+    override fun <E : Enum<E>> doDashboardActivities(enumConstant: Enum<E>): Boolean {
 
-        when(entry) {
+        when(enumConstant) {
             Entry.SIGN_UP -> {
                 SignUpPage().signUp()
                 return true

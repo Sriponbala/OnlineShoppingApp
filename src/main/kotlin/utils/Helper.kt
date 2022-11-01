@@ -6,15 +6,20 @@ import kotlin.random.Random
 
 object Helper {
 
-    private var id = 0
-    private var pid = 0
+    private var userId = 0
+    private var productId = 0
+    private var addressId = 0
 
     fun generateUserId(): String {
-        return "USER${id++}"
+        return "USER${userId++}"
     }
 
     fun generateProductId(): String {
-        return "Product${pid++}"
+        return "Product${productId++}"
+    }
+
+    fun generateAddressId(): String {
+        return "Address${addressId++}"
     }
 
     fun confirm(): Boolean {
@@ -60,8 +65,8 @@ object Helper {
         return currentOtp == generatedOtp
     }
 
-    fun confirmPassword(rePassword: String, password: String): Boolean {
-        return rePassword == password
+    fun confirmPassword(confirmPassword: String, password: String): Boolean {
+        return confirmPassword == password
     }
 
     fun validateMobileNumber(number: String): Boolean { // 10-digit Phone number with Country Code Prefix(max 3 characters)
@@ -69,28 +74,45 @@ object Helper {
     }
 
     fun validateEmail(email: String): Boolean {
-        return Pattern.matches("^[a-zA-Z0-9_!#$.-]+@[a-zA-Z0-9.-]+\$", email)
+        return Pattern.matches("^[a-z0-9_!#$.-]{3,15}+@[a-z]{5,8}+.[a-z]{2,3}+\$", email)
     }
 
     fun validatePasswordPattern(password: String): Boolean {
         return Pattern.matches("^[a-zA-Z0-9!#@$%^&*_+`~]{4,8}+$", password)
         // return Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,25}$", password)
     }
+
+    fun validatePincode(pincode: String): Boolean {
+        return Pattern.matches("^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$", pincode)
+    }
+
+    fun validateAddressFields(fieldValue: String): Boolean {
+        return Pattern.matches("^[a-zA-Z1-9]{1}[a-zA-Z0-9-\\s]{0,30}$", fieldValue) // a-zA-Z]{1,20}[0-9]{0,3}\s{0,1}(- )?[a-zA-Z]{2,20}[0-9]{0,6}
+    }
 }
 
 fun main() {
 
-    println(Helper.generateOTP())
-    println(Helper.validateMobileNumber("+0")) // false
-    println(Helper.validateMobileNumber("+91 9080440195")) // true
-    println(Helper.validateMobileNumber("9080440195")) // true
-    println(Helper.validateMobileNumber("+123 9080440195")) // true
-    println(Helper.validateMobileNumber("+12349080440195")) // false
-    println(Helper.validateEmail("123_!#$.-@1234.234455")) // true
-    println(Helper.validateEmail("123_!#$%&/.-@1234.234$455")) // false
-    println(Helper.validateEmail("sri@gmail.com")) // true
-    println(Helper.validatePasswordPattern("")) // false
-    println(Helper.validatePasswordPattern("@Sri2609!@#")) // false
-    println(Helper.validatePasswordPattern("COMPANY")) // TRUE
-
+//    println(Helper.generateOTP())
+//    println(Helper.validateMobileNumber("+0")) // false
+//    println(Helper.validateMobileNumber("+91 9080440195")) // true
+//    println(Helper.validateMobileNumber("9080440195")) // true
+//    println(Helper.validateMobileNumber("+123 9080440195")) // true
+//    println(Helper.validateMobileNumber("+12349080440195")) // false
+//    println(Helper.validateEmail("123_!#$.-@1234.234455")) // true
+//    println(Helper.validateEmail("123_!#$%&/.-@1234.234$455")) // false
+//    println(Helper.validateEmail("sri@gmail.com")) // true
+//    println(Helper.validatePasswordPattern("")) // false
+//    println(Helper.validatePasswordPattern("@Sri2609!@#")) // false
+//    println(Helper.validatePasswordPattern("COMPANY")) // TRUE
+    println(Helper.validatePincode("600062")) // true
+    println(Helper.validatePincode("600 062")) // true
+    println(Helper.validateAddressFields("B1-S3")) // true
+    println(Helper.validateAddressFields("abcd")) // true
+    println(Helper.validateAddressFields("thirumullaivoyal")) // true
+    println(Helper.validateAddressFields("chennai")) // true
+    println(Helper.validateAddressFields("west mada street")) // true
+    println(Helper.validateAddressFields("abcDE123 - aZ123456")) // true
+    println(Helper.validateAddressFields("0")) // false
+    println(Helper.validateAddressFields("1")) // true
 }

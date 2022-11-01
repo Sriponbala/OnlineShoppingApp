@@ -3,16 +3,18 @@ package userInterface
 import backend.UserAccountActivities
 import interfaces.OnboardingServices
 import utils.Helper
+import utils.UserDAO
 import utils.Utility
 import java.lang.Exception
 
 class SignUpPage: OnboardingServices {
 
+    private lateinit var id: String
     private var name: String = ""
     private var mobile: String = ""
     private var email: String = ""
     private var password: String = ""
-    private var rePassword: String = ""
+    private var confirmPassword: String = ""
 
     fun signUp() {
         println("----------SignUp Page----------")
@@ -27,11 +29,14 @@ class SignUpPage: OnboardingServices {
                                 println("Enter the OTP: ")
                                 val currentOtp = readLine()!!
                                 if(Helper.verifyOtp(currentOtp, otp)) {
+                                    id = Helper.generateUserId()
+                                    val userDAO = UserDAO()
+                                    userDAO.createAccount(id, name, mobile, email, password)
                                     val userAccountActivities = UserAccountActivities()
-                                    userAccountActivities.createAccount(name, mobile, email, password)
-                                    println("Successful SignUp!")
-                                    val homePage = HomePage()
-                                    //  homePage.showDashBoard()
+                                    userAccountActivities.getUserId(mobile)
+                                    userAccountActivities.getUser(mobile)
+                                    println("SignUp Successful!")
+                                    HomePage().showDashboard(userAccountActivities)
                                     break
                                 } else {
                                     println("Incorrect OTP! Try again!")
@@ -65,7 +70,7 @@ class SignUpPage: OnboardingServices {
         do {
             println("Enter email: ")
             email = readLine()!!
-        } while(Helper.fieldValidation(email) || !Helper.validateEmail(email))
+        } while(!Helper.fieldValidation(email) && !Helper.validateEmail(email))
 
         do{
             println("Enter password: " +
@@ -75,15 +80,13 @@ class SignUpPage: OnboardingServices {
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
 
         do{
-            println("Enter re password: ")
-            rePassword = readLine()!!
-        } while(Helper.fieldValidation(rePassword) || Helper.validatePassword(password,rePassword))
+            println("Enter confirm password: ")
+            confirmPassword = readLine()!!
+        } while(Helper.fieldValidation(confirmPassword) || !Helper.confirmPassword(confirmPassword,password))
     }
 
     override fun verifyAccount(): Boolean {
-        return Utility.checkUniqueUser(email)
+        return Utility().checkUniqueUser(mobile)
     }
-
-
 
 }

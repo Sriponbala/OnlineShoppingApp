@@ -1,12 +1,13 @@
 package userInterface
 
+import backend.UserAccountActivities
 import interfaces.OnboardingServices
 import utils.Helper
 import utils.Utility
 
 class SignInPage: OnboardingServices {
 
-    private var email: String = ""
+    private var mobile: String = ""
     private var password: String = ""
 
     fun signIn() {
@@ -16,9 +17,11 @@ class SignInPage: OnboardingServices {
             while (true) {
                     if (Helper.confirm()) {
                         if (verifyAccount()) {
-                            println("Successful SignIn!")
-                            val homePage = HomePage()
-                            //  homePage.showDashBoard()
+                            println("SignIn Successful!")
+                            val userAccountActivities = UserAccountActivities()
+                            userAccountActivities.getUser(mobile)
+                            userAccountActivities.getUserId(mobile)
+                            HomePage().showDashboard(userAccountActivities)
                         } else {
                             println("SignIn failed!")
                         }
@@ -35,9 +38,9 @@ class SignInPage: OnboardingServices {
     override fun getUserInputs() {
 
         do {
-            println("Enter email: ")
-            email = readLine()!!
-        } while(Helper.fieldValidation(email) || !Helper.validateEmail(email))
+            println("Enter mobile number: ")
+            mobile = readLine()!!
+        } while(Helper.fieldValidation(mobile) || !Helper.validateMobileNumber(mobile))
 
         do{
             println("Enter password: \n" +
@@ -48,7 +51,7 @@ class SignInPage: OnboardingServices {
     }
 
     override fun verifyAccount(): Boolean {
-        return Utility.validateLoginCredentials(email, password)
+        return Utility().validateLoginCredentials(mobile, password)
     }
 
 }
