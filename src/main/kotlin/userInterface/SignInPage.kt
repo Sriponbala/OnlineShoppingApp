@@ -20,7 +20,7 @@ class SignInPage: OnboardingServices {
                             println("SignIn Successful!")
                             val userAccountActivities = UserAccountActivities()
                             userAccountActivities.getUser(mobile)
-                            userAccountActivities.getUserId(mobile)
+                            userAccountActivities.getUserId()
                             HomePage().showDashboard(userAccountActivities)
                         } else {
                             println("SignIn failed!")
@@ -45,7 +45,7 @@ class SignInPage: OnboardingServices {
         do{
             println("Enter password: \n" +
                     "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]\n" +
-                    "[It should contain atleast 4 to 8 characters]")
+                    "[It should contain at least 4 to 8 characters]")
             password = readLine()!!
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
     }

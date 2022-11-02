@@ -1,7 +1,8 @@
 package userInterface
 
 import backend.UserAccountActivities
-import data.Address
+import enums.AddressFields
+import enums.AddressManagementOptions
 import enums.AddressSelectionOptions
 import utils.Helper
 
@@ -15,65 +16,170 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
     private var city = ""
     private var state = ""
     private var pincode = ""
-    private var addressesMap = mutableMapOf<Int, String>()
+    private val addressesMap = mutableMapOf<Int, String>()
+
+    fun openAddressPage() {
+
+        displayAllAddresses()
+        val addressSelectionOptions = AddressSelectionOptions.values()
+        while(true) {
+            showDashboard("Address Page Dashboard", addressSelectionOptions)
+            when(getUserChoice(addressSelectionOptions)) {
+                AddressSelectionOptions.ADD_NEW_ADDRESS -> {
+                    getUserInputs()
+                    if(Helper.confirm()) {
+                        addNewAddress()
+                    }
+                }
+                AddressSelectionOptions.SAVED_ADDRESS -> {
+                    while(true) {
+                        displayAllAddresses()
+                        if(manageAddress()) {
+                            break
+                        }
+                    }
+                }
+                AddressSelectionOptions.GO_BACK -> {
+                    break
+                }
+            }
+        }
+    }
+
+    private fun displayAllAddresses() {
+
+        if(addresses.isEmpty()) {
+            println("        Empty addresses list       ")
+        } else {
+            var sno = 1
+            println("-----------------Your Addresses------------------")
+            for((addressId, address) in addresses) {
+                generateAddressMap(sno, addressId)
+                println("${sno++}. $address")
+            }
+        }
+    }
 
     private fun generateAddressMap(sno: Int, addressId: String) {
         addressesMap[sno] = addressId
     }
 
-    fun displayAllAddresses() {
-        var sno = 1
-        for((addressId, address) in addresses) {
-            generateAddressMap(sno, addressId)
-            println("${sno++}. $address")
+    private fun addNewAddress() {
+
+        userAccountActivities.addNewAddress(doorNo, flatName, street, area, city, state, pincode)
+    }
+
+    private fun manageAddress(): Boolean {
+
+        // delete or edit
+        if(addresses.isEmpty()) {
+            return true
+        } else {
+            val addressId = selectAnAddress()!!
+            val addressManagementOptions = AddressManagementOptions.values()
+            while(true) {
+                showDashboard("Address management options", addressManagementOptions)
+                return when(getUserChoice(addressManagementOptions)) {
+                    AddressManagementOptions.EDIT -> { // edit address
+                        editAddress(addressId)
+                        false
+                    }
+                    AddressManagementOptions.DELETE -> { // delete address
+                        deleteAddress(addressId)
+                        true
+                    }
+                    AddressManagementOptions.BACK -> true
+                }
+            }
         }
     }
 
-    fun showDashboard() {
+    private fun editAddress(addressId: String) {
+
+        val addressFields = AddressFields.values()
+        while(true) {
+            showDashboard("Address fields", addressFields)
+            when(getUserChoice(addressFields)) {
+                AddressFields.DOORNUMBER -> {
+                    userAccountActivities.updateAddress(addressId, "doorNo", getUserInput("door number"))
+                }
+                AddressFields.FLATNAME -> {
+                    userAccountActivities.updateAddress(addressId, "flatName", getUserInput("flat name"))
+                }
+                AddressFields.STREET -> {
+                    userAccountActivities.updateAddress(addressId, "street", getUserInput("street name"))
+                }
+                AddressFields.AREA -> {
+                    userAccountActivities.updateAddress(addressId, "area", getUserInput("area"))
+                }
+                AddressFields.CITY -> {
+                    userAccountActivities.updateAddress(addressId, "city", getUserInput("city "))
+                }
+                AddressFields.STATE -> {
+                    userAccountActivities.updateAddress(addressId, "state", getUserInput("state"))
+                }
+                AddressFields.PINCODE -> {
+                    userAccountActivities.updateAddress(addressId, "pincode", getPincode())
+                }
+                AddressFields.BACK -> {
+                    break
+                }
+            }
+        }
+    }
+
+    private fun deleteAddress(addressId: String) {
+
+        userAccountActivities.deleteAddress(addressId)
+    }
+
+    private fun selectAnAddress(): String? {
+
+        var option: Int
+        while(true){
+            println("Select an address: ")
+            try{
+                val userInput = readLine()!!
+                option = userInput.toInt()
+                return if(Helper.checkValidRecord(option,addressesMap.size)) {
+                    println("Selected address: ${addresses[addressesMap[option]]}")
+                    addressesMap[option]
+                } else null
+            } catch(exception: Exception) {
+                println("""Class: AddressPage: selectAnAddress(): Exception: $exception
+                    |Enter again!
+                """.trimMargin())
+            }
+        }
+    }
+
+    private fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {
+
+        println("-------------${title.uppercase()}-------------")
+        for(element in enumArray) {
+            println("${element.ordinal+1}. $element")
+        }
+    }
+    private fun <E: Enum<E>> getUserChoice(enumArray: Array<E>): E {
 
         while (true) {
-            println("------------Your Addresses--------------")
-            for(element in AddressSelectionOptions.values()) {
-                println("${element.ordinal+1}. $element")
-            }
             try {
                 val option = readLine()!!
                 val dashBoardOption = option.toInt()
-                if(Helper.checkValidRecord(dashBoardOption, AddressSelectionOptions.values().size)) {
-                    if(doDashboardActivities(AddressSelectionOptions.values()[dashBoardOption-1])) {
-                        break
-                    }
+                if(Helper.checkValidRecord(dashBoardOption, enumArray.size)) {
+                    return enumArray[dashBoardOption-1]
                 } else {
                     println("Enter valid option!")
                 }
             } catch (exception: Exception) {
-                println("Class AddressPage: showDashBoard(): Exception: $exception")
-            }
-        }
-    }
-
-    private fun doDashboardActivities(enumConstant: AddressSelectionOptions): Boolean {
-
-        return when(enumConstant) {
-            AddressSelectionOptions.ADD_NEW_ADDRESS -> {
-                println("Fill address field: ")
-                getUserInputs()
-                userAccountActivities.addNewAddress(doorNo, flatName, street, area, city, state, pincode)
-                false
-            }
-
-            AddressSelectionOptions.SAVED_ADDRESS -> {
-                editAddress(selectAnAddress())
-                false
-            }
-
-            AddressSelectionOptions.GO_BACK -> {
-                true
+                println("Class AddressPage: getUserChoice(): Exception: $exception")
             }
         }
     }
 
     private fun getUserInputs() {
+
+        println("Fill address fields: ")
 
         do{
             println("Enter door number: ")
@@ -109,28 +215,26 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
             println("Enter pincode: ")
             pincode = readLine()!!
         } while(Helper.fieldValidation(pincode) || !Helper.validatePincode(pincode))
-
     }
 
-    private fun editAddress(addressId: String?) {
-        // delete or edit
+    private fun getUserInput(message: String = ""): String {
 
+        var userInput: String
+        do {
+            println("Enter $message: ")
+            userInput = readLine()!!
+        } while(Helper.fieldValidation(userInput) || !Helper.validateAddressFields(userInput))
+        return userInput
     }
 
-    private fun selectAnAddress(): String? {
-        var option = 0
-        while(true){
-            println("Select an address: ")
-            try{
-                var userInput = readLine()!!
-                option = userInput.toInt()
-                return if(Helper.checkValidRecord(option,addressesMap.size)) addressesMap[option] else null
-            } catch(exception: Exception) {
-                println("""Class: AddressPage: selectAnAddress(): Exception: $exception
-                    |Enter again!
-                """.trimMargin())
-            }
-        }
+    private fun getPincode(): String {
+
+        var pincode: String
+        do {
+            println("Enter pincode: ")
+            pincode = readLine()!!
+        } while(Helper.fieldValidation(pincode) || !Helper.validatePincode(pincode))
+        return pincode
     }
 
 }

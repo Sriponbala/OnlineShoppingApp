@@ -3,7 +3,7 @@ package userInterface
 import backend.UserAccountActivities
 import interfaces.OnboardingServices
 import utils.Helper
-import utils.UserDAO
+import utils.UserData
 import utils.Utility
 import java.lang.Exception
 
@@ -30,11 +30,10 @@ class SignUpPage: OnboardingServices {
                                 val currentOtp = readLine()!!
                                 if(Helper.verifyOtp(currentOtp, otp)) {
                                     id = Helper.generateUserId()
-                                    val userDAO = UserDAO()
-                                    userDAO.createAccount(id, name, mobile, email, password)
                                     val userAccountActivities = UserAccountActivities()
-                                    userAccountActivities.getUserId(mobile)
+                                    userAccountActivities.createUserAccount(id, name, mobile, email, password)
                                     userAccountActivities.getUser(mobile)
+                                    userAccountActivities.getUserId()
                                     println("SignUp Successful!")
                                     HomePage().showDashboard(userAccountActivities)
                                     break
@@ -75,7 +74,7 @@ class SignUpPage: OnboardingServices {
         do{
             println("Enter password: " +
                     "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]" +
-                    "[It should contain atleast 4 to 8 characters]")
+                    "[It should contain at least 4 to 8 characters]")
             password = readLine()!!
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
 

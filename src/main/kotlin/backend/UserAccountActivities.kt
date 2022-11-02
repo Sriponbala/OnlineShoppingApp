@@ -1,24 +1,32 @@
 package backend
 
 import data.Address
+import data.Order
+import data.OrdersHistoryRecord
 import data.User
 import utils.Helper
-import utils.UserDAO
+import utils.OrdersData
+import utils.UserData
 
 class UserAccountActivities {
 
-   // private val users by lazy {UsersDatabase.getUsers()}
     private lateinit var user: User
     lateinit var userId: String
     private lateinit var addressesList: MutableMap<String, Address>
-    private val userDAO = UserDAO()
-
-    fun getUser(mobile: String) {
-        this.user = userDAO.retrieveUser(mobile)
+    private val userData = UserData()
+    fun createUserAccount(userId: String, userName: String, userMobile: String, userEmail: String, password: String) {
+        userData.createAccount(userId, userName, userMobile, userEmail, password)
     }
 
-    fun getUserId(mobile: String) {
-       this.userId = userDAO.retrieveUserId(mobile)
+    fun getUser(mobile: String) {
+        this.user = userData.retrieveUser(mobile)
+    }
+
+    fun getUserId() {
+        if(::user.isInitialized) {
+            this.userId = user.userId
+        }
+      // this.userId = userDAO.retrieveUserId(mobile)
     }
 
     fun getUserDetails(): MutableMap<String, String> {
@@ -42,8 +50,8 @@ class UserAccountActivities {
         user.addresses[Helper.generateAddressId()] = Address(doorNo, flatName, street, area, city, state, pincode)
     }
 
-    fun updateAddress(addressId: String, field: String, value: String): Boolean {
-        return if(user.addresses.containsKey(addressId)) {
+    fun updateAddress(addressId: String, field: String, value: String) {
+        if(user.addresses.containsKey(addressId)) {
                 when(field) {
                     "doorNo" -> {
                         user.addresses[addressId]?.doorNo = value
@@ -67,15 +75,12 @@ class UserAccountActivities {
                         user.addresses[addressId]?.pincode = value
                     }
                 }
-            true
-        } else false
+        }
     }
 
-    fun deleteAddress(addressId: String): Boolean {
-        return if(user.addresses.containsKey(addressId)) {
+    fun deleteAddress(addressId: String) {
+        if(user.addresses.containsKey(addressId)) {
             user.addresses.remove(addressId)
-            true
-        } else false
+        }
     }
-
 }

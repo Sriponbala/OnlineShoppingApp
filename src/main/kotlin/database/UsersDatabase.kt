@@ -1,7 +1,7 @@
-package data
+package database
 
-import utils.Utility
-import javax.rmi.CORBA.Util
+import data.User
+import data.UserPassword
 
 class UsersDatabase private constructor() {
 

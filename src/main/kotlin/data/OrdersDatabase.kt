@@ -1,4 +1,0 @@
-package data
-
-object OrdersDatabase {
-}

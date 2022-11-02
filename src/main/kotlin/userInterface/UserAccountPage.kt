@@ -1,8 +1,6 @@
 package userInterface
 
 import backend.UserAccountActivities
-import data.User
-import enums.HomePageDashboard
 import enums.UserAccountDashboard
 import enums.UserAccountFields
 import interfaces.DashboardServices
@@ -46,6 +44,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                 return false
             }
             UserAccountDashboard.VIEW_ORDERS_HISTORY -> {
+                OrdersPage(userAccountActivities.userId).displayOrdersHistory()
                 return false
             }
             UserAccountDashboard.EDIT_ACCOUNT -> {
@@ -74,7 +73,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                 val editOption = choice.toInt()
                 when(UserAccountFields.values()[editOption - 1]) {
                     UserAccountFields.Name -> {
-                        var name = ""
+                        var name: String
                         do{
                             println("Enter name: ")
                             name = readLine()!!
@@ -82,7 +81,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                         userAccountActivities.updateName(name)
                     }
                     UserAccountFields.Email -> {
-                        var email = ""
+                        var email: String
                         do {
                             println("Enter email: ")
                             email = readLine()!!
@@ -91,13 +90,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                     }
                     UserAccountFields.Addresses -> {
                         val addressPage = AddressPage(userAccountActivities)
-                        addressPage.displayAllAddresses()
-                        addressPage.showDashboard()
-//                        var index = 0
-//                        do {
-//                            println("Select the address to edit: ")
-//                            var userInput = readLine()!!
-//                        } while(Helper.fieldValidation() )
+                        addressPage.openAddressPage()
                     }
                     UserAccountFields.Back -> {
                         break
@@ -107,7 +100,6 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                 println("Class UserAccountPage: editUserDetails(): Exception: $exception")
             }
         }
-
     }
 
 }

@@ -4,29 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/OrdersDatabase.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/UserPassword.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/UserAccountFields.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/AddressPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/utils/UserDAO.kt" afterDir="false" />
+    <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="Commit!">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/backend/OrdersHistoryManagement.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/database/OrdersDatabase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/AddressFields.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/AddressManagementOptions.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/WishListPage.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/utils/OrdersData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/UserAccountActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/UserAccountActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Address.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/Address.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Database.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/UsersDatabase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Order.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/Order.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/OrdersDatabase.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistoryRecord.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Product.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/Product.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Products.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/ProductsDatabase.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/User.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/enums/AddressSelectionOptions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/enums/AddressSelectionOptions.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/enums/Entry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/enums/Entry.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/enums/HomePageDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/enums/HomePageDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/enums/UserAccountActivitiesDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/enums/UserAccountDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/interfaces/DashboardServices.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/interfaces/DashboardServices.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/EntryPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/EntryPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/UsersDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/UsersDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/AddressPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/AddressPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/HomePage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/HomePage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignInPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignInPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignUpPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignUpPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/UserAccountPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/UserAccountPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/Helper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Helper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/UserDAO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/UserData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/Utility.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Utility.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,10 +43,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin Interface" />
         <option value="Kotlin Object" />
         <option value="Kotlin Data Class" />
         <option value="Kotlin Enum" />
+        <option value="Kotlin Interface" />
         <option value="Kotlin Class" />
       </list>
     </option>
@@ -69,7 +70,19 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Kotlin.MainKt">
+  <component name="RecentsManager">
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="database" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Kotlin.OrdersHistoryManagementKt">
+    <configuration name="BookKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="data.BookKt" />
+      <module name="OnlineShoppingApp.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="HelperKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="utils.HelperKt" />
       <module name="OnlineShoppingApp.main" />
@@ -84,15 +97,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProductsKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="data.ProductsKt" />
+    <configuration name="OrdersHistoryManagementKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="backend.OrdersHistoryManagementKt" />
       <module name="OnlineShoppingApp.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="data.UserKt" />
+    <configuration name="ProductsDatabaseKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="data.ProductsDatabaseKt" />
       <module name="OnlineShoppingApp.main" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -100,10 +113,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Kotlin.OrdersHistoryManagementKt" />
+        <item itemvalue="Kotlin.ProductsDatabaseKt" />
         <item itemvalue="Kotlin.MainKt" />
+        <item itemvalue="Kotlin.BookKt" />
         <item itemvalue="Kotlin.HelperKt" />
-        <item itemvalue="Kotlin.ProductsKt" />
-        <item itemvalue="Kotlin.UserKt" />
       </list>
     </recent_temporary>
   </component>
@@ -130,7 +144,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667218906243</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Commit!">
+      <created>1667308962406</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1667308962406</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

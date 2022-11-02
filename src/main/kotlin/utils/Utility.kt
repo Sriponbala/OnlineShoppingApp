@@ -1,6 +1,6 @@
 package utils
 
-import data.UsersDatabase
+import database.UsersDatabase
 import data.User
 import data.UserPassword
 

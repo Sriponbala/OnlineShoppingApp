@@ -2,10 +2,10 @@ package utils
 
 import data.User
 import data.UserPassword
-import data.UsersDatabase
+import database.UsersDatabase
 
-class UserDAO(private val dbUserName: String = "root",
-              private val dbPassword: String = "tiger"){
+class UserData(private val dbUserName: String = "root",
+               private val dbPassword: String = "tiger") {
 
     private lateinit var usersDatabase: UsersDatabase
 
