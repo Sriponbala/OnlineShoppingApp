@@ -28,7 +28,7 @@ class UserData(private val dbUserName: String = "root",
          return usersDatabase.getUserId(mobile)
     }
 
-    fun retrieveUser(mobile: String): User {
+    fun retrieveUser(mobile: String): User? {
         return usersDatabase.getUser(mobile)
     }
 

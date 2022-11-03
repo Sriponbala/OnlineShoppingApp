@@ -1,3 +1,7 @@
 package data
 
-data class WishList(val wishListName: String, var productsList: MutableList<Product>)
+data class WishList(val wishListProducts: ArrayList<Product> = arrayListOf()) { // map - productId, product
+    companion object {
+        const val wishListName = "My WishList"
+    }
+}

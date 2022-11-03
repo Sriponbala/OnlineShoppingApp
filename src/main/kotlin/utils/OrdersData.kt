@@ -5,7 +5,8 @@ import database.OrdersDatabase
 import data.OrdersHistoryRecord
 
 class OrdersData(private val dbUserName: String = "root",
-                 private val dbPassword: String = "tiger") {
+                 private val dbPassword: String = "tiger",
+                 private val userId: String) {
 
     private lateinit var ordersDatabase: OrdersDatabase
 
@@ -15,9 +16,10 @@ class OrdersData(private val dbUserName: String = "root",
 
     init {
         getConnection()
+        createOrdersHistoryRecord(OrdersHistoryRecord(this.userId))
     }
 
-    fun retrieveOrdersHistory(userId: String): MutableMap<String, Order> {
+    fun retrieveOrdersHistory(userId: String): ArrayList<Order>? {
         return ordersDatabase.getOrdersHistoryOfUser(userId)
     }
 
@@ -25,7 +27,7 @@ class OrdersData(private val dbUserName: String = "root",
         ordersDatabase.addOrderToOrdersHistoryOfUser(userId, order)
     }
 
-    fun createOrdersHistoryRecord(ordersHistoryRecord: OrdersHistoryRecord) {
+    private fun createOrdersHistoryRecord(ordersHistoryRecord: OrdersHistoryRecord) {
         ordersDatabase.addOrdersHistoryRecordOfUser(ordersHistoryRecord)
     }
 }

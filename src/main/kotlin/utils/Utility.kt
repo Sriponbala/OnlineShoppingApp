@@ -10,6 +10,8 @@ class Utility(private val dbUserName: String = "root",
     private lateinit var usersDatabase: UsersDatabase
     private lateinit var users: MutableMap<String, User>
     private lateinit var usersPassword: MutableMap<String, UserPassword>
+    private lateinit var wishListData: WishListsData
+
     private fun getConnection() {
         usersDatabase = UsersDatabase.getInstance(dbUserName, dbPassword)!!
     }
@@ -52,6 +54,10 @@ class Utility(private val dbUserName: String = "root",
     private fun getPassword(userId: String): String? {
         usersPassword = usersDatabase.getUsersPassword()
         return usersPassword[userId]?.password
+    }
+
+    fun checkUniqueWishListName(wishListName: String) {
+       // for(name in wis)
     }
 
 }

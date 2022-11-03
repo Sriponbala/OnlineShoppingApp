@@ -41,6 +41,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
         when(enumConstant) {
 
             UserAccountDashboard.VIEW_WISHLIST -> {
+                WishListPage(userAccountActivities.userId).openWishListPage()
                 return false
             }
             UserAccountDashboard.VIEW_ORDERS_HISTORY -> {

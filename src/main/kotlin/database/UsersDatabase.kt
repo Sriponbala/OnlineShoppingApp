@@ -8,10 +8,13 @@ class UsersDatabase private constructor() {
     private val users: MutableMap<String, User> = mutableMapOf()
     private val usersPassword: MutableMap<String, UserPassword> = mutableMapOf()
     companion object {
-        private val INSTANCE by lazy { UsersDatabase() }
+
+        private const val USERNAME = "root"
+        private const val PASSWORD = "tiger"
         fun getInstance(userName: String, password: String): UsersDatabase? {
-            return if(userName == "root" && password == "tiger") {
-                INSTANCE
+
+            return if (userName == USERNAME && password == PASSWORD) {
+                UsersDatabase()
             } else {
                 null
             }
@@ -37,19 +40,19 @@ class UsersDatabase private constructor() {
         return id
     }
 
-    fun getUser(mobile: String): User {
-        var userData: User = User("","","","")
+    fun getUser(mobile: String): User? {
+        var userData: User? = null
         for((_, user) in users) {
             if(mobile == user.userMobile) {
                 userData = user
+                break
+            } else {
+                userData = null
             }
         }
         return userData
     }
 
-//    fun getUserPassword(mobile: String): String {
-//        getUserId(mobile)
-//    }
     fun getUsers() = users
     fun getUsersPassword() = usersPassword
 

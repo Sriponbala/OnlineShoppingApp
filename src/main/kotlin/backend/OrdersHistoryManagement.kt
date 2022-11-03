@@ -6,17 +6,14 @@ import utils.OrdersData
 
 class OrdersHistoryManagement(private val userId: String) {
 
-    private val ordersData = OrdersData()
-
-    fun createOrdersHistoryRecord() {
-        ordersData.createOrdersHistoryRecord(OrdersHistoryRecord(userId, mutableMapOf()))
-    }
+    private val ordersData = OrdersData(userId = this.userId)
 
     fun addOrderToOrdersHistory(order: Order) {
         ordersData.addToOrdersHistory(userId, order)
     }
 
-    fun getOrdersHistory(): MutableMap<String, Order> {
+    fun getOrdersHistory(): ArrayList<Order>? {
         return ordersData.retrieveOrdersHistory(userId)
     }
 }
+

@@ -6,12 +6,14 @@ import utils.Helper
 
 class OrdersDatabase private constructor() {
 
-    private val usersOrdersHistory: MutableMap<String, OrdersHistoryRecord> = mutableMapOf() // id, ordersHistoryRecord
+    private val usersOrdersHistory: MutableMap<String, OrdersHistoryRecord> = mutableMapOf() // userId, ordersHistoryRecord
     companion object {
         private val INSTANCE by lazy { OrdersDatabase() }
+        private const val USERNAME = "root"
+        private const val PASSWORD = "tiger"
         fun getInstance(userName: String, password: String): OrdersDatabase? {
 
-            return if (userName == "root" && password == "tiger") {
+            return if (userName == USERNAME && password == PASSWORD) {
                 INSTANCE
             } else {
                 null
@@ -21,27 +23,23 @@ class OrdersDatabase private constructor() {
 
     fun addOrdersHistoryRecordOfUser(ordersHistoryRecord: OrdersHistoryRecord) {
 
-        usersOrdersHistory[Helper.generateRecordId()] = ordersHistoryRecord
+        usersOrdersHistory[ordersHistoryRecord.userId] = ordersHistoryRecord
     }
 
-    fun getOrdersHistoryOfUser(userId: String): MutableMap<String, Order> {
-        var ordersHistory = mutableMapOf<String, Order>()
-        for((recordId, ordersHistoryRecord) in usersOrdersHistory) {
-            if(ordersHistoryRecord.userId == userId) {
-                ordersHistory = usersOrdersHistory[recordId]?.ordersHistory!!
-                break
-            }
+    fun getOrdersHistoryOfUser(userId: String): ArrayList<Order>? {
+
+        val ordersHistory: ArrayList<Order>? = if(usersOrdersHistory.containsKey(userId)) {
+            usersOrdersHistory[userId]?.ordersHistory
+        } else {
+            null
         }
         return ordersHistory
     }
 
     fun addOrderToOrdersHistoryOfUser(userId: String, order: Order) {
 
-        for((recordId, ordersHistoryRecord) in usersOrdersHistory) {
-            if(ordersHistoryRecord.userId == userId) {
-                usersOrdersHistory[recordId]?.ordersHistory?.set(Helper.generateOrderId(), order)
-                break
-            }
+        if(usersOrdersHistory.containsKey(userId)) {
+            usersOrdersHistory[userId]?.ordersHistory?.add(order)
         }
     }
 }
