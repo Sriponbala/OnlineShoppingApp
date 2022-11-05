@@ -1,5 +1,6 @@
 package userInterface
 
+import backend.CartActivities
 import backend.ShopActivities
 import data.Product
 import enums.ProductActivitiesDashboard
@@ -101,16 +102,13 @@ class ShopPage {
                 while (true) {
                     showDashboard("Product Dashboard", productActivitiesDashboard)
                     when (getUserChoice(productActivitiesDashboard)) {
-                        ProductActivitiesDashboard.ADD_PRODUCT -> {
-
-                        }
-
-                        ProductActivitiesDashboard.DELETE_PRODUCT -> {
-
-                        }
-
                         ProductActivitiesDashboard.ADD_TO_CART -> {
 
+                            if(CartActivities().addToCart(userId, category, productId)) {
+                                println("Product added to cart!")
+                            } else {
+                                println("Can't add to cart, product is out of stock!")
+                            }
                         }
 
                         ProductActivitiesDashboard.ADD_TO_WISHLIST -> {
@@ -179,28 +177,24 @@ class ShopPage {
             is Product.Book -> {
                 val book = product as Product.Book
                 println("""Book type          : ${book.bookType}
-                          |Selected number    : ${product.requiredQuantity}
                 """.trimMargin())
             }
             is Product.Mobile -> {
                 val mobile = product as Product.Mobile
                 println("""Brand              : ${mobile.brand}
                           |Storage            : ${mobile.storage}
-                          |Selected number    : ${mobile.requiredQuantity}
                 """.trimMargin())
             }
             is Product.Clothing -> {
                 val clothing = product as Product.Clothing
                 println("""Colour             : ${clothing.colour}
                           |Gender             : ${clothing.gender}
-                          |Selected number    : ${clothing.requiredQuantity}
                 """.trimMargin())
             }
             is Product.Earphone -> {
                 val earphone = product as Product.Earphone
                 println("""Earphone type      : ${earphone.type}
                           |Storage            : ${earphone.colour}
-                          |Selected number    : ${earphone.requiredQuantity}
                 """.trimMargin())
             }
         }

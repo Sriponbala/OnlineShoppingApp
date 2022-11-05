@@ -1,7 +1,9 @@
 package userInterface
 
+import backend.CartActivities
 import backend.UserAccountActivities
 import backend.WishListsActivities
+import database.UsersDatabase
 import interfaces.OnboardingServices
 import interfaces.UserAccountCreationInterface
 import utils.Helper
@@ -35,6 +37,8 @@ class SignUpPage: OnboardingServices {
                                     userAccountActivities.createUserAccount(name, mobile, email, password)
                                     userAccountActivities.getUser(mobile)
                                     WishListsActivities().createWishList(userAccountActivities.getUserId())
+                                    CartActivities().createCart(userAccountActivities.getUserId())
+                                    println("users: ${UsersDatabase.dummy()}")
                                     println("SignUp Successful!")
                                     HomePage().showDashboard(userAccountActivities)
                                     break

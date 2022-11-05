@@ -17,14 +17,8 @@ class UserData(private val dbUserName: String = "root",
 //        getConnection()
 //    }
 
-    private var userId = 1
-
-    private fun generateUserId(): String {
-        return "USER${userId++}"
-    }
-
     fun createUserAccount(userName: String, userMobile: String, userEmail: String, password: String) {
-        val user = User(generateUserId(), userName, userMobile,userEmail)
+        val user = User(UsersDatabase.generateUserId(), userName, userMobile,userEmail)
         UsersDatabase.users[user.userId] = user
         val userPassword = UserPassword(user.userId, password)
         UsersDatabase.usersPassword[user.userId] = userPassword

@@ -23,11 +23,6 @@ class WishListsData(private val dbUserName: String = "root",
 //        getConnection()
 //    }
 
-    private var wishListId = 1
-    private fun generateWishListId(): String {
-        return "WL${wishListId++}"
-    }
-
     fun retrieveWishListId(userId: String): String {
         return if(WishListDatabase.usersWishList.containsKey(userId)) {
             WishListDatabase.usersWishList[userId]?.wishListId as String
@@ -72,7 +67,7 @@ class WishListsData(private val dbUserName: String = "root",
 
     fun addWishList(userID: String) {
         if(UsersDatabase.users.containsKey(userID)) {
-            WishListDatabase.usersWishList[userID] = WishList(wishListId = generateWishListId())
+            WishListDatabase.usersWishList[userID] = WishList(wishListId = WishListDatabase.generateWishListId())
         }
     }
 

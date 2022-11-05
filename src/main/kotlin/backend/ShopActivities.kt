@@ -8,6 +8,8 @@ class ShopActivities {
     private val productsData = ProductsData()
     private var productsList: List<Product>? = null
     private val wishListsActivities = WishListsActivities()
+    private val cartActivities = CartActivities()
+
     fun getCategories(): List<String> {
         return productsData.retrieveListOfCategories()
     }

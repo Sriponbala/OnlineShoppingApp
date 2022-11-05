@@ -39,7 +39,9 @@ class HomePage {
                 return false
             }
             HomePageDashboard.VIEW_CART -> {
-               // ViewCart().displayCartItems()
+                val cartPage = CartPage()
+                cartPage.setUserIdAndCartId(userAccountActivities.getUserId())
+                cartPage.openCartPage()
                 return false
             }
             HomePageDashboard.YOUR_ACCOUNT -> {

@@ -7,15 +7,13 @@ import kotlin.random.Random
 object Helper {
 
 
-    private var productId = 1
+
 
     private var orderId = 1
     private var recordId = 1
 
 
-    fun generateProductId(): String {
-        return "Product${productId++}"
-    }
+
 
 
     fun generateOrderId(): String {

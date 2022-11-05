@@ -8,6 +8,15 @@ object UsersDatabase {
     val users: MutableMap<String, User> = mutableMapOf()
     val usersPassword: MutableMap<String, UserPassword> = mutableMapOf()
 
+    fun dummy() {
+        println(users)
+    }
+
+    private var userId = 1
+
+    fun generateUserId(): String {
+        return "USER${userId++}"
+    }
 }
 
 

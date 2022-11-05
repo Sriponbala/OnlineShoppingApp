@@ -24,6 +24,11 @@ import utils.ProductsData
 object WishListDatabase {
 
     val usersWishList: MutableMap<String, WishList> = mutableMapOf() // userId, userWishlist
+
+    private var wishListId = 1
+    fun generateWishListId(): String {
+        return "WL${wishListId++}"
+    }
 //
 //    fun addProductToWishListOfUser(userId: String, product: Product) {
 //        if (usersWishList.containsKey(userId)) {
