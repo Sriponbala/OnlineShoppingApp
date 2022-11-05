@@ -1,40 +1,50 @@
 package userInterface
 
 import backend.WishListsActivities
+import data.Product
 import data.WishList
 import enums.WishListDashboard
 import utils.Helper
 
-class WishListPage(private val userId: String) {
+class WishListPage {
 
-    private val wishListsActivities = WishListsActivities(this.userId)
-    private var wishListProducts = wishListsActivities.getWishListProducts()
-    private var isEmptyWishList = true
-    fun openWishListPage() {
+    private val wishListsActivities = WishListsActivities()
+    private var wishListProducts : ArrayList<Product>? = null
+    private var isEmptyWishList: Boolean = true
 
-        displayWishListProducts()
-        val selectedProduct: String
-        if(!isEmptyWishList) {
-            selectedProduct = selectAProduct()
-            val wishListDashboard = WishListDashboard.values()
-            while(true) {
-                showDashboard("WishList Dashboard", wishListDashboard)
-                when(getUserChoice(wishListDashboard)) {
-                    WishListDashboard.VIEW_PRODUCT -> {
-                        println("      ${WishList.wishListName}      ")
-                        println(selectedProduct)
-                    }
-                    WishListDashboard.DELETE_PRODUCT -> {
-                        wishListsActivities.deleteProductFromWishList(selectedProduct)
 
-                    }
-                    WishListDashboard.GO_BACK -> {
-                        break
+    fun openWishListPage(userId: String) {
+
+        val wishListId = wishListsActivities.getWishListId(userId)
+        while(true) {
+            wishListProducts = wishListsActivities.getWishListProducts(userId, wishListId)
+            checkIfWishListIsEmpty(wishListProducts)
+            displayWishListProducts(isEmptyWishList)
+            if(Helper.confirm()) {
+                val selectedProduct: String
+                if(!isEmptyWishList) {
+                    selectedProduct = selectAProduct()
+                    val wishListDashboard = WishListDashboard.values()
+                    while(true) {
+                        showDashboard("WishList Dashboard", wishListDashboard)
+                        when(getUserChoice(wishListDashboard)) {
+                            WishListDashboard.VIEW_PRODUCT -> {
+                                println(selectedProduct)
+                            }
+                            WishListDashboard.DELETE_PRODUCT -> {
+                                wishListsActivities.deleteProductFromWishList(userId, selectedProduct)
+                                break
+                            }
+                            WishListDashboard.GO_BACK -> {
+                                break
+                            }
+                        }
                     }
                 }
+            } else {
+                break
             }
         }
-
     }
 
 
@@ -61,17 +71,21 @@ class WishListPage(private val userId: String) {
         return selectedProduct
     }
 
-    private fun displayWishListProducts() {
-        isEmptyWishList = if(wishListsActivities.getWishListProducts()?.isEmpty() == true) {
-            println("        Empty Wishlist        ")
-            true
+    private fun displayWishListProducts(isEmptyWishList: Boolean) {
+        println("-------------------${WishList.wishListName}----------------------")
+        if(isEmptyWishList) {
+            println("        No items found        ")
         } else {
-            wishListsActivities.getWishListProducts()?.forEachIndexed { index, product ->
+            wishListProducts?.forEachIndexed { index, product ->
                 println("${index + 1}. ${product.productName} - ${product.price}")
             }
-            false
         }
     }
+
+    private fun checkIfWishListIsEmpty(wishListProducts: ArrayList<Product>?) {
+        isEmptyWishList = wishListProducts?.isEmpty() == true
+    }
+
 
     private fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {
 

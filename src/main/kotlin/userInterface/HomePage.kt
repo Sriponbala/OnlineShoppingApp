@@ -33,7 +33,9 @@ class HomePage {
 
         when(enumConstant) {
             HomePageDashboard.VIEW_PRODUCTS -> {
-               // ShopPage().shoppingActivities()
+                val shopPage = ShopPage()
+                shopPage.setUserId(userAccountActivities.getUserId())
+                shopPage.openShopPage()
                 return false
             }
             HomePageDashboard.VIEW_CART -> {

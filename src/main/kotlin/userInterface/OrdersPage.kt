@@ -2,11 +2,12 @@ package userInterface
 
 import backend.OrdersHistoryManagement
 
-class OrdersPage(private val userId: String) {
+class OrdersPage {
 
-    private val ordersHistoryManagement = OrdersHistoryManagement(this.userId)
-    fun displayOrdersHistory() {
-        val ordersHistory = ordersHistoryManagement.getOrdersHistory()
+
+    private val ordersHistoryManagement = OrdersHistoryManagement()
+    fun displayOrdersHistory(userId: String) {
+        val ordersHistory = ordersHistoryManagement.getOrdersHistory(userId)
         println("-----------------Orders History---------------------")
         if(ordersHistory?.isEmpty() == true){
             println("         Empty orders history         ")

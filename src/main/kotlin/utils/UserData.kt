@@ -7,29 +7,52 @@ import database.UsersDatabase
 class UserData(private val dbUserName: String = "root",
                private val dbPassword: String = "tiger") {
 
-    private lateinit var usersDatabase: UsersDatabase
+//    private lateinit var usersDatabase: UsersDatabase
+//
+//    private fun getConnection() {
+//        usersDatabase = UsersDatabase.getInstance(dbUserName, dbPassword)!!
+//    }
+//
+//    init {
+//        getConnection()
+//    }
 
-    private fun getConnection() {
-        usersDatabase = UsersDatabase.getInstance(dbUserName, dbPassword)!!
+    private var userId = 1
+
+    private fun generateUserId(): String {
+        return "USER${userId++}"
     }
 
-    init {
-        getConnection()
+    fun createUserAccount(userName: String, userMobile: String, userEmail: String, password: String) {
+        val user = User(generateUserId(), userName, userMobile,userEmail)
+        UsersDatabase.users[user.userId] = user
+        val userPassword = UserPassword(user.userId, password)
+        UsersDatabase.usersPassword[user.userId] = userPassword
     }
 
-    fun createAccount(userId: String, userName: String, userMobile: String, userEmail: String, password: String) {
-        val user = User(userId, userName, userMobile,userEmail)
-        usersDatabase.addUser(user)
-        val userPassword = UserPassword(userId, password)
-        usersDatabase.addPassword(userId, userPassword)
+    fun retrieveUserId(mobile: String): String {
+        var id = ""
+        for((userId, user) in UsersDatabase.users) {
+            if(mobile == user.userMobile) {
+                id = userId
+                break
+            }
+        }
+        return id
     }
 
-     fun retrieveUserId(mobile: String): String {
-         return usersDatabase.getUserId(mobile)
-    }
 
     fun retrieveUser(mobile: String): User? {
-        return usersDatabase.getUser(mobile)
+        var userData: User? = null
+        for((_, user) in UsersDatabase.users) {
+            if(mobile == user.userMobile) {
+                userData = user
+                break
+            } else {
+                userData = null
+            }
+        }
+        return userData
     }
 
 

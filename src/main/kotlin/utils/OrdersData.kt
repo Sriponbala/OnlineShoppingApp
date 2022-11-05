@@ -5,29 +5,35 @@ import database.OrdersDatabase
 import data.OrdersHistoryRecord
 
 class OrdersData(private val dbUserName: String = "root",
-                 private val dbPassword: String = "tiger",
-                 private val userId: String) {
+                 private val dbPassword: String = "tiger") {
 
-    private lateinit var ordersDatabase: OrdersDatabase
-
-    private fun getConnection() {
-        ordersDatabase = OrdersDatabase.getInstance(dbUserName, dbPassword)!!
-    }
-
-    init {
-        getConnection()
-        createOrdersHistoryRecord(OrdersHistoryRecord(this.userId))
-    }
+//    private lateinit var ordersDatabase: OrdersDatabase
+//
+//    private fun getConnection() {
+//        ordersDatabase = OrdersDatabase.getInstance(dbUserName, dbPassword)!!
+//    }
+//
+//    init {
+//        getConnection()
+//        createOrdersHistoryRecord(OrdersHistoryRecord(this.userId))
+//    }
 
     fun retrieveOrdersHistory(userId: String): ArrayList<Order>? {
-        return ordersDatabase.getOrdersHistoryOfUser(userId)
+        val ordersHistory: ArrayList<Order>? = if(OrdersDatabase.usersOrdersHistory.containsKey(userId)) {
+            OrdersDatabase.usersOrdersHistory[userId]?.ordersHistory
+        } else {
+            null
+        }
+        return ordersHistory
     }
 
     fun addToOrdersHistory(userId: String, order: Order) {
-        ordersDatabase.addOrderToOrdersHistoryOfUser(userId, order)
+        if(OrdersDatabase.usersOrdersHistory.containsKey(userId)) {
+            OrdersDatabase.usersOrdersHistory[userId]?.ordersHistory?.add(order)
+        }
     }
 
     private fun createOrdersHistoryRecord(ordersHistoryRecord: OrdersHistoryRecord) {
-        ordersDatabase.addOrdersHistoryRecordOfUser(ordersHistoryRecord)
+        OrdersDatabase.usersOrdersHistory[ordersHistoryRecord.userId] = ordersHistoryRecord
     }
 }

@@ -4,15 +4,15 @@ import data.Order
 import data.OrdersHistoryRecord
 import utils.OrdersData
 
-class OrdersHistoryManagement(private val userId: String) {
+class OrdersHistoryManagement {
 
-    private val ordersData = OrdersData(userId = this.userId)
+    private val ordersData = OrdersData()
 
-    fun addOrderToOrdersHistory(order: Order) {
+    fun addOrderToOrdersHistory(userId: String, order: Order) {
         ordersData.addToOrdersHistory(userId, order)
     }
 
-    fun getOrdersHistory(): ArrayList<Order>? {
+    fun getOrdersHistory(userId: String): ArrayList<Order>? {
         return ordersData.retrieveOrdersHistory(userId)
     }
 }

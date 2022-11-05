@@ -1,7 +1,9 @@
 package userInterface
 
 import backend.UserAccountActivities
+import backend.WishListsActivities
 import interfaces.OnboardingServices
+import interfaces.UserAccountCreationInterface
 import utils.Helper
 import utils.UserData
 import utils.Utility
@@ -20,7 +22,7 @@ class SignUpPage: OnboardingServices {
         println("----------SignUp Page----------")
         try {
             getUserInputs()
-            while (true) {
+            while(true) {
                 if (Helper.confirm()) {
                         if(verifyAccount()) {
                             val otp = Helper.generateOTP()
@@ -29,11 +31,10 @@ class SignUpPage: OnboardingServices {
                                 println("Enter the OTP: ")
                                 val currentOtp = readLine()!!
                                 if(Helper.verifyOtp(currentOtp, otp)) {
-                                    id = Helper.generateUserId()
                                     val userAccountActivities = UserAccountActivities()
-                                    userAccountActivities.createUserAccount(id, name, mobile, email, password)
+                                    userAccountActivities.createUserAccount(name, mobile, email, password)
                                     userAccountActivities.getUser(mobile)
-                                    userAccountActivities.getUserId()
+                                    WishListsActivities().createWishList(userAccountActivities.getUserId())
                                     println("SignUp Successful!")
                                     HomePage().showDashboard(userAccountActivities)
                                     break

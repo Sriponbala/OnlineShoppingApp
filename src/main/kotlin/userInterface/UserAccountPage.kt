@@ -41,11 +41,11 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
         when(enumConstant) {
 
             UserAccountDashboard.VIEW_WISHLIST -> {
-                WishListPage(userAccountActivities.userId).openWishListPage()
+                WishListPage().openWishListPage(userAccountActivities.getUserId())
                 return false
             }
             UserAccountDashboard.VIEW_ORDERS_HISTORY -> {
-                OrdersPage(userAccountActivities.userId).displayOrdersHistory()
+                OrdersPage().displayOrdersHistory(userAccountActivities.getUserId())
                 return false
             }
             UserAccountDashboard.EDIT_ACCOUNT -> {

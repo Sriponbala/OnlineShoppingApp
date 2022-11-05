@@ -4,29 +4,27 @@ import data.Address
 import data.Order
 import data.OrdersHistoryRecord
 import data.User
+import interfaces.UserAccountCreationInterface
+import interfaces.UserIdInterface
 import utils.Helper
 import utils.OrdersData
 import utils.UserData
 
-class UserAccountActivities {
+class UserAccountActivities: UserIdInterface {
 
     private lateinit var user: User
-    lateinit var userId: String
     private lateinit var addressesList: MutableMap<String, Address>
     private val userData = UserData()
-    fun createUserAccount(userId: String, userName: String, userMobile: String, userEmail: String, password: String) {
-        userData.createAccount(userId, userName, userMobile, userEmail, password)
+    fun createUserAccount(userName: String, userMobile: String, userEmail: String, password: String) {
+        userData.createUserAccount(userName, userMobile, userEmail, password)
     }
 
     fun getUser(mobile: String) {
-        this.user = userData.retrieveUser(mobile)
+        this.user = userData.retrieveUser(mobile)!!
     }
 
-    fun getUserId() {
-        if(::user.isInitialized) {
-            this.userId = user.userId
-        }
-      // this.userId = userDAO.retrieveUserId(mobile)
+    override fun getUserId(): String {
+        return user.userId
     }
 
     fun getUserDetails(): MutableMap<String, String> {
@@ -47,7 +45,7 @@ class UserAccountActivities {
     }
 
     fun addNewAddress(doorNo: String, flatName: String, street: String, area: String, city: String, state: String, pincode: String) {
-        user.addresses[Helper.generateAddressId()] = Address(doorNo, flatName, street, area, city, state, pincode)
+        user.addresses[generateAddressId()] = Address(doorNo, flatName, street, area, city, state, pincode)
     }
 
     fun updateAddress(addressId: String, field: String, value: String) {
@@ -82,5 +80,10 @@ class UserAccountActivities {
         if(user.addresses.containsKey(addressId)) {
             user.addresses.remove(addressId)
         }
+    }
+
+    private var addressId = 1
+    private fun generateAddressId(): String {
+        return "Address${addressId++}"
     }
 }

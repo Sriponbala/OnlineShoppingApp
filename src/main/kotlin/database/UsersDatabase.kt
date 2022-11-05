@@ -3,24 +3,34 @@ package database
 import data.User
 import data.UserPassword
 
-class UsersDatabase private constructor() {
+object UsersDatabase {
 
-    private val users: MutableMap<String, User> = mutableMapOf()
-    private val usersPassword: MutableMap<String, UserPassword> = mutableMapOf()
-    companion object {
+    val users: MutableMap<String, User> = mutableMapOf()
+    val usersPassword: MutableMap<String, UserPassword> = mutableMapOf()
 
-        private const val USERNAME = "root"
-        private const val PASSWORD = "tiger"
-        fun getInstance(userName: String, password: String): UsersDatabase? {
+}
 
-            return if (userName == USERNAME && password == PASSWORD) {
-                UsersDatabase()
-            } else {
-                null
-            }
-        }
-    }
 
+//class UsersDatabase private constructor() {
+//
+//
+//
+//    companion object {
+//
+//        private const val USERNAME = "root"
+//        private const val PASSWORD = "tiger"
+//        fun getInstance(userName: String, password: String): UsersDatabase? {
+//
+//            return if (userName == USERNAME && password == PASSWORD) {
+//                UsersDatabase()
+//            } else {
+//                null
+//            }
+//        }
+//    }
+
+
+/*
     fun addUser(user: User) {
         users[user.userId] = user
     }
@@ -53,7 +63,4 @@ class UsersDatabase private constructor() {
         return userData
     }
 
-    fun getUsers() = users
-    fun getUsersPassword() = usersPassword
-
-}
+ */

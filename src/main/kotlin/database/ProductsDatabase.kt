@@ -3,20 +3,24 @@ package database
 import data.Product
 import utils.Helper
 
-class ProductsDatabase private constructor() {
+//class ProductsDatabase private constructor() {
+//
+//
+//    companion object {
+//        private val INSTANCE by lazy { ProductsDatabase() }
+//        fun getInstance(userName: String, password: String): ProductsDatabase? {
+//
+//            return if (userName == "root" && password == "tiger") {
+//                INSTANCE
+//            } else {
+//                null
+//            }
+//        }
+//    }
 
-    private val products: MutableMap<String,MutableList<Product>>
-    companion object {
-        private val INSTANCE by lazy { ProductsDatabase() }
-        fun getInstance(userName: String, password: String): ProductsDatabase? {
+object ProductsDatabase {
 
-            return if (userName == "root" && password == "tiger") {
-                INSTANCE
-            } else {
-                null
-            }
-        }
-    }
+    val products: Map<String,MutableList<Product>>
 
     private val book1 = Product.Book(Helper.generateProductId(), "Book1", 200f, 5, 0, "fiction")
     private val book2 = Product.Book(Helper.generateProductId(), "Book2", 110f, 10, 0, "nonfiction")
@@ -37,10 +41,8 @@ class ProductsDatabase private constructor() {
 
     private val earphones = mutableListOf<Product>()
     init {
-        products = mutableMapOf("Books" to books, "Mobiles" to mobiles, "Clothings" to clothings, "Earphones" to earphones)
+        products = mutableMapOf("books" to books, "mobiles" to mobiles, "clothings" to clothings, "earphones" to earphones)
     }
-
-    fun getProducts() = products
 
 }
 

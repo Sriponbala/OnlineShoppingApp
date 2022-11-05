@@ -133,24 +133,29 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
         userAccountActivities.deleteAddress(addressId)
     }
 
-    private fun selectAnAddress(): String? {
+    private fun selectAnAddress(): String {
 
         var option: Int
+        var selectedAddress: String
         while(true){
             println("Select an address: ")
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                return if(Helper.checkValidRecord(option,addressesMap.size)) {
+                if(Helper.checkValidRecord(option,addressesMap.size)) {
                     println("Selected address: ${addresses[addressesMap[option]]}")
-                    addressesMap[option]
-                } else null
+                    selectedAddress = addressesMap[option]!!
+                    break
+                } else {
+                    println("Invalid option! Try again")
+                }
             } catch(exception: Exception) {
                 println("""Class: AddressPage: selectAnAddress(): Exception: $exception
                     |Enter again!
                 """.trimMargin())
             }
         }
+        return selectedAddress
     }
 
     private fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {

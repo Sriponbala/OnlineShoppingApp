@@ -5,22 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/backend/WishListsActivities.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/database/WishListDatabase.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/WishListDashboard.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/utils/WishListsData.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/Item.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/utils/ProductsData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/OrdersHistoryManagement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/OrdersHistoryManagement.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistoryRecord.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistoryRecord.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/ShopActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/ShopActivities.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/UserAccountActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/UserAccountActivities.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/WishListsActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/WishListsActivities.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Product.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/Product.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/WishList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/WishList.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/OrdersDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/OrdersDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/ProductsDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/ProductsDatabase.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/UsersDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/UsersDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/WishListDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/WishListDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/AddressPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/AddressPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/HomePage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/HomePage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignInPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignInPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignUpPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignUpPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/UserAccountPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/UserAccountPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/WishListPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/WishListPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/Helper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Helper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/OrdersData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/OrdersData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/UserData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/UserData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/Utility.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Utility.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/WishListsData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/WishListsData.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,10 +47,10 @@
       <list>
         <option value="Kotlin Object" />
         <option value="Kotlin Data Class" />
-        <option value="Kotlin Interface" />
         <option value="Class" />
-        <option value="Kotlin Class" />
         <option value="Kotlin Enum" />
+        <option value="Kotlin Class" />
+        <option value="Kotlin Interface" />
       </list>
     </option>
   </component>
@@ -56,12 +66,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="database" />
@@ -150,7 +160,21 @@
       <option name="project" value="LOCAL" />
       <updated>1667411448544</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Commit!">
+      <created>1667503433131</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1667503433131</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Commit!">
+      <created>1667503478544</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1667503478544</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

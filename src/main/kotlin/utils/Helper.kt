@@ -6,23 +6,17 @@ import kotlin.random.Random
 
 object Helper {
 
-    private var userId = 1
+
     private var productId = 1
-    private var addressId = 1
+
     private var orderId = 1
     private var recordId = 1
 
-    fun generateUserId(): String {
-        return "USER${userId++}"
-    }
 
     fun generateProductId(): String {
         return "Product${productId++}"
     }
 
-    fun generateAddressId(): String {
-        return "Address${addressId++}"
-    }
 
     fun generateOrderId(): String {
         return "Order${orderId++}"

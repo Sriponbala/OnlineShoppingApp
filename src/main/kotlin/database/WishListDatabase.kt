@@ -2,52 +2,56 @@ package database
 
 import data.Product
 import data.WishList
+import utils.ProductsData
 
-class WishListDatabase private constructor() {
+//class WishListDatabase private constructor() {
+//
+//    private
+//    companion object {
+//        private val INSTANCE by lazy { WishListDatabase() }
+//        private const val USERNAME = "root"
+//        private const val PASSWORD = "tiger"
+//        fun getInstance(userName: String, password: String): WishListDatabase? {
+//
+//            return if (userName == USERNAME && password == PASSWORD) {
+//                INSTANCE
+//            } else {
+//                null
+//            }
+//        }
+//    }
 
-    private val usersWishList: MutableMap<String, WishList> = mutableMapOf() // userId, userWishlist
+object WishListDatabase {
 
-    companion object {
-        private val INSTANCE by lazy { WishListDatabase() }
-        private const val USERNAME = "root"
-        private const val PASSWORD = "tiger"
-        fun getInstance(userName: String, password: String): WishListDatabase? {
-
-            return if (userName == USERNAME && password == PASSWORD) {
-                INSTANCE
-            } else {
-                null
-            }
-        }
-    }
-
-    fun addProductToWishListOfUser(userId: String, product: Product) {
-        if (usersWishList.containsKey(userId)) {
-            usersWishList[userId]?.wishListProducts!!.add(product)
-        }
-    }
-
-    fun getWishList(userId: String): WishList? {
-        return if (usersWishList.containsKey(userId)) {
-            usersWishList[userId]
-        } else {
-            null
-        }
-    }
-
-    fun addWishList(userId: String, wishList: WishList) {
-        usersWishList[userId] = wishList
-    }
-
-    fun deleteProductFromWishList(userId: String, productId: String) {
-        if(usersWishList.containsKey(userId)) {
-            for (product in usersWishList[userId]!!.wishListProducts) {
-                if(productId == product.productId) {
-                    usersWishList[userId]?.wishListProducts?.remove(product)
-                }
-            }
-        }
-    }
+    val usersWishList: MutableMap<String, WishList> = mutableMapOf() // userId, userWishlist
+//
+//    fun addProductToWishListOfUser(userId: String, product: Product) {
+//        if (usersWishList.containsKey(userId)) {
+//            usersWishList[userId]?.wishListProducts!!.add(product)
+//        }
+//    }
+//
+//    fun getWishList(userId: String): WishList? {
+//        return if (usersWishList.containsKey(userId)) {
+//            usersWishList[userId]
+//        } else {
+//            null
+//        }
+//    }
+//
+//    fun addWishList(userId: String, wishList: WishList) {
+//        usersWishList[userId] = wishList
+//    }
+//
+//    fun deleteProductFromWishList(userId: String, productId: String) {
+//        if(usersWishList.containsKey(userId)) {
+//            for (product in usersWishList[userId]!!.wishListProducts) {
+//                if(productId == product.productId) {
+//                    usersWishList[userId]?.wishListProducts?.remove(product)
+//                }
+//            }
+//        }
+//    }
 
 }
 

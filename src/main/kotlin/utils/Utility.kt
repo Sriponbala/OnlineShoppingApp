@@ -7,20 +7,9 @@ import data.UserPassword
 class Utility(private val dbUserName: String = "root",
               private val dbPassword: String = "tiger") {
 
-    private lateinit var usersDatabase: UsersDatabase
     private lateinit var users: MutableMap<String, User>
-    private lateinit var usersPassword: MutableMap<String, UserPassword>
-    private lateinit var wishListData: WishListsData
-
-    private fun getConnection() {
-        usersDatabase = UsersDatabase.getInstance(dbUserName, dbPassword)!!
-    }
-    init {
-        getConnection()
-    }
-
     fun checkUniqueUser(mobile: String): Boolean {
-        users = usersDatabase.getUsers()
+        users = UsersDatabase.users
         println("Users: $users")
         var flag = false
         if (users.isEmpty()) {
@@ -39,11 +28,11 @@ class Utility(private val dbUserName: String = "root",
     }
 
     fun validateLoginCredentials(mobile: String, password: String) : Boolean {
-        users = usersDatabase.getUsers()
+        users = UsersDatabase.users
         println("Users: login() : $users")
         var flag = false
         for((userId,user) in users) {
-            if (mobile == user.userMobile&& password == (getPassword(userId) as String)) {
+            if (mobile == user.userMobile&& password == (getPassword(userId))) {
                 flag = true
                 break
             }
@@ -51,13 +40,12 @@ class Utility(private val dbUserName: String = "root",
         return flag
     }
 
-    private fun getPassword(userId: String): String? {
-        usersPassword = usersDatabase.getUsersPassword()
-        return usersPassword[userId]?.password
-    }
-
-    fun checkUniqueWishListName(wishListName: String) {
-       // for(name in wis)
+    private fun getPassword(userId: String): String {
+        var password: String = ""
+        UsersDatabase.usersPassword[userId]?.let {
+            password = it.password
+        }
+        return password
     }
 
 }

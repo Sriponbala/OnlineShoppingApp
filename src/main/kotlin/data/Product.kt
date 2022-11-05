@@ -7,13 +7,14 @@ sealed class Product {
     abstract var productId: String
     abstract  var productName: String
     abstract var price: Float
+    abstract val category: String
     abstract var availableQuantity: Int
     abstract var requiredQuantity: Int
 
-    data class Book(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var bookType: String, var category: String = "book"): Product()
-    data class Mobile(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var brand: String, var storage: String, val category: String = "mobile"): Product()
-    data class Clothing(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var gender: String, var colour: String, val category: String = "clothing"): Product()
-    data class Earphone(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var type: String, var colour: String, val category: String = "book"): Product()
+    data class Book(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var bookType: String, override val category: String = "book"): Product()
+    data class Mobile(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var brand: String, var storage: String, override val category: String = "mobile"): Product()
+    data class Clothing(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var gender: String, var colour: String, override val category: String = "clothing"): Product()
+    data class Earphone(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, override var requiredQuantity: Int, var type: String, var colour: String, override val category: String = "book"): Product()
 
 }
 
