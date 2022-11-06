@@ -9,6 +9,7 @@ class SignInPage: OnboardingServices {
 
     private var mobile: String = ""
     private var password: String = ""
+    private lateinit var userId: String
 
     fun signIn() {
         println("----------SignIn Page----------")
@@ -19,8 +20,8 @@ class SignInPage: OnboardingServices {
                         if (verifyAccount()) {
                             println("SignIn Successful!")
                             val userAccountActivities = UserAccountActivities()
-                            userAccountActivities.getUser(mobile)
-                            HomePage().showDashboard(userAccountActivities)
+                            userId = userAccountActivities.getUserId(mobile)
+                            HomePage().showDashboard(userId)
                         } else {
                             println("SignIn failed!")
                         }

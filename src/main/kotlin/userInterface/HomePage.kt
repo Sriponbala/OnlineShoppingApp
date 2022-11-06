@@ -1,12 +1,11 @@
 package userInterface
 
-import backend.UserAccountActivities
 import enums.HomePageDashboard
 import utils.Helper
 
 class HomePage {
 
-     fun showDashboard(userAccountActivities: UserAccountActivities) {
+     fun showDashboard(userId: String) {
 
         while (true) {
             println("------------Home Page-------------")
@@ -17,7 +16,7 @@ class HomePage {
                 val option = readLine()!!
                 val dashBoardOption = option.toInt()
                 if(Helper.checkValidRecord(dashBoardOption, HomePageDashboard.values().size)) {
-                    if(doDashboardActivities(HomePageDashboard.values()[dashBoardOption-1], userAccountActivities)) {
+                    if(doDashboardActivities(HomePageDashboard.values()[dashBoardOption-1], userId)) {
                         break
                     }
                 } else {
@@ -29,25 +28,24 @@ class HomePage {
         }
     }
 
-    private fun doDashboardActivities(enumConstant: HomePageDashboard, userAccountActivities: UserAccountActivities): Boolean {
+    private fun doDashboardActivities(enumConstant: HomePageDashboard, userId: String): Boolean {
 
         when(enumConstant) {
             HomePageDashboard.VIEW_PRODUCTS -> {
                 val shopPage = ShopPage()
-                shopPage.setUserId(userAccountActivities.getUserId())
+                shopPage.setUserIdAndAccountInfo(userId)
                 shopPage.openShopPage()
                 return false
             }
             HomePageDashboard.VIEW_CART -> {
                 val cartPage = CartPage()
-                cartPage.setUserIdAndCartId(userAccountActivities.getUserId())
+                cartPage.setUserIdAndCartId(userId)
                 cartPage.openCartPage()
                 return false
             }
             HomePageDashboard.YOUR_ACCOUNT -> {
-                val userAccountPage = UserAccountPage(userAccountActivities)
-                userAccountPage.displayUserDetails(userAccountActivities.getUserDetails())
-                userAccountPage.showDashboard()
+                val userAccountPage = UserAccountPage()
+                userAccountPage.openUserAccountPage(userId)
                 return false
             }
             HomePageDashboard.SIGN_OUT -> {

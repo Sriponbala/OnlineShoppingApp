@@ -1,7 +1,6 @@
 package data
 
 import enums.ProductStatus
-import utils.Helper
 
 sealed class Product {
 
@@ -11,8 +10,7 @@ sealed class Product {
     abstract val category: String
     abstract var availableQuantity: Int
     abstract var status: ProductStatus
-    data class Book(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var bookType: String, override val category: String = "book",
-                    override var status: ProductStatus): Product()
+    data class Book(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var bookType: String, override val category: String = "book", override var status: ProductStatus): Product()
     data class Mobile(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var brand: String, var storage: String, override val category: String = "mobile", override var status: ProductStatus): Product()
     data class Clothing(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var gender: String, var colour: String, override val category: String = "clothing", override var status: ProductStatus): Product()
     data class Earphone(override var productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var type: String, var colour: String, override val category: String = "book", override var status: ProductStatus): Product()
@@ -23,8 +21,8 @@ sealed class Product {
 
 //abstract class AbstractClassProduct {
 //
-//    open lateinit var productId: String
-//    open lateinit var productName: String
+//    open late init var productId: String
+//    open late init var productName: String
 //    open var price: Float = 0f
 //    open var availableQuantity: Int = 0
 //    open var requiredQuantity: Int = 0

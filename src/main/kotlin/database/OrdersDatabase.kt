@@ -1,11 +1,17 @@
 package database
 
-import data.OrdersHistoryRecord
+import data.Order
 
 
 object OrdersDatabase {
 
-    val usersOrdersHistory: MutableMap<String, OrdersHistoryRecord> = mutableMapOf() // userId, ordersHistoryRecord
+    val usersOrdersHistory: MutableMap<String, ArrayList<Order>> = mutableMapOf() // ordersHistoryId, ArrayList<Order>
+
+    private var ordersHistoryId = 1
+
+    fun generateOrdersHistoryId(): String {
+        return "OH${ordersHistoryId++}"
+    }
 
 }
 

@@ -16,7 +16,7 @@ class CartPage {
 
     fun openCartPage() {
 
-        isCartEmpty = checkIfCartIsEmpty(userId, cartId)
+        isCartEmpty = checkIfCartIsEmpty(cartId)
         displayCartItems(cartId)
     }
 
@@ -24,7 +24,7 @@ class CartPage {
         if(isCartEmpty) {
             println("No items found in cart!")
         } else {
-            cartActivities.getCartItems(userId, cartId)?.let {
+            cartActivities.getCartItems(cartId)?.let {
                 it.forEachIndexed { index, item ->
                     println("${index + 1}. $item")
                 }
@@ -32,7 +32,7 @@ class CartPage {
         }
     }
 
-    private fun checkIfCartIsEmpty(userId: String, cartId: String): Boolean {
-        return cartActivities.getCartItems(userId, cartId)?.isEmpty() == true
+    private fun checkIfCartIsEmpty(cartId: String): Boolean {
+        return cartActivities.getCartItems(cartId)?.isEmpty() == true
     }
 }

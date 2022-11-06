@@ -4,11 +4,11 @@ import data.Cart
 
 object CartDatabase {
 
-    val carts: MutableMap<String, Cart> = mutableMapOf() // userId, Cart
+    val carts: MutableMap<String, Cart> = mutableMapOf() // cartId, Cart
 
     private var cartId = 1
 
-    fun getCartId(): String {
+    fun generateCartId(): String {
         return "CartId${cartId++}"
     }
 

@@ -1,8 +1,6 @@
 package database
 
-import data.Product
 import data.WishList
-import utils.ProductsData
 
 //class WishListDatabase private constructor() {
 //
@@ -23,40 +21,12 @@ import utils.ProductsData
 
 object WishListDatabase {
 
-    val usersWishList: MutableMap<String, WishList> = mutableMapOf() // userId, userWishlist
+    val usersWishList: MutableMap<String, WishList> = mutableMapOf() // wishListId, userWishlist
 
     private var wishListId = 1
     fun generateWishListId(): String {
         return "WL${wishListId++}"
     }
-//
-//    fun addProductToWishListOfUser(userId: String, product: Product) {
-//        if (usersWishList.containsKey(userId)) {
-//            usersWishList[userId]?.wishListProducts!!.add(product)
-//        }
-//    }
-//
-//    fun getWishList(userId: String): WishList? {
-//        return if (usersWishList.containsKey(userId)) {
-//            usersWishList[userId]
-//        } else {
-//            null
-//        }
-//    }
-//
-//    fun addWishList(userId: String, wishList: WishList) {
-//        usersWishList[userId] = wishList
-//    }
-//
-//    fun deleteProductFromWishList(userId: String, productId: String) {
-//        if(usersWishList.containsKey(userId)) {
-//            for (product in usersWishList[userId]!!.wishListProducts) {
-//                if(productId == product.productId) {
-//                    usersWishList[userId]?.wishListProducts?.remove(product)
-//                }
-//            }
-//        }
-//    }
 
 }
 

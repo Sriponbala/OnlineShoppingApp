@@ -4,9 +4,7 @@ import data.Product
 import database.ProductsDatabase
 import enums.ProductStatus
 
-class ProductsData(private val dbUserName: String = "root",
-                   private val dbPassword: String = "tiger") {
-
+class ProductsData {
 
     fun retrieveListOfProducts(category: String): MutableList<Product>? {
         return if(ProductsDatabase.products.containsKey(category)) {

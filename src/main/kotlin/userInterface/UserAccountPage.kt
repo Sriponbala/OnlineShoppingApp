@@ -1,18 +1,31 @@
 package userInterface
 
 import backend.UserAccountActivities
+import data.AccountInfo
 import enums.UserAccountDashboard
 import enums.UserAccountFields
 import interfaces.DashboardServices
 import utils.Helper
 
-class UserAccountPage(private val userAccountActivities: UserAccountActivities): DashboardServices {
+class UserAccountPage: DashboardServices {
 
-    fun displayUserDetails(userDetails: MutableMap<String, String>) {
+    private val userAccountActivities = UserAccountActivities()
+    private lateinit var userId: String
+    private lateinit var accountInfo: AccountInfo
+
+    private fun displayUserDetails(userDetails: MutableMap<String, String>) {
         println("---------------Your Profile--------------")
         println("""|Name   : ${userDetails["name"]} 
                    |Mobile : ${userDetails["mobile"]} 
                    |Email  : ${userDetails["email"]}""".trimMargin())
+    }
+
+    fun openUserAccountPage(userId: String) {
+        this.userId = userId
+        userAccountActivities.getUser(userId)
+        accountInfo = userAccountActivities.getAccountInfo(userId)!!
+        displayUserDetails(userAccountActivities.getUserDetails())
+        showDashboard()
     }
     override fun showDashboard() {
 
@@ -41,11 +54,11 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
         when(enumConstant) {
 
             UserAccountDashboard.VIEW_WISHLIST -> {
-                WishListPage().openWishListPage(userAccountActivities.getUserId())
+                WishListPage().openWishListPage(accountInfo.wishListId)
                 return false
             }
             UserAccountDashboard.VIEW_ORDERS_HISTORY -> {
-                OrdersPage().displayOrdersHistory(userAccountActivities.getUserId())
+                OrdersPage().displayOrdersHistory(accountInfo.ordersHistoryId)
                 return false
             }
             UserAccountDashboard.EDIT_ACCOUNT -> {

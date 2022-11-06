@@ -13,11 +13,10 @@ class WishListPage {
     private var isEmptyWishList: Boolean = true
 
 
-    fun openWishListPage(userId: String) {
+    fun openWishListPage(wishListId: String) {
 
-        val wishListId = wishListsActivities.getWishListId(userId)
         while(true) {
-            wishListProducts = wishListsActivities.getWishListProducts(userId, wishListId)
+            wishListProducts = wishListsActivities.getWishListProducts(wishListId)
             checkIfWishListIsEmpty(wishListProducts)
             displayWishListProducts(isEmptyWishList)
             if(Helper.confirm()) {
@@ -32,7 +31,7 @@ class WishListPage {
                                 println(selectedProduct)
                             }
                             WishListDashboard.DELETE_PRODUCT -> {
-                                wishListsActivities.deleteProductFromWishList(userId, selectedProduct)
+                                wishListsActivities.removeProductFromWishList(wishListId, selectedProduct)
                                 break
                             }
                             WishListDashboard.GO_BACK -> {

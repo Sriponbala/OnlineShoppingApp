@@ -1,7 +1,6 @@
 package backend
 
 import data.Order
-import data.OrdersHistoryRecord
 import utils.OrdersData
 
 class OrdersHistoryManagement {
@@ -12,8 +11,21 @@ class OrdersHistoryManagement {
         ordersData.addToOrdersHistory(userId, order)
     }
 
-    fun getOrdersHistory(userId: String): ArrayList<Order>? {
-        return ordersData.retrieveOrdersHistory(userId)
+    fun getOrdersHistory(ordersHistoryId: String): ArrayList<Order>? {
+        return ordersData.retrieveOrdersHistory(ordersHistoryId)
+    }
+
+    fun getOrdersHistoryId(userId: String): String {
+        val id: String = if(ordersData.retrieveOrdersHistoryId(userId) == null) {
+            ""
+        } else {
+            ordersData.retrieveOrdersHistoryId(userId)!!
+        }
+        return id
+    }
+
+    fun createAndGetOrdersHistoryId(userId: String): String {
+        return ordersData.createAndGetOrdersHistoryId(userId)
     }
 }
 

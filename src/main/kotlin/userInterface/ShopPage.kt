@@ -2,22 +2,31 @@ package userInterface
 
 import backend.CartActivities
 import backend.ShopActivities
+import backend.UserAccountActivities
+import backend.WishListsActivities
+import data.AccountInfo
 import data.Product
 import enums.ProductActivitiesDashboard
 import utils.Helper
 
 class ShopPage {
 
+    private val userAccountActivities = UserAccountActivities()
     private val shopActivities = ShopActivities()
+    private val wishListsActivities = WishListsActivities()
     private lateinit var category: String
     private lateinit var productsList: Map<Int, Triple<String, String, Float>>
     private lateinit var product: Product
     private var isEmptyProductsList = false
     private lateinit var userId: String
+    private lateinit var accountInfo: AccountInfo
 
-    fun setUserId(userId: String) {
+
+    fun setUserIdAndAccountInfo(userId: String) {
         this.userId = userId
+        accountInfo = userAccountActivities.getAccountInfo(userId)!!
     }
+
     fun openShopPage() {
 
         while(true) {
@@ -103,17 +112,16 @@ class ShopPage {
                     showDashboard("Product Dashboard", productActivitiesDashboard)
                     when (getUserChoice(productActivitiesDashboard)) {
                         ProductActivitiesDashboard.ADD_TO_CART -> {
-
-                            if(CartActivities().addToCart(userId, category, productId)) {
+                            if(CartActivities().addToCart(accountInfo.cartId, category, productId)) {
                                 println("Product added to cart!")
                             } else {
-                                println("Can't add to cart, product is out of stock!")
+                                println("Can't add to cart!")
                             }
                         }
 
                         ProductActivitiesDashboard.ADD_TO_WISHLIST -> {
                             if(::userId.isInitialized) {
-                                if(shopActivities.addProductToWishList(userId, category, productId)) {
+                                if(wishListsActivities.addProductToWishList(accountInfo.wishListId, category, productId)) {
                                     println("Product added to wishlist!")
                                 } else {
                                     println("Product already added to wishlist!")
@@ -124,7 +132,7 @@ class ShopPage {
                         }
 
                         ProductActivitiesDashboard.REMOVE_FROM_WISHLIST -> {
-                            if(shopActivities.removeProductFromWishList(userId, productId)) {
+                            if(wishListsActivities.removeProductFromWishList(accountInfo.wishListId, productId)) {
                                 println("Product removed from wishlist!")
                             } else {
                                 println("Product not yet added to wishlist!")

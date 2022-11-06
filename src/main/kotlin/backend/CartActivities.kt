@@ -9,26 +9,42 @@ class CartActivities {
 
     private val cartData = CartData()
     private val productsData = ProductsData()
-    fun createCart(userId: String) {
-        cartData.createCart(userId)
+
+    fun createAndGetCartId(userId: String): String {
+        return cartData.addAndGetCartId(userId)
     }
 
     fun getCartId(userId: String): String {
-        return cartData.retrieveCartId(userId)
+        val id: String = if(cartData.retrieveCartId(userId) == null) {
+            ""
+        } else {
+            cartData.retrieveCartId(userId)!!
+        }
+        return id
     }
 
-    fun getCartItems(userId: String, cartId: String): List<Item>? {
-        return cartData.retrieveCartItems(userId, cartId)
+    fun getCartItems(cartId: String): List<Item>? {
+        return cartData.retrieveCartItems(cartId)
     }
 
-    fun addToCart(userId: String, category: String, productId: String): Boolean {
+    fun addToCart(cartId: String, category: String, productId: String): Boolean {
+        val itemAddedToCart: Boolean
         val status = productsData.retrieveProductAvailabilityStatus(category, productId)
-        return if(status == ProductStatus.OUT_OF_STOCK) {
+        itemAddedToCart = if(status == ProductStatus.OUT_OF_STOCK) {
             false
         } else {
-            cartData.addToCart(userId, category, productId, status)
-            true
+            if(isItemInCart(cartId, productId)) {
+                false
+            } else {
+                cartData.addToCart(cartId, category, productId, status)
+                true
+            }
         }
+        return itemAddedToCart
+    }
+
+    private fun isItemInCart(cartId: String, productId: String): Boolean {
+        return cartData.checkIfItemIsInCart(cartId, productId)
     }
 
 

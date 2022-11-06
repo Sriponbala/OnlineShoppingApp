@@ -1,30 +1,32 @@
 package backend
 
-import data.Address
-import data.Order
-import data.OrdersHistoryRecord
-import data.User
-import interfaces.UserAccountCreationInterface
-import interfaces.UserIdInterface
-import utils.Helper
-import utils.OrdersData
+import data.*
 import utils.UserData
 
-class UserAccountActivities: UserIdInterface {
+class UserAccountActivities {
 
     private lateinit var user: User
     private lateinit var addressesList: MutableMap<String, Address>
     private val userData = UserData()
-    fun createUserAccount(userName: String, userMobile: String, userEmail: String, password: String) {
-        userData.createUserAccount(userName, userMobile, userEmail, password)
+
+    fun getUser(userId: String) {
+        this.user = userData.retrieveUser(userId)!!
     }
 
-    fun getUser(mobile: String) {
-        this.user = userData.retrieveUser(mobile)!!
+    fun getUserId(mobile: String): String {
+        return userData.retrieveUserId(mobile)
     }
 
-    override fun getUserId(): String {
-        return user.userId
+    fun createAndGetUserId(userName: String, userMobile: String, userEmail: String, password: String): String {
+        return userData.createAndGetUserId(userName, userMobile, userEmail, password)
+    }
+
+    fun createAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String) {
+        userData.createUserAccountInfo(userId, cartId, wishListId, ordersHistoryId)
+    }
+
+    fun getAccountInfo(userId: String): AccountInfo? {
+        return userData.retrieveAccountInfo(userId)
     }
 
     fun getUserDetails(): MutableMap<String, String> {

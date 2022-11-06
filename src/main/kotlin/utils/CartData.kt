@@ -9,24 +9,38 @@ import enums.ProductStatus
 
 class CartData {
 
-    fun createCart(userId: String) {
-        CartDatabase.carts[userId] = Cart(CartDatabase.getCartId(), mutableListOf(), 0f)
+    private lateinit var cartId: String
+    private fun createCart() {
+        cartId = CartDatabase.generateCartId()
+        CartDatabase.carts[cartId] = Cart()
     }
 
-    fun retrieveCartId(userId: String): String {
-        return if(CartDatabase.carts.containsKey(userId)) {
-            CartDatabase.carts[userId]?.cartId as String
-        } else {
-            ""
+    fun addAndGetCartId(userId: String): String {
+        var id = ""
+        if(UsersDatabase.users.containsKey(userId)) {
+            createCart()
+            id = cartId
         }
+        return id
     }
 
-    fun addToCart(userId: String, category: String, productId: String, status: ProductStatus): Boolean {
+    fun retrieveCartId(userId: String): String? {
+        var id: String? = null
+        if(UsersDatabase.users.containsKey(userId)) {
+            if(UsersDatabase.usersAccountInfo.containsKey(userId)) {
+                id = UsersDatabase.usersAccountInfo[userId]?.cartId
+            }
+        }
+        return id
+    }
+
+    fun addToCart(cartId: String, category: String, productId: String, status: ProductStatus): Boolean {
         var isItemAddedToCart = false
         if(ProductsDatabase.products.containsKey(category)) {
             for(product in ProductsDatabase.products[category]!!) {
                 if(product.productId == productId) {
-                    CartDatabase.carts[userId]?.cartItems?.add(Item(productId = productId, productName = product.productName, price = product.price, 1, status))
+                    CartDatabase.carts[cartId]?.cartItems?.add(Item(productId = productId, productName = product.productName, price = product.price, 1, status))
+                    //CartDatabase.carts[userId]?.cartItems?.add(Item(productId = productId, productName = product.productName, price = product.price, 1, status))
                     isItemAddedToCart = true
                     break
                 }
@@ -35,14 +49,25 @@ class CartData {
         return isItemAddedToCart
     }
 
-    fun retrieveCartItems(userId: String, cartId: String): List<Item>? {
+    fun retrieveCartItems(cartId: String): List<Item>? {
         var cartItems: List<Item>? = null
-        if(CartDatabase.carts.containsKey(userId)) {
-            if(CartDatabase.carts[userId]?.cartId == cartId) {
-                cartItems = CartDatabase.carts[userId]?.cartItems
-            }
+        if(CartDatabase.carts.containsKey(cartId)) {
+            cartItems = CartDatabase.carts[cartId]?.cartItems
         }
         return cartItems
+    }
+
+    fun checkIfItemIsInCart(cartId: String, productId: String): Boolean {
+        var isProductInWishList = false
+        if(CartDatabase.carts.containsKey(cartId)) {
+            for(item in CartDatabase.carts[cartId]?.cartItems!!) {
+                if(item.productId == productId) {
+                    isProductInWishList = true
+                    break
+                }
+            }
+        }
+        return isProductInWishList
     }
 }
 

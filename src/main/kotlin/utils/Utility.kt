@@ -2,10 +2,8 @@ package utils
 
 import database.UsersDatabase
 import data.User
-import data.UserPassword
 
-class Utility(private val dbUserName: String = "root",
-              private val dbPassword: String = "tiger") {
+class Utility {
 
     private lateinit var users: MutableMap<String, User>
     fun checkUniqueUser(mobile: String): Boolean {
@@ -41,7 +39,7 @@ class Utility(private val dbUserName: String = "root",
     }
 
     private fun getPassword(userId: String): String {
-        var password: String = ""
+        var password = ""
         UsersDatabase.usersPassword[userId]?.let {
             password = it.password
         }

@@ -1,4 +1,4 @@
 package data
 
-data class Cart(val cartId: String, val cartItems: MutableList<Item>, var subTotal: Float = 0f)
+data class Cart(val cartItems: MutableList<Item> = mutableListOf(), var subTotal: Float = 0f)
 

@@ -7,8 +7,7 @@ class ShopActivities {
 
     private val productsData = ProductsData()
     private var productsList: List<Product>? = null
-    private val wishListsActivities = WishListsActivities()
-    private val cartActivities = CartActivities()
+
 
     fun getCategories(): List<String> {
         return productsData.retrieveListOfCategories()
@@ -32,24 +31,6 @@ class ShopActivities {
             }
         }
         return selectedProduct
-    }
-
-    fun addProductToWishList(userId: String, category: String, productId: String): Boolean {
-        return if(!wishListsActivities.isProductInWishList(userId, productId)) {
-            wishListsActivities.addAProductToWishList(userId, category, productId)
-            true
-        } else {
-            false
-        }
-    }
-
-    fun removeProductFromWishList(userId: String, productId: String): Boolean {
-        return if(wishListsActivities.isProductInWishList(userId, productId)) {
-            wishListsActivities.deleteProductFromWishList(userId, productId)
-            true
-        } else {
-            false
-        }
     }
 
 }

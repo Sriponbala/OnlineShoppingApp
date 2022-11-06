@@ -75,7 +75,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
         if(addresses.isEmpty()) {
             return true
         } else {
-            val addressId = selectAnAddress()!!
+            val addressId = selectAnAddress()
             val addressManagementOptions = AddressManagementOptions.values()
             while(true) {
                 showDashboard("Address management options", addressManagementOptions)

@@ -2,12 +2,11 @@ package utils
 
 import data.Order
 import database.OrdersDatabase
-import data.OrdersHistoryRecord
+import database.UsersDatabase
 
-class OrdersData(private val dbUserName: String = "root",
-                 private val dbPassword: String = "tiger") {
+class OrdersData {
 
-//    private lateinit var ordersDatabase: OrdersDatabase
+//    private late init var ordersDatabase: OrdersDatabase
 //
 //    private fun getConnection() {
 //        ordersDatabase = OrdersDatabase.getInstance(dbUserName, dbPassword)!!
@@ -18,22 +17,47 @@ class OrdersData(private val dbUserName: String = "root",
 //        createOrdersHistoryRecord(OrdersHistoryRecord(this.userId))
 //    }
 
-    fun retrieveOrdersHistory(userId: String): ArrayList<Order>? {
-        val ordersHistory: ArrayList<Order>? = if(OrdersDatabase.usersOrdersHistory.containsKey(userId)) {
-            OrdersDatabase.usersOrdersHistory[userId]?.ordersHistory
+    private lateinit var ordersHistoryId: String
+
+    fun retrieveOrdersHistory(ordersHistoryId: String): ArrayList<Order>? {
+        val ordersHistory: ArrayList<Order>? = if(OrdersDatabase.usersOrdersHistory.containsKey(ordersHistoryId)) {
+            OrdersDatabase.usersOrdersHistory[ordersHistoryId]
         } else {
             null
         }
         return ordersHistory
     }
 
-    fun addToOrdersHistory(userId: String, order: Order) {
-        if(OrdersDatabase.usersOrdersHistory.containsKey(userId)) {
-            OrdersDatabase.usersOrdersHistory[userId]?.ordersHistory?.add(order)
+    fun addToOrdersHistory(ordersHistoryId: String, order: Order) {
+        if(OrdersDatabase.usersOrdersHistory.containsKey(ordersHistoryId)) {
+            OrdersDatabase.usersOrdersHistory[ordersHistoryId]?.add(order)
         }
     }
 
-    private fun createOrdersHistoryRecord(ordersHistoryRecord: OrdersHistoryRecord) {
-        OrdersDatabase.usersOrdersHistory[ordersHistoryRecord.userId] = ordersHistoryRecord
+    private fun createOrdersHistory() {
+        ordersHistoryId = OrdersDatabase.generateOrdersHistoryId()
+        OrdersDatabase.usersOrdersHistory[ordersHistoryId] = arrayListOf() // ArrayList<Order>
     }
+
+
+    fun retrieveOrdersHistoryId(userId: String): String? {
+        var id: String? = null
+        if(UsersDatabase.users.containsKey(userId)) {
+            if(UsersDatabase.usersAccountInfo.containsKey(userId)) {
+                id = UsersDatabase.usersAccountInfo[userId]?.ordersHistoryId
+            }
+        }
+        return id
+    }
+
+    fun createAndGetOrdersHistoryId(userId: String): String {
+        var id = ""
+        if(UsersDatabase.users.containsKey(userId)) {
+            createOrdersHistory()
+            id = ordersHistoryId
+        }
+        return id
+    }
+
+
 }

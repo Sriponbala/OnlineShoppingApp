@@ -5,13 +5,11 @@ import data.WishList
 import database.ProductsDatabase
 import database.UsersDatabase
 import database.WishListDatabase
-import userInterface.WishListPage
 
-class WishListsData(private val dbUserName: String = "root",
-                    private val dbPassword: String = "tiger") {
+class WishListsData {
 
-//    private lateinit var wishListDatabase: WishListDatabase
-//    private lateinit var productsDatabase: ProductsDatabase
+//    private late init var wishListDatabase: WishListDatabase
+//    private late init var productsDatabase: ProductsDatabase
 //
 //    private fun getConnection() {
 //        wishListDatabase = WishListDatabase.getInstance(dbUserName, dbPassword)!!
@@ -23,41 +21,30 @@ class WishListsData(private val dbUserName: String = "root",
 //        getConnection()
 //    }
 
-    fun retrieveWishListId(userId: String): String {
-        return if(WishListDatabase.usersWishList.containsKey(userId)) {
-            WishListDatabase.usersWishList[userId]?.wishListId as String
-        } else ""
+    private lateinit var wishListId: String
+
+    fun retrieveWishListId(userId: String): String? {
+        var id: String? = null
+        if(UsersDatabase.users.containsKey(userId)) {
+            if(UsersDatabase.usersAccountInfo.containsKey(userId)) {
+                id = UsersDatabase.usersAccountInfo[userId]?.wishListId
+            }
+        }
+       return id
     }
 
-    fun retrieveWishListProducts(userId: String, wishListId: String): ArrayList<Product>? {
-        return if(UsersDatabase.users.containsKey(userId) && WishListDatabase.usersWishList[userId]?.wishListId == wishListId) {
-            WishListDatabase.usersWishList[userId]?.wishListProducts
+    fun retrieveWishListProducts(wishListId: String): ArrayList<Product>? {
+        return if(WishListDatabase.usersWishList.containsKey(wishListId)) {
+            WishListDatabase.usersWishList[wishListId]?.wishListProducts
         } else null
     }
 
-    fun addAProductToWishList(userId: String, category: String, productId: String) {
+    fun addAProductToWishList(wishListId: String, category: String, productId: String) {
         if(ProductsDatabase.products.containsKey(category)) {
             for(product in ProductsDatabase.products[category]!!) {
                 if(product.productId == productId) {
-                    if(UsersDatabase.users.containsKey(userId)) {
-                        val wishListId = retrieveWishListId(userId)
-                        if(WishListDatabase.usersWishList[userId]?.wishListId == wishListId) {
-                            WishListDatabase.usersWishList[userId]?.wishListProducts?.add(product)
-                            break
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun deleteProductFromWishList(userId: String, productId: String) {
-        if(UsersDatabase.users.containsKey(userId)) {
-            val wishListId = retrieveWishListId(userId)
-            if(WishListDatabase.usersWishList[userId]?.wishListId == wishListId) {
-                for(product in WishListDatabase.usersWishList[userId]?.wishListProducts!!) {
-                    if(product.productId == productId) {
-                        WishListDatabase.usersWishList[userId]?.wishListProducts?.remove(product)
+                    if(WishListDatabase.usersWishList.containsKey(wishListId)) {
+                        WishListDatabase.usersWishList[wishListId]?.wishListProducts?.add(product)
                         break
                     }
                 }
@@ -65,16 +52,35 @@ class WishListsData(private val dbUserName: String = "root",
         }
     }
 
-    fun addWishList(userID: String) {
-        if(UsersDatabase.users.containsKey(userID)) {
-            WishListDatabase.usersWishList[userID] = WishList(wishListId = WishListDatabase.generateWishListId())
+    fun deleteProductFromWishList(wishListId: String, productId: String) {
+        if(WishListDatabase.usersWishList.containsKey(wishListId)) {
+            for(product in WishListDatabase.usersWishList[wishListId]?.wishListProducts!!) {
+                if(product.productId == productId) {
+                    WishListDatabase.usersWishList[wishListId]?.wishListProducts?.remove(product)
+                    break
+                }
+            }
         }
     }
 
-    fun checkIfProductIsInUserWishList(userId: String, productId: String): Boolean {
+    fun addAndGetWishListId(userID: String): String {
+        var id = ""
+        if(UsersDatabase.users.containsKey(userID)) {
+            createWishList()
+            id = wishListId
+        }
+        return id
+    }
+
+    private fun createWishList() {
+        wishListId = WishListDatabase.generateWishListId()
+        WishListDatabase.usersWishList[wishListId] = WishList(wishListId = wishListId)
+    }
+
+    fun checkIfProductIsInUserWishList(wishListId: String, productId: String): Boolean {
         var isProductInWishList = false
-        if(WishListDatabase.usersWishList.containsKey(userId)) {
-            for(product in WishListDatabase.usersWishList[userId]?.wishListProducts!!) {
+        if(WishListDatabase.usersWishList.containsKey(wishListId)) {
+            for(product in WishListDatabase.usersWishList[wishListId]?.wishListProducts!!) {
                 if(product.productId == productId) {
                     isProductInWishList = true
                     break
