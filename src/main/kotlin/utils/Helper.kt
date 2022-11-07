@@ -6,12 +6,6 @@ import kotlin.random.Random
 
 object Helper {
 
-    private var orderId = 1
-
-    fun generateOrderId(): String {
-        return "Order${orderId++}"
-    }
-
     fun confirm(): Boolean {
         while(true) {
             println("Confirm: ")

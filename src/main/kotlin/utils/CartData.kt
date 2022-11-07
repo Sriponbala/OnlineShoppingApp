@@ -2,10 +2,9 @@ package utils
 
 import data.Cart
 import data.Item
+import data.Product
 import database.CartDatabase
-import database.ProductsDatabase
 import database.UsersDatabase
-import enums.ProductStatus
 
 class CartData {
 
@@ -15,59 +14,41 @@ class CartData {
         CartDatabase.carts[cartId] = Cart()
     }
 
-    fun addAndGetCartId(userId: String): String {
-        var id = ""
-        if(UsersDatabase.users.containsKey(userId)) {
-            createCart()
-            id = cartId
-        }
-        return id
+    fun createAndGetCartId(): String {
+        createCart()
+        return cartId
     }
 
-    fun retrieveCartId(userId: String): String? {
-        var id: String? = null
-        if(UsersDatabase.users.containsKey(userId)) {
-            if(UsersDatabase.usersAccountInfo.containsKey(userId)) {
-                id = UsersDatabase.usersAccountInfo[userId]?.cartId
+    fun retrieveCartId(userId: String): String {
+        return UsersDatabase.usersAccountInfo[userId]!!.cartId
+    }
+
+    fun retrieveCartItems(cartId: String): List<Item> {
+        return CartDatabase.carts[cartId]!!.cartItems
+    }
+
+    fun addToCart(cartId: String, product: Product) {
+        CartDatabase.carts[cartId]!!.cartItems.add(Item(productId = product.productId, productName = product.productName, productPrice = product.price, totalPrice = product.price, category = product.category,1, product.status))
+    }
+
+    fun removeFromCart(cartId: String, item: Item) {
+        CartDatabase.carts[cartId]!!.cartItems.remove(item)
+    }
+
+    fun clearCart(cartId: String, cartItems: MutableList<Item>) {
+        CartDatabase.carts[cartId]!!.cartItems.removeAll(cartItems)
+    }
+
+    fun retrieveCartItem(cartId: String, productId: String): Item {
+        lateinit var cartItem: Item
+        for(item in CartDatabase.carts[cartId]!!.cartItems) {
+            if(item.productId == productId) {
+                cartItem = item
+                break
             }
         }
-        return id
+        return cartItem
     }
 
-    fun addToCart(cartId: String, category: String, productId: String, status: ProductStatus): Boolean {
-        var isItemAddedToCart = false
-        if(ProductsDatabase.products.containsKey(category)) {
-            for(product in ProductsDatabase.products[category]!!) {
-                if(product.productId == productId) {
-                    CartDatabase.carts[cartId]?.cartItems?.add(Item(productId = productId, productName = product.productName, price = product.price, 1, status))
-                    //CartDatabase.carts[userId]?.cartItems?.add(Item(productId = productId, productName = product.productName, price = product.price, 1, status))
-                    isItemAddedToCart = true
-                    break
-                }
-            }
-        }
-        return isItemAddedToCart
-    }
-
-    fun retrieveCartItems(cartId: String): List<Item>? {
-        var cartItems: List<Item>? = null
-        if(CartDatabase.carts.containsKey(cartId)) {
-            cartItems = CartDatabase.carts[cartId]?.cartItems
-        }
-        return cartItems
-    }
-
-    fun checkIfItemIsInCart(cartId: String, productId: String): Boolean {
-        var isProductInWishList = false
-        if(CartDatabase.carts.containsKey(cartId)) {
-            for(item in CartDatabase.carts[cartId]?.cartItems!!) {
-                if(item.productId == productId) {
-                    isProductInWishList = true
-                    break
-                }
-            }
-        }
-        return isProductInWishList
-    }
 }
 

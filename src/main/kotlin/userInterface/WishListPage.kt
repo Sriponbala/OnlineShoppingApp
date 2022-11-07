@@ -9,7 +9,7 @@ import utils.Helper
 class WishListPage {
 
     private val wishListsActivities = WishListsActivities()
-    private var wishListProducts : ArrayList<Product>? = null
+    private lateinit var wishListProducts : ArrayList<Product>
     private var isEmptyWishList: Boolean = true
 
 
@@ -55,10 +55,10 @@ class WishListPage {
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                if(Helper.checkValidRecord(option,wishListProducts?.size!!)) {
-                   selectedProduct = wishListProducts?.let{
+                if(Helper.checkValidRecord(option,wishListProducts.size)) {
+                   selectedProduct = wishListProducts.let{
                        it[option - 1].productId
-                   } ?: ""
+                   }
                 }
                 break
             } catch(exception: Exception) {
@@ -75,7 +75,7 @@ class WishListPage {
         if(isEmptyWishList) {
             println("        No items found        ")
         } else {
-            wishListProducts?.forEachIndexed { index, product ->
+            wishListProducts.forEachIndexed { index, product ->
                 println("${index + 1}. ${product.productName} - ${product.price}")
             }
         }

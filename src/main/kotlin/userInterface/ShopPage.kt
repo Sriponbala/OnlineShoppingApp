@@ -7,6 +7,7 @@ import backend.WishListsActivities
 import data.AccountInfo
 import data.Product
 import enums.ProductActivitiesDashboard
+import enums.ProductStatus
 import utils.Helper
 
 class ShopPage {
@@ -140,7 +141,13 @@ class ShopPage {
                         }
 
                         ProductActivitiesDashboard.BUY_NOW -> {
-
+                            if(product.status == ProductStatus.IN_STOCK) {
+                                val item = shopActivities.createItemToBuy(product.productId, product.productName, product.price, product.price, product.category, 1, product.status)
+                                val buyNowPage = BuyNowPage(userId, item)
+                                buyNowPage.openBuyNowPage()
+                            } else {
+                                println("Product out of stock!")
+                            }
                         }
 
                         ProductActivitiesDashboard.GO_BACK -> {
@@ -205,6 +212,8 @@ class ShopPage {
                           |Storage            : ${earphone.colour}
                 """.trimMargin())
             }
+
+            else -> {}
         }
     }
 

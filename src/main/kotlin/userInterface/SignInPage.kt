@@ -51,7 +51,7 @@ class SignInPage: OnboardingServices {
     }
 
     override fun verifyAccount(): Boolean {
-        return Utility().validateLoginCredentials(mobile, password)
+            return Utility().validateLoginCredentials(mobile, password)
     }
 
 }

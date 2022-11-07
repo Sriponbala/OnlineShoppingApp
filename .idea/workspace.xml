@@ -5,33 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/data/AccountInfo.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/BuyNowPageDashboard.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/enums/ProductQuantityManagement.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/CartActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/CartActivities.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/OrdersHistoryManagement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/OrdersHistoryManagement.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/ShopActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/ShopActivities.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/UserAccountActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/UserAccountActivities.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/WishListsActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/WishListsActivities.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Cart.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/Cart.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/OrdersHistoryRecord.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Product.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/Product.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/CartDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/CartDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/data/Item.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/data/Item.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/OrdersDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/OrdersDatabase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/UsersDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/UsersDatabase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/WishListDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/WishListDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/ProductsDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/ProductsDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/enums/CartActivitiesDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/enums/CartActivitiesDashboard.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/AddressPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/AddressPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/BuyNowPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/BuyNowPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/CartPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/CartPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/HomePage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/HomePage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/PaymentPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/PaymentPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignInPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignInPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignUpPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/SignUpPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/UserAccountPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/UserAccountPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/WishListPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/WishListPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/CartData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/CartData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/Helper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Helper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/OrdersData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/OrdersData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/ProductsData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/ProductsData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/UserData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/UserData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/Utility.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/Utility.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/WishListsData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/WishListsData.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,9 +51,9 @@
         <option value="Class" />
         <option value="Kotlin Interface" />
         <option value="Kotlin Object" />
+        <option value="Kotlin Data Class" />
         <option value="Kotlin Class" />
         <option value="Kotlin Enum" />
-        <option value="Kotlin Data Class" />
       </list>
     </option>
   </component>
@@ -61,6 +62,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2GsvlK0vTJPbfo19ych5I64XGSL" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -80,6 +84,13 @@
     </key>
   </component>
   <component name="RunManager" selected="Kotlin.MainKt">
+    <configuration name="AddressPageKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="userInterface.AddressPageKt" />
+      <module name="OnlineShoppingApp.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MainKt" />
       <module name="OnlineShoppingApp.main" />
@@ -87,22 +98,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OrdersHistoryManagementKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="backend.OrdersHistoryManagementKt" />
+    <configuration name="ProductsDataKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="utils.ProductsDataKt" />
       <module name="OnlineShoppingApp.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OrdersPageKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="userInterface.OrdersPageKt" />
-      <module name="OnlineShoppingApp.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ProductsDatabaseKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="data.ProductsDatabaseKt" />
+    <configuration name="UtilityKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="utils.UtilityKt" />
       <module name="OnlineShoppingApp.main" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -118,10 +122,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Kotlin.MainKt" />
+        <item itemvalue="Kotlin.ProductsDataKt" />
+        <item itemvalue="Kotlin.UtilityKt" />
+        <item itemvalue="Kotlin.AddressPageKt" />
         <item itemvalue="Kotlin.WishListDatabaseKt" />
-        <item itemvalue="Kotlin.OrdersPageKt" />
-        <item itemvalue="Kotlin.OrdersHistoryManagementKt" />
-        <item itemvalue="Kotlin.ProductsDatabaseKt" />
       </list>
     </recent_temporary>
   </component>
@@ -197,7 +201,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667679431936</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Commit!">
+      <created>1667709673694</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1667709673695</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -214,5 +225,15 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commit!" />
     <option name="LAST_COMMIT_MESSAGE" value="Commit!" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NoSuchMethodError" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

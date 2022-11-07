@@ -1,14 +1,20 @@
 package backend
 
 import data.Product
+import utils.ProductsData
+import utils.Utility
 import utils.WishListsData
 
 class WishListsActivities {
 
     private val wishListsData = WishListsData()
+    private val productsData = ProductsData()
+    private val utility = Utility()
 
     fun createAndGetWishListId(userId: String): String {
-        return wishListsData.addAndGetWishListId(userId)
+        return if(utility.checkIfUserExists(userId)) {
+            wishListsData.addAndGetWishListId()
+        } else ""
     }
 
     fun getWishListId(userId: String): String {
@@ -20,30 +26,35 @@ class WishListsActivities {
         return id
     }
 
-    fun getWishListProducts(wishListId: String): ArrayList<Product>? {
-        return wishListsData.retrieveWishListProducts(wishListId)
+    fun getWishListProducts(wishListId: String): ArrayList<Product> {
+        return if(utility.checkIfWishListExists(wishListId)) {
+            wishListsData.retrieveWishListProducts(wishListId)
+        } else arrayListOf()
     }
 
     fun addProductToWishList(wishListId: String, category: String, productId: String): Boolean {
-        return if(!isProductInWishList(wishListId, productId)) {
-            wishListsData.addAProductToWishList(wishListId, category, productId)
-            true
-        } else {
-            false
-        }
+        return if(utility.checkIfCategoryExistsInProductDB(category)) {
+            if(utility.checkIfProductExists(productId, category)) {
+                if(utility.checkIfWishListExists(wishListId)) {
+                    if(!utility.checkIfProductIsInUserWishList(wishListId, productId)) {
+                        val product = productsData.retrieveProduct(productId, category)
+                        wishListsData.addAProductToWishList(wishListId, product)
+                        true
+                    } else false
+                } else false
+            } else false
+        } else false
     }
 
     fun removeProductFromWishList(wishListId: String, productId: String): Boolean {
-        return if(isProductInWishList(wishListId, productId)) {
-            wishListsData.deleteProductFromWishList(wishListId, productId)
-            true
-        } else {
-            false
-        }
+        return if(utility.checkIfWishListExists(wishListId)) {
+            if(utility.checkIfProductIsInUserWishList(wishListId, productId)) {
+                val product = wishListsData.retrieveProductFromWishList(wishListId, productId)
+                wishListsData.deleteProductFromWishList(wishListId, product)
+                true
+            } else false
+        } else false
     }
 
-    private fun isProductInWishList(wishListId: String, productId: String): Boolean {
-        return wishListsData.checkIfProductIsInUserWishList(wishListId, productId)
-    }
 }
 

@@ -13,6 +13,12 @@ object OrdersDatabase {
         return "OH${ordersHistoryId++}"
     }
 
+    private var orderId = 1
+
+    fun generateOrderId(): String {
+        return "Order${orderId++}"
+    }
+
 }
 
 

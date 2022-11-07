@@ -1,14 +1,16 @@
 package userInterface
 
 import backend.UserAccountActivities
+import data.Address
 import enums.AddressFields
 import enums.AddressManagementOptions
 import enums.AddressSelectionOptions
 import utils.Helper
 
-class AddressPage(private val userAccountActivities: UserAccountActivities) {
+class AddressPage() {
 
-    private val addresses = userAccountActivities.getUserAddresses()
+    private lateinit var userAccountActivities: UserAccountActivities
+    private lateinit var addresses: MutableMap<String, Address>
     private var doorNo = ""
     private var flatName = ""
     private var street = ""
@@ -17,6 +19,28 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
     private var state = ""
     private var pincode = ""
     private val addressesMap = mutableMapOf<Int, String>()
+    private var selectAddress = false
+    private var shippingAddress: String = ""
+
+    constructor(userAccountActivities: UserAccountActivities): this() {
+        this.userAccountActivities = userAccountActivities
+        this.addresses = userAccountActivities.getUserAddresses()
+    }
+    constructor(userId: String) : this() {
+        this.userAccountActivities = UserAccountActivities()
+        userAccountActivities.getUser(userId)
+        this.addresses = userAccountActivities.getUserAddresses()
+    }
+    fun setSelectAddress(input: Boolean) {
+        this.selectAddress = input
+    }
+
+    fun selectAddressForDelivery(): String {
+        do{
+            openAddressPage()
+        } while(shippingAddress == "" && selectAddress)
+        return shippingAddress
+    }
 
     fun openAddressPage() {
 
@@ -34,12 +58,21 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
                 AddressSelectionOptions.SAVED_ADDRESS -> {
                     while(true) {
                         displayAllAddresses()
+                        if(selectAddress) {
+                            if(addresses.isEmpty()) {
+                                break
+                            } else{
+                                shippingAddress = userAccountActivities.getShippingAddress(selectAnAddress())
+                                break
+                            }
+                        }
                         if(manageAddress()) {
                             break
                         }
                     }
                 }
                 AddressSelectionOptions.GO_BACK -> {
+                    selectAddress = false
                     break
                 }
             }
@@ -65,7 +98,6 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
     }
 
     private fun addNewAddress() {
-
         userAccountActivities.addNewAddress(doorNo, flatName, street, area, city, state, pincode)
     }
 
@@ -88,7 +120,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
                         deleteAddress(addressId)
                         true
                     }
-                    AddressManagementOptions.BACK -> true
+                    AddressManagementOptions.BACK ->  true
                 }
             }
         }
@@ -243,3 +275,5 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
     }
 
 }
+
+

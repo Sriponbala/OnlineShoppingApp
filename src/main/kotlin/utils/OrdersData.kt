@@ -1,5 +1,6 @@
 package utils
 
+import data.Item
 import data.Order
 import database.OrdersDatabase
 import database.UsersDatabase
@@ -19,18 +20,13 @@ class OrdersData {
 
     private lateinit var ordersHistoryId: String
 
-    fun retrieveOrdersHistory(ordersHistoryId: String): ArrayList<Order>? {
-        val ordersHistory: ArrayList<Order>? = if(OrdersDatabase.usersOrdersHistory.containsKey(ordersHistoryId)) {
-            OrdersDatabase.usersOrdersHistory[ordersHistoryId]
-        } else {
-            null
-        }
-        return ordersHistory
+    fun retrieveOrdersHistory(ordersHistoryId: String): ArrayList<Order> {
+        return OrdersDatabase.usersOrdersHistory[ordersHistoryId]!!
     }
 
-    fun addToOrdersHistory(ordersHistoryId: String, order: Order) {
-        if(OrdersDatabase.usersOrdersHistory.containsKey(ordersHistoryId)) {
-            OrdersDatabase.usersOrdersHistory[ordersHistoryId]?.add(order)
+    fun addToOrdersHistory(ordersHistoryId: String, orderedItems: MutableList<Item>, orderedDate: String, deliveryDate: String, shippingAddress: String) {
+        for(item in orderedItems) {
+            retrieveOrdersHistory(ordersHistoryId).add(Order(OrdersDatabase.generateOrderId(), orderedDate, deliveryDate, shippingAddress, item))
         }
     }
 
@@ -50,13 +46,9 @@ class OrdersData {
         return id
     }
 
-    fun createAndGetOrdersHistoryId(userId: String): String {
-        var id = ""
-        if(UsersDatabase.users.containsKey(userId)) {
-            createOrdersHistory()
-            id = ordersHistoryId
-        }
-        return id
+    fun createAndGetOrdersHistoryId(): String {
+        createOrdersHistory()
+        return ordersHistoryId
     }
 
 

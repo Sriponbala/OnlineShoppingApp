@@ -1,16 +1,23 @@
 package backend
 
-import data.*
+
+import data.AccountInfo
+import data.Address
+import data.User
 import utils.UserData
+import utils.Utility
 
 class UserAccountActivities {
 
     private lateinit var user: User
     private lateinit var addressesList: MutableMap<String, Address>
     private val userData = UserData()
+    private val utility = Utility()
 
     fun getUser(userId: String) {
-        this.user = userData.retrieveUser(userId)!!
+        if(utility.checkIfUserExists(userId)) {
+            this.user = userData.retrieveUser(userId)
+        }
     }
 
     fun getUserId(mobile: String): String {
@@ -22,20 +29,37 @@ class UserAccountActivities {
     }
 
     fun createAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String) {
-        userData.createUserAccountInfo(userId, cartId, wishListId, ordersHistoryId)
+        if(utility.checkIfUserExists(userId)) {
+            userData.createUserAccountInfo(userId, cartId, wishListId, ordersHistoryId)
+        }
     }
 
     fun getAccountInfo(userId: String): AccountInfo? {
-        return userData.retrieveAccountInfo(userId)
+        val accountInfo: AccountInfo? = if(utility.checkIfUserExists(userId)) {
+            if(utility.checkIfUserAccountInfoExists(userId)) {
+                userData.retrieveAccountInfo(userId)
+            } else null
+        } else null
+        return accountInfo
     }
 
     fun getUserDetails(): MutableMap<String, String> {
-       return mutableMapOf("name" to user.userName, "mobile" to user.userMobile, "email" to user.userEmail)
+        return if(::user.isInitialized) {
+            mutableMapOf("name" to user.userName, "mobile" to user.userMobile, "email" to user.userEmail)
+        } else mutableMapOf()
     }
 
     fun getUserAddresses(): MutableMap<String, Address> {
-        addressesList = user.addresses
+        if(::user.isInitialized) {
+            addressesList = user.addresses
+        }
         return addressesList
+    }
+
+    fun getShippingAddress(addressId: String): String {
+        return if(addressesList.containsKey(addressId)) {
+            addressesList[addressId].toString()
+        } else ""
     }
 
     fun updateName(name: String) {

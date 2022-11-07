@@ -2,7 +2,6 @@ package database
 
 import data.Product
 import enums.ProductStatus
-import utils.Helper
 
 //class ProductsDatabase private constructor() {
 //
@@ -42,7 +41,7 @@ object ProductsDatabase {
 
     private val earphones = mutableListOf<Product>()
     init {
-        products = mutableMapOf("books" to books, "mobiles" to mobiles, "clothings" to clothings, "earphones" to earphones)
+        products = mutableMapOf("book" to books, "mobile" to mobiles, "clothing" to clothings, "earphone" to earphones)
     }
 
     private var productId = 1

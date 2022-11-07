@@ -1,13 +1,14 @@
 package backend
 
+import data.Item
 import data.Product
+import enums.ProductStatus
 import utils.ProductsData
 
 class ShopActivities {
 
     private val productsData = ProductsData()
     private var productsList: List<Product>? = null
-
 
     fun getCategories(): List<String> {
         return productsData.retrieveListOfCategories()
@@ -31,6 +32,10 @@ class ShopActivities {
             }
         }
         return selectedProduct
+    }
+
+    fun createItemToBuy(productId: String, productName: String, productPrice: Float, totalPrice: Float, category: String, quantity: Int, status: ProductStatus): Item {
+        return Item(productId, productName, productPrice, totalPrice, category, quantity, status)
     }
 
 }

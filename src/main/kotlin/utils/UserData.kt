@@ -26,16 +26,11 @@ class UserData {
     }
 
     fun createUserAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String) {
-        if(UsersDatabase.users.containsKey(userId)) {
-            UsersDatabase.usersAccountInfo[userId] = AccountInfo(cartId, wishListId, ordersHistoryId)
-        }
+        UsersDatabase.usersAccountInfo[userId] = AccountInfo(cartId, wishListId, ordersHistoryId)
     }
 
-    fun retrieveAccountInfo(userId: String): AccountInfo? {
-        val accountInfo: AccountInfo? = if(UsersDatabase.usersAccountInfo.containsKey(userId)) {
-            UsersDatabase.usersAccountInfo[userId]
-        } else null
-        return accountInfo
+    fun retrieveAccountInfo(userId: String): AccountInfo {
+        return UsersDatabase.usersAccountInfo[userId]!!
     }
 
     fun retrieveUserId(mobile: String): String {
@@ -50,12 +45,8 @@ class UserData {
     }
 
 
-    fun retrieveUser(userId: String): User? {
-        var userData: User? = null
-        if(UsersDatabase.users.containsKey(userId)) {
-            userData = UsersDatabase.users[userId]
-        }
-        return userData
+    fun retrieveUser(userId: String): User {
+        return UsersDatabase.users[userId]!!
     }
 
 
