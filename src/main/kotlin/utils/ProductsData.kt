@@ -18,31 +18,20 @@ class ProductsData {
         }
     }
 
-    fun updateAvailableQuantityOfProduct(productId: String) {
-
-    }
-
-    fun updateRequiredQuantityOfProduct() {
-
+    fun updateAvailableQuantityOfProduct(productId: String, category: String, quantity: Int) {
+        retrieveProduct(productId, category).availableQuantity -= quantity
     }
 
     fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
-        var status: ProductStatus = ProductStatus.OUT_OF_STOCK
-        println("$category $productId $status")
-        try{
-            for(product in ProductsDatabase.products[category]!!) {
-                println("$product")
-                if(product.productId == productId) {
-                    if(product.availableQuantity > 0) {
-                        status = ProductStatus.IN_STOCK
-                        break
-                    }
-                }
-            }
-        } catch(e: Exception) {
-            println("availability: $e")
-        }
-        return status
+        return retrieveProduct(productId, category).status
+    }
+
+    fun retrieveAvailableQuantityOfProduct(productId: String, category: String): Int {
+        return retrieveProduct(productId, category).availableQuantity
+    }
+
+    fun updateStatusOfProduct(productId: String, category: String, status: ProductStatus) {
+        retrieveProduct(productId, category).status = status
     }
 
     fun retrieveProduct(productId: String, category: String): Product {

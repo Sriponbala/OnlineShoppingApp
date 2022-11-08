@@ -1,6 +1,8 @@
 package backend
 
 import data.Item
+import database.CartDatabase
+import enums.ProductStatus
 import utils.CartData
 import utils.ProductsData
 import utils.Utility
@@ -8,8 +10,8 @@ import utils.Utility
 class CartActivities {
 
     private val cartData = CartData()
-    private val productsData = ProductsData()
     private val utility = Utility()
+    private val shopActivities = ShopActivities()
 
     fun createAndGetCartId(userId: String): String {
         var cartId = ""
@@ -37,11 +39,13 @@ class CartActivities {
     fun addToCart(cartId: String, category: String, productId: String): Boolean {
         val itemAddedToCart: Boolean = if(utility.checkIfCategoryExistsInProductDB(category)) {
             if(utility.checkIfProductExists(productId, category)) {
-                if(utility.checkIfCartExists(cartId)) {
-                    if(!utility.checkIfItemIsInCart(cartId, productId)) {
-                        val product = productsData.retrieveProduct(productId, category)
-                        cartData.addToCart(cartId, product)
-                        true
+                if(shopActivities.retrieveProductAvailabilityStatus(category, productId) == ProductStatus.IN_STOCK) {
+                    if(utility.checkIfCartExists(cartId)) {
+                        if(!utility.checkIfItemIsInCart(cartId, productId)) {
+                            val product = shopActivities.getProductFromDb(productId, category)
+                            cartData.addToCart(cartId, product)
+                            true
+                        } else false
                     } else false
                 } else false
             } else false
@@ -62,7 +66,7 @@ class CartActivities {
         return itemRemovedFromCart
     }
 
-    fun clearCartItems(cartId: String, cartItems: MutableList<Item>, remove: Boolean): Boolean {
+    fun clearCartItems(cartId: String, cartItems: ArrayList<Item>, remove: Boolean): Boolean {
         val areItemsRemoved = if(utility.checkIfCartExists(cartId)) {
             if(remove) {
                 if(cartItems.isNotEmpty()) {
@@ -72,6 +76,37 @@ class CartActivities {
             } else false
         } else false
         return areItemsRemoved
+    }
+
+    fun calculateAndUpdateSubtotal(cartId: String, cartItems: List<Item>): Float {
+        var subTotal = 0f
+        if(utility.checkIfCartExists(cartId)) {
+            for(item in cartItems) {
+                if(item.status == ProductStatus.IN_STOCK) {
+                    subTotal += (item.totalPrice)
+                }
+            }
+            cartData.updateSubtotal(cartId, subTotal)
+        }
+        return subTotal
+    }
+
+    fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
+        return shopActivities.getAvailableQuantityOfProduct(productId, category)
+    }
+
+    fun changeQuantityAndUpdateTotalPriceOfItem(cartId: String, item: Item, quantity: Int): Boolean {
+        return if(utility.checkIfCartExists(cartId)) {
+            if(utility.checkIfItemIsInCart(cartId, item.productId)) {
+                cartData.changeItemQuantityAndPrice(cartId ,item, quantity)
+                calculateAndUpdateSubtotal(cartId, cartData.retrieveCartItems(cartId))
+                true
+            } else false
+        } else false
+    }
+
+    fun updateAvailabilityStatusOfCartItems() {
+       cartData.updateAvailableQuantityAndStatusOfCartItems()
     }
 
 }

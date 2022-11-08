@@ -5,10 +5,12 @@ import data.Item
 import data.Product
 import database.CartDatabase
 import database.UsersDatabase
+import enums.ProductStatus
 
 class CartData {
 
     private lateinit var cartId: String
+    private val productsData by lazy { ProductsData() }
     private fun createCart() {
         cartId = CartDatabase.generateCartId()
         CartDatabase.carts[cartId] = Cart()
@@ -48,6 +50,35 @@ class CartData {
             }
         }
         return cartItem
+    }
+
+    fun changeItemQuantityAndPrice(cartId: String, item: Item, quantity: Int) {
+        for(cartItem in CartDatabase.carts[cartId]!!.cartItems) {
+            if(cartItem == item) {
+                cartItem.quantity = quantity
+                cartItem.totalPrice = (quantity * cartItem.productPrice)
+                break
+            }
+        }
+    }
+
+    fun updateSubtotal(cartId: String, subTotal: Float) {
+        CartDatabase.carts[cartId]!!.subTotal = subTotal
+    }
+
+    fun updateAvailableQuantityAndStatusOfCartItems() {
+        for((_, cart) in CartDatabase.carts) {
+            for(cartItem in cart.cartItems) {
+                val availableQuantity = productsData.retrieveAvailableQuantityOfProduct(cartItem.productId, cartItem.category)
+                val status = productsData.retrieveProductAvailabilityStatus(cartItem.category, cartItem.productId)
+                cartItem.status = status
+                if(cartItem.quantity > availableQuantity) {
+                    cartItem.quantity = availableQuantity
+                } else if(status == ProductStatus.OUT_OF_STOCK) {
+                    cartItem.quantity = 0
+                }
+            }
+        }
     }
 
 }

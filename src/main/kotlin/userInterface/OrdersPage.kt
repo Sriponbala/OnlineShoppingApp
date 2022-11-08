@@ -19,18 +19,4 @@ class OrdersPage {
         }
     }
 
-    fun addOrdersToOrdersHistory(
-        ordersHistoryId: String,
-        finalizedListOfItems: MutableList<Item>,
-        orderedDate: String,
-        deliveryDate: String,
-        shippingAddress: String
-    ) {
-        if(ordersHistoryManagement.addOrderToOrdersHistory(ordersHistoryId, finalizedListOfItems, orderedDate, deliveryDate, shippingAddress)) {
-            println("Orders added to orders  history!")
-        } else {
-            println("Orders not added to orders history!")
-        }
-    }
-
 }

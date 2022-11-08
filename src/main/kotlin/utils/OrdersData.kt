@@ -24,9 +24,9 @@ class OrdersData {
         return OrdersDatabase.usersOrdersHistory[ordersHistoryId]!!
     }
 
-    fun addToOrdersHistory(ordersHistoryId: String, orderedItems: MutableList<Item>, orderedDate: String, deliveryDate: String, shippingAddress: String) {
-        for(item in orderedItems) {
-            retrieveOrdersHistory(ordersHistoryId).add(Order(OrdersDatabase.generateOrderId(), orderedDate, deliveryDate, shippingAddress, item))
+    fun addToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>) {
+        for(order in orders) {
+            retrieveOrdersHistory(ordersHistoryId).add(order)
         }
     }
 

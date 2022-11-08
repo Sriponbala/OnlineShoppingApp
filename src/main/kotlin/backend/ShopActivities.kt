@@ -4,11 +4,13 @@ import data.Item
 import data.Product
 import enums.ProductStatus
 import utils.ProductsData
+import utils.Utility
 
 class ShopActivities {
 
     private val productsData = ProductsData()
     private var productsList: List<Product>? = null
+    private val utility = Utility()
 
     fun getCategories(): List<String> {
         return productsData.retrieveListOfCategories()
@@ -34,8 +36,32 @@ class ShopActivities {
         return selectedProduct
     }
 
-    fun createItemToBuy(productId: String, productName: String, productPrice: Float, totalPrice: Float, category: String, quantity: Int, status: ProductStatus): Item {
-        return Item(productId, productName, productPrice, totalPrice, category, quantity, status)
+    fun getProductFromDb(productId: String, category: String): Product {
+        return productsData.retrieveProduct(productId, category)
     }
+
+    fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
+        return if(utility.checkIfProductExists(productId, category)) {
+            productsData.retrieveAvailableQuantityOfProduct(productId, category)
+        } else 0
+    }
+
+    fun updateAvailableQuantityAndStatusOfProduct(productId: String, category: String, quantity: Int) {
+        if(utility.checkIfProductExists(productId, category)) {
+            if((productsData.retrieveAvailableQuantityOfProduct(productId, category) - quantity) >= 0 ) {
+                productsData.updateAvailableQuantityOfProduct(productId, category, quantity)
+                if(productsData.retrieveAvailableQuantityOfProduct(productId, category) == 0) {
+                    productsData.updateStatusOfProduct(productId, category, ProductStatus.OUT_OF_STOCK)
+                } else {
+                    productsData.updateStatusOfProduct(productId, category, ProductStatus.IN_STOCK)
+                }
+            }
+        }
+    }
+
+    fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
+        return productsData.retrieveProductAvailabilityStatus(category, productId)
+    }
+
 
 }

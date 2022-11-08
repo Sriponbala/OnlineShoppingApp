@@ -10,9 +10,9 @@ class OrdersHistoryManagement {
     private val ordersData = OrdersData()
     private val utility = Utility()
 
-    fun addOrderToOrdersHistory(ordersHistoryId: String, orderedItems: MutableList<Item>, orderedDate: String, deliveryDate: String, shippingAddress: String): Boolean {
+    fun addOrderToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>): Boolean {
         return if(utility.checkIfOrdersHistoryExists(ordersHistoryId)) {
-            ordersData.addToOrdersHistory(ordersHistoryId, orderedItems, orderedDate, deliveryDate, shippingAddress)
+            ordersData.addToOrdersHistory(ordersHistoryId, orders)
             true
         } else false
     }
