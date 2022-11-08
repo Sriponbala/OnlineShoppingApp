@@ -44,10 +44,8 @@ class UserData {
         return id
     }
 
-
     fun retrieveUser(userId: String): User {
         return UsersDatabase.users[userId]!!
     }
-
 
 }

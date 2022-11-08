@@ -1,6 +1,5 @@
 package backend
 
-import data.Item
 import data.Product
 import enums.ProductStatus
 import utils.ProductsData
@@ -62,6 +61,5 @@ class ShopActivities {
     fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
         return productsData.retrieveProductAvailabilityStatus(category, productId)
     }
-
 
 }

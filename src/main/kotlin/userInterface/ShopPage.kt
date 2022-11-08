@@ -9,6 +9,7 @@ import data.Product
 import enums.ProductActivitiesDashboard
 import enums.ProductStatus
 import utils.Helper
+import java.util.*
 
 class ShopPage {
 
@@ -61,7 +62,7 @@ class ShopPage {
     private fun displayCategories() {
         println("---------------Categories----------------")
         shopActivities.getCategories().forEachIndexed{ index, category ->
-            println("${index + 1}. ${category.capitalize()}")
+            println("${index + 1}. ${category.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}")
         }
     }
 
@@ -102,7 +103,7 @@ class ShopPage {
         }
     }
 
-    fun productActivities() {
+    private fun productActivities() {
 
         label@while(true) {
             val productId = selectAProduct()
@@ -211,8 +212,6 @@ class ShopPage {
                           |Storage            : ${earphone.colour}
                 """.trimMargin())
             }
-
-            else -> {}
         }
     }
 

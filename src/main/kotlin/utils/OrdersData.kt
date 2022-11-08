@@ -1,6 +1,5 @@
 package utils
 
-import data.Item
 import data.Order
 import database.OrdersDatabase
 import database.UsersDatabase
@@ -35,21 +34,9 @@ class OrdersData {
         OrdersDatabase.usersOrdersHistory[ordersHistoryId] = arrayListOf() // ArrayList<Order>
     }
 
-
-    fun retrieveOrdersHistoryId(userId: String): String? {
-        var id: String? = null
-        if(UsersDatabase.users.containsKey(userId)) {
-            if(UsersDatabase.usersAccountInfo.containsKey(userId)) {
-                id = UsersDatabase.usersAccountInfo[userId]?.ordersHistoryId
-            }
-        }
-        return id
-    }
-
     fun createAndGetOrdersHistoryId(): String {
         createOrdersHistory()
         return ordersHistoryId
     }
-
 
 }

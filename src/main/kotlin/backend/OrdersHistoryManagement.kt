@@ -1,6 +1,5 @@
 package backend
 
-import data.Item
 import data.Order
 import utils.OrdersData
 import utils.Utility
@@ -21,15 +20,6 @@ class OrdersHistoryManagement {
         return if(utility.checkIfOrdersHistoryExists(ordersHistoryId)) {
             ordersData.retrieveOrdersHistory(ordersHistoryId)
         } else arrayListOf()
-    }
-
-    fun getOrdersHistoryId(userId: String): String {
-        val id: String = if(ordersData.retrieveOrdersHistoryId(userId) == null) {
-            ""
-        } else {
-            ordersData.retrieveOrdersHistoryId(userId)!!
-        }
-        return id
     }
 
     fun createAndGetOrdersHistoryId(userId: String): String {

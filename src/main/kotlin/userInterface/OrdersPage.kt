@@ -1,7 +1,6 @@
 package userInterface
 
 import backend.OrdersHistoryManagement
-import data.Item
 
 class OrdersPage {
 

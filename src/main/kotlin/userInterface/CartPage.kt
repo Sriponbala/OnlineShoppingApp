@@ -151,8 +151,8 @@ class CartPage {
         return cartActivities.getCartItems(cartId).isEmpty()
     }
 
-    fun getQuantity(productId: String, category: String): Int {
-        var quantity: Int = 1
+    private fun getQuantity(productId: String, category: String): Int {
+        var quantity = 1
         while(true) {
             if(Helper.confirm()) {
                 println("Enter the quantity required: ")

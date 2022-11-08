@@ -2,18 +2,13 @@ package backend
 
 import data.Item
 import data.Order
-import enums.ProductStatus
-import utils.Utility
 
-class CheckOutActivities() {
+class CheckOutActivities {
 
     private val ordersHistoryManagement = OrdersHistoryManagement()
     private val cartActivities = CartActivities()
-    private val utility = Utility()
-    private val orders: ArrayList<Order> = arrayListOf()
     private val shopActivities = ShopActivities()
-
-
+    private val orders: ArrayList<Order> = arrayListOf()
 
     fun addOrdersToOrdersHistory(
         ordersHistoryId: String,
@@ -40,7 +35,7 @@ class CheckOutActivities() {
 
     private var orderId = 1
 
-    fun generateOrderId(): String {
+    private fun generateOrderId(): String {
         return "Order${orderId++}"
     }
 

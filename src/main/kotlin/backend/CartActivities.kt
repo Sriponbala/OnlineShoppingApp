@@ -1,10 +1,8 @@
 package backend
 
 import data.Item
-import database.CartDatabase
 import enums.ProductStatus
 import utils.CartData
-import utils.ProductsData
 import utils.Utility
 
 class CartActivities {

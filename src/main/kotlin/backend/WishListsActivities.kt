@@ -17,15 +17,6 @@ class WishListsActivities {
         } else ""
     }
 
-    fun getWishListId(userId: String): String {
-        val id: String = if(wishListsData.retrieveWishListId(userId) == null) {
-            ""
-        } else {
-            wishListsData.retrieveWishListId(userId)!!
-        }
-        return id
-    }
-
     fun getWishListProducts(wishListId: String): ArrayList<Product> {
         return if(utility.checkIfWishListExists(wishListId)) {
             wishListsData.retrieveWishListProducts(wishListId)
