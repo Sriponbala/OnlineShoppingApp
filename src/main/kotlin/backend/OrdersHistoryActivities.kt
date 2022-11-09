@@ -4,7 +4,7 @@ import data.Order
 import utils.OrdersData
 import utils.Utility
 
-class OrdersHistoryManagement {
+class OrdersHistoryActivities {
 
     private val ordersData = OrdersData()
     private val utility = Utility()

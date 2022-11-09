@@ -9,7 +9,7 @@ class CartActivities {
 
     private val cartData = CartData()
     private val utility = Utility()
-    private val shopActivities = ShopActivities()
+    private val productActivities = ProductActivities()
 
     fun createAndGetCartId(userId: String): String {
         var cartId = ""
@@ -37,10 +37,10 @@ class CartActivities {
     fun addToCart(cartId: String, category: String, productId: String): Boolean {
         val itemAddedToCart: Boolean = if(utility.checkIfCategoryExistsInProductDB(category)) {
             if(utility.checkIfProductExists(productId, category)) {
-                if(shopActivities.retrieveProductAvailabilityStatus(category, productId) == ProductStatus.IN_STOCK) {
+                if(productActivities.retrieveProductAvailabilityStatus(category, productId) == ProductStatus.IN_STOCK) {
                     if(utility.checkIfCartExists(cartId)) {
                         if(!utility.checkIfItemIsInCart(cartId, productId)) {
-                            val product = shopActivities.getProductFromDb(productId, category)
+                            val product = productActivities.getProductFromDb(productId, category)
                             cartData.addToCart(cartId, product)
                             true
                         } else false
@@ -90,7 +90,7 @@ class CartActivities {
     }
 
     fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
-        return shopActivities.getAvailableQuantityOfProduct(productId, category)
+        return productActivities.getAvailableQuantityOfProduct(productId, category)
     }
 
     fun changeQuantityAndUpdateTotalPriceOfItem(cartId: String, item: Item, quantity: Int): Boolean {

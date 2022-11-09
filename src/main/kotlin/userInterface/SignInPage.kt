@@ -21,7 +21,7 @@ class SignInPage: OnboardingServices {
                             println("SignIn Successful!")
                             val userAccountActivities = UserAccountActivities()
                             userId = userAccountActivities.getUserId(mobile)
-                            HomePage().showDashboard(userId)
+                            HomePage(userId).openHomePage()
                         } else {
                             println("SignIn failed!")
                         }

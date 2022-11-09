@@ -60,7 +60,6 @@ object Helper {
 
     fun validatePasswordPattern(password: String): Boolean {
         return Pattern.matches("^[a-zA-Z0-9!#@$%^&*_+`~]{4,8}+$", password)
-        // return Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,25}$", password)
     }
 
     fun validatePincode(pincode: String): Boolean {
@@ -68,7 +67,7 @@ object Helper {
     }
 
     fun validateAddressFields(fieldValue: String): Boolean {
-        return Pattern.matches("^[a-zA-Z1-9][a-zA-Z0-9-\\s]{0,30}$", fieldValue) // a-zA-Z]{1,20}[0-9]{0,3}\s{0,1}(- )?[a-zA-Z]{2,20}[0-9]{0,6}
+        return Pattern.matches("^[a-zA-Z1-9][a-zA-Z0-9-.\\s]{0,30}$", fieldValue)
     }
 }
 

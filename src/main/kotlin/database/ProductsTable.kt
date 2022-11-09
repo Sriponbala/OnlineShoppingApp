@@ -3,22 +3,7 @@ package database
 import data.Product
 import enums.ProductStatus
 
-//class ProductsDatabase private constructor() {
-//
-//
-//    companion object {
-//        private val INSTANCE by lazy { ProductsDatabase() }
-//        fun getInstance(userName: String, password: String): ProductsDatabase? {
-//
-//            return if (userName == "root" && password == "tiger") {
-//                INSTANCE
-//            } else {
-//                null
-//            }
-//        }
-//    }
-
-object ProductsDatabase {
+object ProductsTable {
 
     val products: Map<String,MutableList<Product>>
 

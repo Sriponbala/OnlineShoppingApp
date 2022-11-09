@@ -18,6 +18,7 @@ class UserAccountActivities {
         if(utility.checkIfUserExists(userId)) {
             this.user = userData.retrieveUser(userId)
         }
+        println("User: ${this.user}")
     }
 
     fun getUserId(mobile: String): String {

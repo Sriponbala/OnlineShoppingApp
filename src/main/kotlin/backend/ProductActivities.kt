@@ -5,7 +5,7 @@ import enums.ProductStatus
 import utils.ProductsData
 import utils.Utility
 
-class ShopActivities {
+class ProductActivities {
 
     private val productsData = ProductsData()
     private var productsList: List<Product>? = null

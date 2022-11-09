@@ -1,8 +1,7 @@
 package utils
 
 import data.Order
-import database.OrdersDatabase
-import database.UsersDatabase
+import database.OrdersTable
 
 class OrdersData {
 
@@ -20,7 +19,7 @@ class OrdersData {
     private lateinit var ordersHistoryId: String
 
     fun retrieveOrdersHistory(ordersHistoryId: String): ArrayList<Order> {
-        return OrdersDatabase.usersOrdersHistory[ordersHistoryId]!!
+        return OrdersTable.usersOrdersHistory[ordersHistoryId]!!
     }
 
     fun addToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>) {
@@ -30,8 +29,8 @@ class OrdersData {
     }
 
     private fun createOrdersHistory() {
-        ordersHistoryId = OrdersDatabase.generateOrdersHistoryId()
-        OrdersDatabase.usersOrdersHistory[ordersHistoryId] = arrayListOf() // ArrayList<Order>
+        ordersHistoryId = OrdersTable.generateOrdersHistoryId()
+        OrdersTable.usersOrdersHistory[ordersHistoryId] = arrayListOf() // ArrayList<Order>
     }
 
     fun createAndGetOrdersHistoryId(): String {

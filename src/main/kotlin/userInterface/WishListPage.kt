@@ -4,16 +4,17 @@ import backend.WishListsActivities
 import data.Product
 import data.WishList
 import enums.WishListDashboard
+import interfaces.DashboardServices
 import utils.Helper
 
-class WishListPage {
+class WishListPage(private val wishListId: String): DashboardServices {
 
     private val wishListsActivities = WishListsActivities()
     private lateinit var wishListProducts : ArrayList<Product>
     private var isEmptyWishList: Boolean = true
 
 
-    fun openWishListPage(wishListId: String) {
+    fun openWishListPage() {
 
         while(true) {
             wishListProducts = wishListsActivities.getWishListProducts(wishListId)
@@ -25,8 +26,8 @@ class WishListPage {
                     selectedProduct = selectAProduct()
                     val wishListDashboard = WishListDashboard.values()
                     while(true) {
-                        showDashboard("WishList Dashboard", wishListDashboard)
-                        when(getUserChoice(wishListDashboard)) {
+                        super.showDashboard("WishList Dashboard", wishListDashboard)
+                        when(super.getUserChoice(wishListDashboard)) {
                             WishListDashboard.VIEW_PRODUCT -> {
                                 println(selectedProduct)
                             }
@@ -45,7 +46,6 @@ class WishListPage {
             }
         }
     }
-
 
     private fun selectAProduct(): String {
         var option: Int
@@ -83,31 +83,6 @@ class WishListPage {
 
     private fun checkIfWishListIsEmpty(wishListProducts: ArrayList<Product>?) {
         isEmptyWishList = wishListProducts?.isEmpty() == true
-    }
-
-
-    private fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {
-
-        println("-------------${title.uppercase()}-------------")
-        for(element in enumArray) {
-            println("${element.ordinal+1}. $element")
-        }
-    }
-    private fun <E: Enum<E>> getUserChoice(enumArray: Array<E>): E {
-
-        while (true) {
-            try {
-                val option = readLine()!!
-                val dashBoardOption = option.toInt()
-                if(Helper.checkValidRecord(dashBoardOption, enumArray.size)) {
-                    return enumArray[dashBoardOption-1]
-                } else {
-                    println("Enter valid option!")
-                }
-            } catch (exception: Exception) {
-                println("Class AddressPage: getUserChoice(): Exception: $exception")
-            }
-        }
     }
 
 }

@@ -1,10 +1,11 @@
 package userInterface
 
 import backend.CartActivities
-import backend.OrdersHistoryManagement
+import backend.OrdersHistoryActivities
 import backend.UserAccountActivities
 import backend.WishListsActivities
-import database.UsersDatabase
+import database.UsersTable
+import interfaces.DashboardServices
 import interfaces.OnboardingServices
 import utils.Helper
 import utils.Utility
@@ -39,11 +40,10 @@ class SignUpPage: OnboardingServices {
                                     userId = userAccountActivities.createAndGetUserId(name, mobile, email, password)
                                     wishListId = WishListsActivities().createAndGetWishListId(userId)
                                     cartId = CartActivities().createAndGetCartId(userId)
-                                    ordersHistoryId = OrdersHistoryManagement().createAndGetOrdersHistoryId(userId)
+                                    ordersHistoryId = OrdersHistoryActivities().createAndGetOrdersHistoryId(userId)
                                     userAccountActivities.createAccountInfo(userId, cartId, wishListId, ordersHistoryId)
-                                    println("users: ${UsersDatabase.dummy()}")
                                     println("SignUp Successful!")
-                                    HomePage().showDashboard(userId)
+                                    HomePage(userId).openHomePage()
                                     break
                                 } else {
                                     println("Incorrect OTP! Try again!")

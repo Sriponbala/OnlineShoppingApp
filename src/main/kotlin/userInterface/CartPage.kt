@@ -5,21 +5,14 @@ import data.Item
 import enums.CartActivitiesDashboard
 import enums.ProductQuantityManagement
 import enums.ProductStatus
+import interfaces.DashboardServices
 import utils.Helper
 
-class CartPage {
+class CartPage(private val userId: String, private val cartId: String): DashboardServices {
 
     private val cartActivities = CartActivities()
-    private lateinit var cartId: String
-    private lateinit var userId: String
     private var isCartEmpty = false
     private lateinit var cartItems: List<Item>
-
-
-    fun setUserIdAndCartId(userId: String) {
-        this.userId = userId
-        this.cartId = cartActivities.getCartId(userId)
-    }
 
     fun openCartPage() {
 
@@ -29,8 +22,8 @@ class CartPage {
                 cartItems = cartActivities.getCartItems(cartId)
                 displayCartItems()
                 val cartActivitiesDashboard = CartActivitiesDashboard.values()
-                showDashboard("Cart Dashboard", cartActivitiesDashboard)
-                when(getUserChoice(cartActivitiesDashboard)) {
+                super.showDashboard("Cart Dashboard", cartActivitiesDashboard)
+                when(super.getUserChoice(cartActivitiesDashboard)) {
                     CartActivitiesDashboard.SELECT_A_PRODUCT -> {
                         val item = selectAnItem()
                         doActivitiesOnSelectedItem(item)
@@ -66,8 +59,8 @@ class CartPage {
     private fun doActivitiesOnSelectedItem(item: Item) {
         val productQuantityManagement = ProductQuantityManagement.values()
         while(true) {
-            showDashboard("Activities on selected product", productQuantityManagement)
-            when(getUserChoice(productQuantityManagement)) {
+            super.showDashboard("Activities on selected product", productQuantityManagement)
+            when(super.getUserChoice(productQuantityManagement)) {
                 ProductQuantityManagement.CHANGE_QUANTITY -> {
                     if(item.status == ProductStatus.IN_STOCK) {
                         val quantity = getQuantity(item.productId, item.category)
@@ -121,30 +114,6 @@ class CartPage {
             }
         }
         return selectedItem
-    }
-
-    private fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {
-        println("-------------${title.uppercase()}-------------")
-        for(element in enumArray) {
-            println("${element.ordinal+1}. $element")
-        }
-    }
-
-    private fun <E: Enum<E>> getUserChoice(enumArray: Array<E>): E {
-        while (true) {
-            try {
-                println("Enter your choice: ")
-                val option = readLine()!!
-                val dashBoardOption = option.toInt()
-                if(Helper.checkValidRecord(dashBoardOption, enumArray.size)) {
-                    return enumArray[dashBoardOption-1]
-                } else {
-                    println("Enter valid option!")
-                }
-            } catch (exception: Exception) {
-                println("Class CartPage: getUserChoice(): Exception: $exception")
-            }
-        }
     }
 
     private fun checkIfCartIsEmpty(cartId: String): Boolean {

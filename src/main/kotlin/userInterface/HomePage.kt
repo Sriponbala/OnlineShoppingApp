@@ -1,61 +1,61 @@
 package userInterface
 
+import backend.UserAccountActivities
+import data.AccountInfo
 import enums.HomePageDashboard
-import utils.Helper
+import interfaces.DashboardServices
 
-class HomePage {
+class HomePage(): DashboardServices {
 
-     fun showDashboard(userId: String) {
+    private lateinit var userId: String
+    private var accountInfo: AccountInfo? =  null
+    private val userAccountActivities by lazy { UserAccountActivities() }
 
-        while (true) {
-            println("------------Home Page-------------")
-            for(element in HomePageDashboard.values()) {
-                println("${element.ordinal+1}. $element")
-            }
-            try {
-                val option = readLine()!!
-                val dashBoardOption = option.toInt()
-                if(Helper.checkValidRecord(dashBoardOption, HomePageDashboard.values().size)) {
-                    if(doDashboardActivities(HomePageDashboard.values()[dashBoardOption-1], userId)) {
-                        break
+    constructor(userId: String): this() {
+        this.userId = userId
+        this.accountInfo = userAccountActivities.getAccountInfo(userId)
+    }
+
+    fun openHomePage() {
+        val homePageDashboard = HomePageDashboard.values()
+        while(true) {
+            super.showDashboard("Home Page", homePageDashboard)
+            when(super.getUserChoice(homePageDashboard)) {
+                HomePageDashboard.VIEW_PRODUCTS -> {
+                    if(::userId.isInitialized && accountInfo != null) {
+                        val shopPage = ShopPage(userId, accountInfo!!)
+                        shopPage.openShopPage()
+                    } else {
+                        val shopPage = ShopPage()
+                        shopPage.openShopPage()
                     }
-                } else {
-                    println("Enter valid option!")
                 }
-            } catch (exception: Exception) {
-                println("Class HomePage: showDashBoard(): Exception: $exception")
+                HomePageDashboard.VIEW_CART -> {
+                    if(::userId.isInitialized && accountInfo != null) {
+                        val cartPage = CartPage(userId, accountInfo!!.cartId)
+                        cartPage.openCartPage()
+                    } else {
+                        println("No items found in cart! Login to add items!")
+                    }
+                }
+                HomePageDashboard.YOUR_ACCOUNT -> {
+                    if(::userId.isInitialized && accountInfo != null) {
+                        val userAccountPage = UserAccountPage(userId, accountInfo!!)
+                        userAccountPage.openUserAccountPage()
+                    } else {
+                        println("Login to your account!")
+                    }
+                }
+                HomePageDashboard.SIGN_OUT -> {
+                    if(::userId.isInitialized && accountInfo != null) {
+                        println("Signed out...")
+                    } else {
+                        println("Login to your account!")
+                    }
+                    break
+                }
             }
         }
     }
 
-    private fun doDashboardActivities(enumConstant: HomePageDashboard, userId: String): Boolean {
-
-        when(enumConstant) {
-            HomePageDashboard.VIEW_PRODUCTS -> {
-                val shopPage = ShopPage()
-                shopPage.setUserIdAndAccountInfo(userId)
-                shopPage.openShopPage()
-                return false
-            }
-            HomePageDashboard.VIEW_CART -> {
-                val cartPage = CartPage()
-                cartPage.setUserIdAndCartId(userId)
-                cartPage.openCartPage()
-                return false
-            }
-            HomePageDashboard.YOUR_ACCOUNT -> {
-                val userAccountPage = UserAccountPage()
-                userAccountPage.openUserAccountPage(userId)
-                return false
-            }
-            HomePageDashboard.SIGN_OUT -> {
-                println("Signed out...")
-                return true
-            }
-            else -> {
-                println("Invalid dashboard option!")
-                return false
-            }
-        }
-    }
 }

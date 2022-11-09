@@ -2,7 +2,7 @@ package utils
 
 import data.Product
 import data.WishList
-import database.WishListDatabase
+import database.WishListTable
 
 class WishListsData {
 
@@ -22,15 +22,15 @@ class WishListsData {
     private lateinit var wishListId: String
 
     fun retrieveWishListProducts(wishListId: String): ArrayList<Product> {
-        return WishListDatabase.usersWishList[wishListId]!!.wishListProducts
+        return WishListTable.usersWishList[wishListId]!!.wishListProducts
     }
 
     fun addAProductToWishList(wishListId: String, product: Product) {
-        WishListDatabase.usersWishList[wishListId]!!.wishListProducts.add(product)
+        WishListTable.usersWishList[wishListId]!!.wishListProducts.add(product)
     }
 
     fun deleteProductFromWishList(wishListId: String, product: Product) {
-        WishListDatabase.usersWishList[wishListId]!!.wishListProducts.remove(product)
+        WishListTable.usersWishList[wishListId]!!.wishListProducts.remove(product)
     }
 
     fun addAndGetWishListId(): String {
@@ -39,13 +39,13 @@ class WishListsData {
     }
 
     private fun createWishList() {
-        wishListId = WishListDatabase.generateWishListId()
-        WishListDatabase.usersWishList[wishListId] = WishList(wishListId = wishListId)
+        wishListId = WishListTable.generateWishListId()
+        WishListTable.usersWishList[wishListId] = WishList(wishListId = wishListId)
     }
 
     fun retrieveProductFromWishList(wishListId: String, productId: String): Product {
         lateinit var wishListProduct: Product
-        for(product in WishListDatabase.usersWishList[wishListId]!!.wishListProducts) {
+        for(product in WishListTable.usersWishList[wishListId]!!.wishListProducts) {
             if(product.productId == productId) {
                 wishListProduct = product
                 break

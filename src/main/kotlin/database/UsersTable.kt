@@ -4,10 +4,9 @@ import data.AccountInfo
 import data.User
 import data.UserPassword
 
-object UsersDatabase {
+object UsersTable {
 
     val users: MutableMap<String, User> = mutableMapOf() // userId, User
-    val usersPassword: MutableMap<String, UserPassword> = mutableMapOf() // userId, UserPassword
     val usersAccountInfo: MutableMap<String, AccountInfo> = mutableMapOf() // userId, AccountInfo
 
     fun dummy() {
@@ -22,23 +21,6 @@ object UsersDatabase {
 }
 
 
-//class UsersDatabase private constructor() {
-//
-//
-//
-//    companion object {
-//
-//        private const val USERNAME = "root"
-//        private const val PASSWORD = "tiger"
-//        fun getInstance(userName: String, password: String): UsersDatabase? {
-//
-//            return if (userName == USERNAME && password == PASSWORD) {
-//                UsersDatabase()
-//            } else {
-//                null
-//            }
-//        }
-//    }
 
 
 /*

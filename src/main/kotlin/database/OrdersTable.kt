@@ -3,7 +3,7 @@ package database
 import data.Order
 
 
-object OrdersDatabase {
+object OrdersTable {
 
     val usersOrdersHistory: MutableMap<String, ArrayList<Order>> = mutableMapOf() // ordersHistoryId, ArrayList<Order>
 
@@ -14,23 +14,6 @@ object OrdersDatabase {
     }
 
 }
-
-
-//class OrdersDatabase private constructor() {
-
-//    companion object {
-//        private val INSTANCE by lazy { OrdersDatabase() }
-//        private const val USERNAME = "root"
-//        private const val PASSWORD = "tiger"
-//        fun getInstance(userName: String, password: String): OrdersDatabase? {
-//
-//            return if (userName == USERNAME && password == PASSWORD) {
-//                INSTANCE
-//            } else {
-//                null
-//            }
-//        }
-//    }
 
 
 

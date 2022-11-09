@@ -2,7 +2,7 @@ package database
 
 import data.Cart
 
-object CartDatabase {
+object CartTable {
 
     val carts: MutableMap<String, Cart> = mutableMapOf() // cartId, Cart
 

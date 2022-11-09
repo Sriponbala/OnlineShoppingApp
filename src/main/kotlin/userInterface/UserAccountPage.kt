@@ -7,11 +7,9 @@ import enums.UserAccountFields
 import interfaces.DashboardServices
 import utils.Helper
 
-class UserAccountPage: DashboardServices {
+class UserAccountPage(private val userId: String, private val accountInfo: AccountInfo): DashboardServices {
 
     private val userAccountActivities = UserAccountActivities()
-    private lateinit var userId: String
-    private lateinit var accountInfo: AccountInfo
 
     private fun displayUserDetails(userDetails: MutableMap<String, String>) {
         println("---------------Your Profile--------------")
@@ -20,98 +18,59 @@ class UserAccountPage: DashboardServices {
                    |Email  : ${userDetails["email"]}""".trimMargin())
     }
 
-    fun openUserAccountPage(userId: String) {
-        this.userId = userId
+    fun openUserAccountPage() {
         userAccountActivities.getUser(userId)
-        accountInfo = userAccountActivities.getAccountInfo(userId)!!
+       // accountInfo = userAccountActivities.getAccountInfo(userId)!!
         displayUserDetails(userAccountActivities.getUserDetails())
-        showDashboard()
-    }
-    override fun showDashboard() {
-
-        while (true) {
-            println("------------Your Account-------------")
-            for(element in UserAccountDashboard.values()) {
-                println("${element.ordinal+1}. $element")
-            }
-            try {
-                val option = readLine()!!
-                val dashBoardOption = option.toInt()
-                if(Helper.checkValidRecord(dashBoardOption, UserAccountDashboard.values().size)) {
-                    if(doDashboardActivities(UserAccountDashboard.values()[dashBoardOption-1])) {
-                        break
-                    }
-                } else {
-                    println("Enter valid option!")
+        val userAccountDashboard = UserAccountDashboard.values()
+        while(true) {
+            super.showDashboard("Your Account", userAccountDashboard)
+            when(super.getUserChoice(userAccountDashboard)) {
+                UserAccountDashboard.VIEW_WISHLIST -> {
+                    WishListPage(accountInfo.wishListId).openWishListPage()
                 }
-            } catch (exception: Exception) {
-                println("Class UserAccountPage: showDashBoard(): Exception: $exception")
+                UserAccountDashboard.VIEW_ORDERS_HISTORY -> {
+                    OrdersPage(accountInfo.ordersHistoryId).displayOrdersHistory()
+                }
+                UserAccountDashboard.EDIT_ACCOUNT -> {
+                    editUserAccountDetails()
+                    println("user : ${userAccountActivities.getUserDetails()}")
+                }
+                UserAccountDashboard.GO_BACK -> break
             }
         }
     }
-    override fun <E : Enum<E>> doDashboardActivities(enumConstant: Enum<E>): Boolean {
 
-        when(enumConstant) {
-
-            UserAccountDashboard.VIEW_WISHLIST -> {
-                WishListPage().openWishListPage(accountInfo.wishListId)
-                return false
-            }
-            UserAccountDashboard.VIEW_ORDERS_HISTORY -> {
-                OrdersPage().displayOrdersHistory(accountInfo.ordersHistoryId)
-                return false
-            }
-            UserAccountDashboard.EDIT_ACCOUNT -> {
-                editUserAccountDetails()
-                println("user : ${userAccountActivities.getUserDetails()}")
-                return false
-            }
-            UserAccountDashboard.GO_BACK -> return true
-            else -> {
-                println("Invalid dashboard option!")
-                return false
-            }
-        }
-    }
 
     private fun editUserAccountDetails() {
-
+        val userAccountFields = UserAccountFields.values()
         while(true) {
-            println("-------------Edit User Details------------")
+            super.showDashboard("Edit User Details", userAccountFields)
             println("Select the field to edit:")
-            for(field in UserAccountFields.values()) {
-                println("${field.ordinal + 1}. $field")
-            }
-            try{
-                val choice = readLine()!!
-                val editOption = choice.toInt()
-                when(UserAccountFields.values()[editOption - 1]) {
-                    UserAccountFields.Name -> {
-                        var name: String
-                        do{
-                            println("Enter name: ")
-                            name = readLine()!!
-                        } while(Helper.fieldValidation(name))
-                        userAccountActivities.updateName(name)
-                    }
-                    UserAccountFields.Email -> {
-                        var email: String
-                        do {
-                            println("Enter email: ")
-                            email = readLine()!!
-                        } while(!Helper.fieldValidation(email) && !Helper.validateEmail(email))
-                        userAccountActivities.updateEmail(email)
-                    }
-                    UserAccountFields.Addresses -> {
-                        val addressPage = AddressPage(userAccountActivities)
-                        addressPage.openAddressPage()
-                    }
-                    UserAccountFields.Back -> {
-                        break
-                    }
+            when(super.getUserChoice(userAccountFields)) {
+                UserAccountFields.Name -> {
+                    var name: String
+                    do{
+                        println("Enter name: ")
+                        name = readLine()!!
+                    } while(Helper.fieldValidation(name))
+                    userAccountActivities.updateName(name)
                 }
-            } catch(exception: Exception) {
-                println("Class UserAccountPage: editUserDetails(): Exception: $exception")
+                UserAccountFields.Email -> {
+                    var email: String
+                    do {
+                        println("Enter email: ")
+                        email = readLine()!!
+                    } while(!Helper.fieldValidation(email) && !Helper.validateEmail(email))
+                    userAccountActivities.updateEmail(email)
+                }
+                UserAccountFields.Addresses -> {
+                    val addressPage = AddressPage(userAccountActivities)
+                    addressPage.openAddressPage()
+                }
+                UserAccountFields.Back -> {
+                    break
+                }
             }
         }
     }

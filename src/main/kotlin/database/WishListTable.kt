@@ -2,24 +2,7 @@ package database
 
 import data.WishList
 
-//class WishListDatabase private constructor() {
-//
-//    private
-//    companion object {
-//        private val INSTANCE by lazy { WishListDatabase() }
-//        private const val USERNAME = "root"
-//        private const val PASSWORD = "tiger"
-//        fun getInstance(userName: String, password: String): WishListDatabase? {
-//
-//            return if (userName == USERNAME && password == PASSWORD) {
-//                INSTANCE
-//            } else {
-//                null
-//            }
-//        }
-//    }
-
-object WishListDatabase {
+object WishListTable {
 
     val usersWishList: MutableMap<String, WishList> = mutableMapOf() // wishListId, userWishlist
 

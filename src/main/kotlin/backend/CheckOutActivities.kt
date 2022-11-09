@@ -5,23 +5,23 @@ import data.Order
 
 class CheckOutActivities {
 
-    private val ordersHistoryManagement = OrdersHistoryManagement()
+    private val ordersHistoryActivities = OrdersHistoryActivities()
     private val cartActivities = CartActivities()
-    private val shopActivities = ShopActivities()
+    private val productActivities = ProductActivities()
     private val orders: ArrayList<Order> = arrayListOf()
 
     fun addOrdersToOrdersHistory(
         ordersHistoryId: String,
         orders: ArrayList<Order>,
     ): Boolean {
-        return ordersHistoryManagement.addOrderToOrdersHistory(ordersHistoryId, orders)
+        return ordersHistoryActivities.addOrderToOrdersHistory(ordersHistoryId, orders)
     }
 
-    fun createOrders(finalizedListOfItems: MutableList<Item>) {
+    fun createOrders(finalizedListOfItems: MutableList<Item>, shippingAddress: String) {
         val orderedDate = "1-1-2022"
         val deliveryDate = "2-2-2022"
         for(item in finalizedListOfItems) {
-            orders.add(Order(orderId = generateOrderId(), orderedDate = orderedDate, deliveryDate = deliveryDate, item = item))
+            orders.add(Order(orderId = generateOrderId(), orderedDate = orderedDate, deliveryDate = deliveryDate, shippingAddress = shippingAddress, item = item))
         }
     }
 
@@ -48,12 +48,12 @@ class CheckOutActivities {
     }
 
     fun createItemToBuy(productId: String, category: String): Item {
-        val product = shopActivities.getProductFromDb(productId, category)
+        val product = productActivities.getProductFromDb(productId, category)
         return Item(product.productId, product.productName, product.price, product.price, category, 1, product.status)
     }
 
     fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
-        return shopActivities.getAvailableQuantityOfProduct(productId, category)
+        return productActivities.getAvailableQuantityOfProduct(productId, category)
     }
 
     fun changeQuantityAndUpdateTotalPriceOfItem(item: Item, quantity: Int) {
@@ -71,7 +71,7 @@ class CheckOutActivities {
 
     fun updateAvailableQuantityAndStatusOfProducts(finalizedListOfItems: ArrayList<Item>) {
         for(item in finalizedListOfItems) {
-            shopActivities.updateAvailableQuantityAndStatusOfProduct(item.productId, item.category, item.quantity)
+            productActivities.updateAvailableQuantityAndStatusOfProduct(item.productId, item.category, item.quantity)
         }
     }
 

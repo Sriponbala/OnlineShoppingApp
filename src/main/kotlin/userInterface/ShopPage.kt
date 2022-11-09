@@ -1,21 +1,23 @@
 package userInterface
 
 import backend.CartActivities
-import backend.ShopActivities
+import backend.ProductActivities
 import backend.UserAccountActivities
 import backend.WishListsActivities
 import data.AccountInfo
 import data.Product
 import enums.ProductActivitiesDashboard
 import enums.ProductStatus
+import interfaces.DashboardServices
 import utils.Helper
 import java.util.*
 
-class ShopPage {
+class ShopPage(): DashboardServices {
 
-    private val userAccountActivities = UserAccountActivities()
-    private val shopActivities = ShopActivities()
-    private val wishListsActivities = WishListsActivities()
+    private val userAccountActivities by lazy { UserAccountActivities()}
+    private val productActivities = ProductActivities()
+    private val wishListsActivities by lazy { WishListsActivities() }
+    private val cartActivities by lazy { CartActivities() }
     private lateinit var category: String
     private lateinit var productsList: Map<Int, Triple<String, String, Float>>
     private lateinit var product: Product
@@ -23,6 +25,10 @@ class ShopPage {
     private lateinit var userId: String
     private lateinit var accountInfo: AccountInfo
 
+    constructor(userId: String, accountInfo: AccountInfo): this() {
+        this.userId = userId
+        this.accountInfo = accountInfo
+    }
 
     fun setUserIdAndAccountInfo(userId: String) {
         this.userId = userId
@@ -61,12 +67,12 @@ class ShopPage {
 
     private fun displayCategories() {
         println("---------------Categories----------------")
-        shopActivities.getCategories().forEachIndexed{ index, category ->
+        productActivities.getCategories().forEachIndexed{ index, category ->
             println("${index + 1}. ${category.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}")
         }
     }
 
-    private fun selectACategory(): String {
+    private fun selectACategory(): String { // returns category name in lowercase
         var option: Int
         var selectedCategory: String
         while(true){
@@ -74,8 +80,8 @@ class ShopPage {
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                if(Helper.checkValidRecord(option, shopActivities.getCategories().size)) {
-                    selectedCategory = shopActivities.getCategories()[option - 1].lowercase()
+                if(Helper.checkValidRecord(option, productActivities.getCategories().size)) {
+                    selectedCategory = productActivities.getCategories()[option - 1].lowercase()
                     break
                 } else {
                     println("Invalid option! Try again!")
@@ -91,7 +97,7 @@ class ShopPage {
 
     private fun displayProducts(category: String): Boolean {
         println("------------------${category}s--------------------")
-        productsList = shopActivities.getProductsList(category)
+        productsList = productActivities.getProductsList(category)
         return if(productsList.isEmpty()) {
             println("       No products found        ")
             true
@@ -111,13 +117,17 @@ class ShopPage {
                 displayProductDetails(productId)
                 val productActivitiesDashboard = ProductActivitiesDashboard.values()
                 while (true) {
-                    showDashboard("Product Dashboard", productActivitiesDashboard)
-                    when (getUserChoice(productActivitiesDashboard)) {
+                    super.showDashboard("Product Dashboard", productActivitiesDashboard)
+                    when (super.getUserChoice(productActivitiesDashboard)) {
                         ProductActivitiesDashboard.ADD_TO_CART -> {
-                            if(CartActivities().addToCart(accountInfo.cartId, category, productId)) {
-                                println("Product added to cart!")
+                            if(::userId.isInitialized) {
+                                if(cartActivities.addToCart(accountInfo.cartId, category, productId)) {
+                                    println("Product added to cart!")
+                                } else {
+                                    println("Can't add to cart!")
+                                }
                             } else {
-                                println("Can't add to cart!")
+                                println("Login to your account!")
                             }
                         }
 
@@ -134,19 +144,27 @@ class ShopPage {
                         }
 
                         ProductActivitiesDashboard.REMOVE_FROM_WISHLIST -> {
-                            if(wishListsActivities.removeProductFromWishList(accountInfo.wishListId, productId)) {
-                                println("Product removed from wishlist!")
+                            if(::userId.isInitialized) {
+                                if(wishListsActivities.removeProductFromWishList(accountInfo.wishListId, productId)) {
+                                    println("Product removed from wishlist!")
+                                } else {
+                                    println("Product not yet added to wishlist!")
+                                }
                             } else {
-                                println("Product not yet added to wishlist!")
+                                println("Login to your account!")
                             }
                         }
 
                         ProductActivitiesDashboard.BUY_NOW -> {
-                            if(product.status == ProductStatus.IN_STOCK) {
-                                val checkOutPage = CheckOutPage(userId, productId, category)
-                                checkOutPage.openCheckOutPage()
+                            if(::userId.isInitialized) {
+                                if(product.status == ProductStatus.IN_STOCK) {
+                                    val checkOutPage = CheckOutPage(userId, productId, category)
+                                    checkOutPage.openCheckOutPage()
+                                } else {
+                                    println("Product out of stock!")
+                                }
                             } else {
-                                println("Product out of stock!")
+                                println("Login to your account!")
                             }
                         }
 
@@ -160,7 +178,7 @@ class ShopPage {
             }
         }
     }
-    private fun selectAProduct(): String {
+    private fun selectAProduct(): String { // returns productId
         var option: Int
         var selectedProductId: String
         while(true){
@@ -168,7 +186,7 @@ class ShopPage {
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                if(Helper.checkValidRecord(option, shopActivities.getProductsList(category).size)) {
+                if(Helper.checkValidRecord(option, productActivities.getProductsList(category).size)) {
                     selectedProductId = productsList[option]!!.first
                     break
                 } else {
@@ -184,7 +202,7 @@ class ShopPage {
     }
 
     private fun displayProductDetails(productId: String) {
-        product = shopActivities.getAProduct(productId)!!
+        product = productActivities.getAProduct(productId)!!
         println("""Product name       : ${product.productName}
                   |Product price      : ${product.price}
         """.trimMargin())
@@ -212,30 +230,7 @@ class ShopPage {
                           |Storage            : ${earphone.colour}
                 """.trimMargin())
             }
-        }
-    }
 
-    private fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {
-
-        println("-------------${title.uppercase()}-------------")
-        for(element in enumArray) {
-            println("${element.ordinal+1}. $element")
-        }
-    }
-    private fun <E: Enum<E>> getUserChoice(enumArray: Array<E>): E {
-
-        while (true) {
-            try {
-                val option = readLine()!!
-                val dashBoardOption = option.toInt()
-                if(Helper.checkValidRecord(dashBoardOption, enumArray.size)) {
-                    return enumArray[dashBoardOption-1]
-                } else {
-                    println("Enter valid option!")
-                }
-            } catch (exception: Exception) {
-                println("Class AddressPage: getUserChoice(): Exception: $exception")
-            }
         }
     }
 

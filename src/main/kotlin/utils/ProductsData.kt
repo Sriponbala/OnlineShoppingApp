@@ -1,19 +1,19 @@
 package utils
 
 import data.Product
-import database.ProductsDatabase
+import database.ProductsTable
 import enums.ProductStatus
 
 class ProductsData {
 
     fun retrieveListOfProducts(category: String): MutableList<Product>? {
-        return if(ProductsDatabase.products.containsKey(category)) {
-            ProductsDatabase.products[category]
+        return if(ProductsTable.products.containsKey(category)) {
+            ProductsTable.products[category]
         } else null
     }
 
     fun retrieveListOfCategories(): List<String> {
-        return ProductsDatabase.products.map{
+        return ProductsTable.products.map{
             it.key
         }
     }
@@ -36,7 +36,7 @@ class ProductsData {
 
     fun retrieveProduct(productId: String, category: String): Product {
         lateinit var productData: Product
-        for(product in ProductsDatabase.products[category]!!) {
+        for(product in ProductsTable.products[category]!!) {
             if(product.productId == productId) {
                 productData = product
                 break
