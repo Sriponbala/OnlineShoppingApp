@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/CartActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/CartActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/CheckOutActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/CheckOutActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/OrdersHistoryManagement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/OrdersHistoryManagement.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/ShopActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/ShopActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/WishListsActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/WishListsActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/database/OrdersDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/database/OrdersDatabase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/CartPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/CartPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/CheckOutPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/CheckOutPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/OrdersPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/OrdersData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/OrdersData.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/UserData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/UserData.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/WishListsData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/WishListsData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/interfaces/UserAccountCreationInterface.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/interfaces/UserIdInterface.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,7 +196,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667924244072</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Commit!">
+      <created>1667924816711</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1667924816711</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
