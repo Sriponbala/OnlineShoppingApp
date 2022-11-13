@@ -77,10 +77,8 @@ class CartData: CartDao {
                 cartItem.status = status
                 if(cartItem.quantity > availableQuantity) {
                     changeItemQuantityAndPrice(cartId, cartItem, availableQuantity)
-                    //cartItem.quantity = availableQuantity
                 } else if(status == ProductStatus.OUT_OF_STOCK) {
                     changeItemQuantityAndPrice(cartId, cartItem, 0)
-                    //cartItem.quantity = 0
                 }
             }
         }
