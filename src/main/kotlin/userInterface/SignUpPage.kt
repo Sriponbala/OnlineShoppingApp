@@ -4,11 +4,10 @@ import backend.CartActivities
 import backend.OrdersHistoryActivities
 import backend.UserAccountActivities
 import backend.WishListsActivities
-import database.UsersTable
-import interfaces.DashboardServices
+import data.AccountInfo
 import interfaces.OnboardingServices
+import interfaces.UtilityDao
 import utils.Helper
-import utils.Utility
 import java.lang.Exception
 
 class SignUpPage: OnboardingServices {
@@ -22,28 +21,62 @@ class SignUpPage: OnboardingServices {
     private lateinit var wishListId: String
     private lateinit var ordersHistoryId: String
     private lateinit var userId: String
+    private var accountInfo: AccountInfo? = null
 
-    fun signUp() {
+    fun signUp(
+        homePage: HomePage,
+        userAccountActivities: UserAccountActivities,
+        wishListsActivities: WishListsActivities,
+        cartActivities: CartActivities,
+        ordersHistoryActivities: OrdersHistoryActivities,
+        utility: UtilityDao,
+        shopPage: ShopPage,
+        cartPage: CartPage,
+        userAccountPage: UserAccountPage,
+        addressPage: AddressPage,
+        ordersPage: OrdersPage,
+        wishListPage: WishListPage,
+        checkOutPage: CheckOutPage,
+        paymentPage: PaymentPage
+    ) {
         println("----------SignUp Page----------")
         try {
             getUserInputs()
             while(true) {
                 if (Helper.confirm()) {
-                        if(verifyAccount()) {
+                        if(verifyAccount(utility)) {
                             val otp = Helper.generateOTP()
                             println("OTP : $otp")
                             while(true) {
                                 println("Enter the OTP: ")
                                 val currentOtp = readLine()!!
                                 if(Helper.verifyOtp(currentOtp, otp)) {
-                                    val userAccountActivities = UserAccountActivities()
                                     userId = userAccountActivities.createAndGetUserId(name, mobile, email, password)
-                                    wishListId = WishListsActivities().createAndGetWishListId(userId)
-                                    cartId = CartActivities().createAndGetCartId(userId)
-                                    ordersHistoryId = OrdersHistoryActivities().createAndGetOrdersHistoryId(userId)
-                                    userAccountActivities.createAccountInfo(userId, cartId, wishListId, ordersHistoryId)
-                                    println("SignUp Successful!")
-                                    HomePage(userId).openHomePage()
+                                    userAccountActivities.getUser(userId)
+                                    wishListId = wishListsActivities.createAndGetWishListId(userId)
+                                    cartId = cartActivities.createAndGetCartId(userId)
+                                    ordersHistoryId = ordersHistoryActivities.createAndGetOrdersHistoryId(userId)
+                                    if(userAccountActivities.createAccountInfo(userId, cartId, wishListId, ordersHistoryId)) {
+                                        accountInfo = userAccountActivities.getAccountInfo(userId)
+                                        if(accountInfo != null) {
+                                            println("SignUp Successful!")
+                                            homePage.initializeUserIdAndAccountInfo(userId, accountInfo!!)
+                                            homePage.openHomePage(
+                                                shopPage,
+                                                cartPage,
+                                                userAccountPage,
+                                                addressPage,
+                                                ordersPage,
+                                                wishListPage,
+                                                checkOutPage,
+                                                paymentPage
+                                            )
+                                        } else {
+                                            println("Account Info not found!")
+                                        }
+                                    } else {
+                                        println("Invalid userId!")
+                                    }
                                     break
                                 } else {
                                     println("Incorrect OTP! Try again!")
@@ -92,8 +125,7 @@ class SignUpPage: OnboardingServices {
         } while(Helper.fieldValidation(confirmPassword) || !Helper.confirmPassword(confirmPassword,password))
     }
 
-    override fun verifyAccount(): Boolean {
-        return Utility().checkUniqueUser(mobile)
+    private fun verifyAccount(utility: UtilityDao): Boolean {
+        return utility.checkUniqueUser(mobile)
     }
-
 }

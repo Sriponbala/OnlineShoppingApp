@@ -2,10 +2,14 @@ package userInterface
 
 import backend.OrdersHistoryActivities
 
-class OrdersPage(private val ordersHistoryId: String) {
+class OrdersPage(private val ordersHistoryActivities: OrdersHistoryActivities) {
 
+    private lateinit var ordersHistoryId: String
 
-    private val ordersHistoryActivities = OrdersHistoryActivities()
+    fun initializer(ordersHistoryId: String) {
+        this.ordersHistoryId = ordersHistoryId
+    }
+
     fun displayOrdersHistory() {
         val ordersHistory = ordersHistoryActivities.getOrdersHistory(ordersHistoryId)
         println("-----------------Orders History---------------------")

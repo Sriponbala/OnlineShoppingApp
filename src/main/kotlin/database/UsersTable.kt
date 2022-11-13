@@ -2,16 +2,11 @@ package database
 
 import data.AccountInfo
 import data.User
-import data.UserPassword
 
 object UsersTable {
 
     val users: MutableMap<String, User> = mutableMapOf() // userId, User
     val usersAccountInfo: MutableMap<String, AccountInfo> = mutableMapOf() // userId, AccountInfo
-
-    fun dummy() {
-        println(users)
-    }
 
     private var userId = 1
 

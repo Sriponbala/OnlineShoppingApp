@@ -1,25 +1,25 @@
 package backend
 
 import data.Product
+import interfaces.UtilityDao
+import interfaces.WishListDao
 import utils.ProductsData
-import utils.Utility
 import utils.WishListsData
 
-class WishListsActivities {
+class WishListsActivities(private val utility: UtilityDao) {
 
-    private val wishListsData = WishListsData()
+    private val wishListsDao: WishListDao = WishListsData()
     private val productsData = ProductsData()
-    private val utility = Utility()
 
     fun createAndGetWishListId(userId: String): String {
         return if(utility.checkIfUserExists(userId)) {
-            wishListsData.addAndGetWishListId()
+            wishListsDao.addAndGetWishListId()
         } else ""
     }
 
     fun getWishListProducts(wishListId: String): ArrayList<Product> {
         return if(utility.checkIfWishListExists(wishListId)) {
-            wishListsData.retrieveWishListProducts(wishListId)
+            wishListsDao.retrieveWishListProducts(wishListId)
         } else arrayListOf()
     }
 
@@ -29,7 +29,7 @@ class WishListsActivities {
                 if(utility.checkIfWishListExists(wishListId)) {
                     if(!utility.checkIfProductIsInUserWishList(wishListId, productId)) {
                         val product = productsData.retrieveProduct(productId, category)
-                        wishListsData.addAProductToWishList(wishListId, product)
+                        wishListsDao.addAProductToWishList(wishListId, product)
                         true
                     } else false
                 } else false
@@ -40,8 +40,8 @@ class WishListsActivities {
     fun removeProductFromWishList(wishListId: String, productId: String): Boolean {
         return if(utility.checkIfWishListExists(wishListId)) {
             if(utility.checkIfProductIsInUserWishList(wishListId, productId)) {
-                val product = wishListsData.retrieveProductFromWishList(wishListId, productId)
-                wishListsData.deleteProductFromWishList(wishListId, product)
+                val product = wishListsDao.retrieveProductFromWishList(wishListId, productId)
+                wishListsDao.deleteProductFromWishList(wishListId, product)
                 true
             } else false
         } else false

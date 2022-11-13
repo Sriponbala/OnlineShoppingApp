@@ -2,27 +2,17 @@ package utils
 
 import data.Order
 import database.OrdersTable
+import interfaces.OrdersDao
 
-class OrdersData {
-
-//    private late init var ordersDatabase: OrdersDatabase
-//
-//    private fun getConnection() {
-//        ordersDatabase = OrdersDatabase.getInstance(dbUserName, dbPassword)!!
-//    }
-//
-//    init {
-//        getConnection()
-//        createOrdersHistoryRecord(OrdersHistoryRecord(this.userId))
-//    }
+class OrdersData: OrdersDao {
 
     private lateinit var ordersHistoryId: String
 
-    fun retrieveOrdersHistory(ordersHistoryId: String): ArrayList<Order> {
+    override fun retrieveOrdersHistory(ordersHistoryId: String): ArrayList<Order> {
         return OrdersTable.usersOrdersHistory[ordersHistoryId]!!
     }
 
-    fun addToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>) {
+    override fun addToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>) {
         for(order in orders) {
             retrieveOrdersHistory(ordersHistoryId).add(order)
         }
@@ -33,7 +23,7 @@ class OrdersData {
         OrdersTable.usersOrdersHistory[ordersHistoryId] = arrayListOf() // ArrayList<Order>
     }
 
-    fun createAndGetOrdersHistoryId(): String {
+    override fun createAndGetOrdersHistoryId(): String {
         createOrdersHistory()
         return ordersHistoryId
     }

@@ -2,7 +2,6 @@ package userInterface
 
 import backend.CartActivities
 import backend.ProductActivities
-import backend.UserAccountActivities
 import backend.WishListsActivities
 import data.AccountInfo
 import data.Product
@@ -12,31 +11,42 @@ import interfaces.DashboardServices
 import utils.Helper
 import java.util.*
 
-class ShopPage(): DashboardServices {
+class ShopPage(private val productActivities: ProductActivities) : DashboardServices {
 
-    private val userAccountActivities by lazy { UserAccountActivities()}
-    private val productActivities = ProductActivities()
-    private val wishListsActivities by lazy { WishListsActivities() }
-    private val cartActivities by lazy { CartActivities() }
+    private lateinit var wishListsActivities: WishListsActivities
+    private lateinit var cartActivities: CartActivities
+    private lateinit var checkOutPage: CheckOutPage
+    private lateinit var addressPage: AddressPage
+    private lateinit var paymentPage: PaymentPage
     private lateinit var category: String
     private lateinit var productsList: Map<Int, Triple<String, String, Float>>
     private lateinit var product: Product
     private var isEmptyProductsList = false
     private lateinit var userId: String
     private lateinit var accountInfo: AccountInfo
+    private var isLoggedIn = false
 
-    constructor(userId: String, accountInfo: AccountInfo): this() {
+
+    fun initializer(
+        userId: String,
+        accountInfo: AccountInfo,
+        wishListsActivities: WishListsActivities,
+        cartActivities: CartActivities,
+        checkOutPage: CheckOutPage,
+        addressPage: AddressPage,
+        paymentPage: PaymentPage
+    ) {
         this.userId = userId
         this.accountInfo = accountInfo
-    }
-
-    fun setUserIdAndAccountInfo(userId: String) {
-        this.userId = userId
-        accountInfo = userAccountActivities.getAccountInfo(userId)!!
+        this.isLoggedIn = true
+        this.wishListsActivities = wishListsActivities
+        this.cartActivities = cartActivities
+        this.checkOutPage = checkOutPage
+        this.addressPage = addressPage
+        this.paymentPage = paymentPage
     }
 
     fun openShopPage() {
-
         while(true) {
             displayCategories()
             if(Helper.confirm()) {
@@ -44,15 +54,27 @@ class ShopPage(): DashboardServices {
                     category = selectACategory()
                     if(Helper.confirm()) {
                         while(true) {
-                            isEmptyProductsList = displayProducts(category)
+                            productsList = productActivities.getProductsList(category)
+                            isEmptyProductsList = productsList.isEmpty()
+                            //isEmptyProductsList = displayProducts(category)
                             if(isEmptyProductsList) {
+                                displayProducts(true)
                                 break
                             } else {
-                                if(Helper.confirm()) {
-                                    productActivities()
-                                } else {
-                                    break@label
-                                }
+                                //if(Helper.confirm()) {
+                                    while(true) {
+                                        displayProducts(false)
+                                        if(Helper.confirm()) {
+                                            val productId = selectAProduct()
+                                            if(Helper.confirm()) {
+                                                productActivities(productId)
+                                            } else break
+                                        } else break@label
+                                    }
+                                    //productActivities()
+                                //} else {
+                                //    break@label
+                                //}
                             }
                         }
                     } else {
@@ -95,32 +117,29 @@ class ShopPage(): DashboardServices {
         return selectedCategory
     }
 
-    private fun displayProducts(category: String): Boolean {
-        println("------------------${category}s--------------------")
-        productsList = productActivities.getProductsList(category)
-        return if(productsList.isEmpty()) {
+    private fun displayProducts(isEmptyProductsList: Boolean) {//}: Boolean {
+        if(isEmptyProductsList) {
             println("       No products found        ")
-            true
         } else {
+            println("------------------${category}s--------------------")
             for((id, product) in productsList) {
                 println("${id}. ${product.second} - ${product.third}")
             }
-            false
         }
     }
 
-    private fun productActivities() {
+    fun productActivities(productId: String) {
 
         label@while(true) {
-            val productId = selectAProduct()
-            if(Helper.confirm()) {
+            //val productId = selectAProduct()
+            //if(Helper.confirm()) {
                 displayProductDetails(productId)
                 val productActivitiesDashboard = ProductActivitiesDashboard.values()
                 while (true) {
                     super.showDashboard("Product Dashboard", productActivitiesDashboard)
                     when (super.getUserChoice(productActivitiesDashboard)) {
                         ProductActivitiesDashboard.ADD_TO_CART -> {
-                            if(::userId.isInitialized) {
+                            if(isLoggedIn) {
                                 if(cartActivities.addToCart(accountInfo.cartId, category, productId)) {
                                     println("Product added to cart!")
                                 } else {
@@ -132,7 +151,7 @@ class ShopPage(): DashboardServices {
                         }
 
                         ProductActivitiesDashboard.ADD_TO_WISHLIST -> {
-                            if(::userId.isInitialized) {
+                            if(isLoggedIn) {
                                 if(wishListsActivities.addProductToWishList(accountInfo.wishListId, category, productId)) {
                                     println("Product added to wishlist!")
                                 } else {
@@ -144,7 +163,7 @@ class ShopPage(): DashboardServices {
                         }
 
                         ProductActivitiesDashboard.REMOVE_FROM_WISHLIST -> {
-                            if(::userId.isInitialized) {
+                            if(isLoggedIn) {
                                 if(wishListsActivities.removeProductFromWishList(accountInfo.wishListId, productId)) {
                                     println("Product removed from wishlist!")
                                 } else {
@@ -156,9 +175,9 @@ class ShopPage(): DashboardServices {
                         }
 
                         ProductActivitiesDashboard.BUY_NOW -> {
-                            if(::userId.isInitialized) {
+                            if(isLoggedIn) {
                                 if(product.status == ProductStatus.IN_STOCK) {
-                                    val checkOutPage = CheckOutPage(userId, productId, category)
+                                    checkOutPage.initializer(addressPage, paymentPage, productId, category, accountInfo)
                                     checkOutPage.openCheckOutPage()
                                 } else {
                                     println("Product out of stock!")
@@ -173,9 +192,9 @@ class ShopPage(): DashboardServices {
                         }
                     }
                 }
-            } else {
-                break
-            }
+//            } else {
+//                break
+//            }
         }
     }
     private fun selectAProduct(): String { // returns productId

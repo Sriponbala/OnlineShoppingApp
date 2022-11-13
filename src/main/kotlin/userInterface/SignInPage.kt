@@ -1,27 +1,57 @@
 package userInterface
 
 import backend.UserAccountActivities
+import data.AccountInfo
 import interfaces.OnboardingServices
+import interfaces.UtilityDao
 import utils.Helper
-import utils.Utility
 
 class SignInPage: OnboardingServices {
 
     private var mobile: String = ""
     private var password: String = ""
     private lateinit var userId: String
+    private var accountInfo: AccountInfo? = null
 
-    fun signIn() {
+    fun signIn(
+        homePage: HomePage,
+        userAccountActivities: UserAccountActivities,
+        utility: UtilityDao,
+        shopPage: ShopPage,
+        cartPage: CartPage,
+        userAccountPage: UserAccountPage,
+        addressPage: AddressPage,
+        ordersPage: OrdersPage,
+        wishListPage: WishListPage,
+        checkOutPage: CheckOutPage,
+        paymentPage: PaymentPage
+    ) {
         println("----------SignIn Page----------")
         try {
             getUserInputs()
             while (true) {
                     if (Helper.confirm()) {
-                        if (verifyAccount()) {
-                            println("SignIn Successful!")
-                            val userAccountActivities = UserAccountActivities()
+                        if (verifyAccount(utility)) {
                             userId = userAccountActivities.getUserId(mobile)
-                            HomePage(userId).openHomePage()
+                            userAccountActivities.getUser(userId)
+                            accountInfo = userAccountActivities.getAccountInfo(userId)
+                            if(accountInfo != null) {
+                                println("SignIn Successful!")
+                                homePage.initializeUserIdAndAccountInfo(userId, accountInfo!!)
+                                homePage.openHomePage(
+                                    shopPage,
+                                    cartPage,
+                                    userAccountPage,
+                                    addressPage,
+                                    ordersPage,
+                                    wishListPage,
+                                    checkOutPage,
+                                    paymentPage
+                                )
+                            } else {
+                                println("Invalid userId!")
+                            }
+                            //HomePage(userId).openHomePage()
                         } else {
                             println("SignIn failed!")
                         }
@@ -50,8 +80,8 @@ class SignInPage: OnboardingServices {
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
     }
 
-    override fun verifyAccount(): Boolean {
-            return Utility().validateLoginCredentials(mobile, password)
+    private fun verifyAccount(utility: UtilityDao): Boolean {
+        return utility.validateLoginCredentials(mobile, password)
     }
 
 }

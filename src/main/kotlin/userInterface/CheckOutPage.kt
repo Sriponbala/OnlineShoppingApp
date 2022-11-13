@@ -1,7 +1,6 @@
 package userInterface
 
 import backend.CheckOutActivities
-import backend.UserAccountActivities
 import data.AccountInfo
 import data.Item
 import data.Order
@@ -10,33 +9,35 @@ import enums.ProductQuantityManagement
 import interfaces.DashboardServices
 import utils.Helper
 
-class CheckOutPage(): DashboardServices {
+class CheckOutPage(private val checkOutActivities: CheckOutActivities): DashboardServices {
 
-    private var checkOutActivities: CheckOutActivities = CheckOutActivities()
+    private lateinit var addressPage: AddressPage
+    private lateinit var paymentPage: PaymentPage
     private var finalizedListOfItems = arrayListOf<Item>()
-    private lateinit var userId: String
     private lateinit var shippingAddress: String
-    private var modeOfPayment: String? = null
     private lateinit var accountInfo: AccountInfo
     private lateinit var item: Item
     private lateinit var items: ArrayList<Item>
     private lateinit var orders: ArrayList<Order>
     private var totalBill: Float = 0f
+    private var isNavigatedFromCartPage: Boolean = false
 
-    constructor(userId: String, productId: String, category: String): this() { // directly from ShopPage
-        this.userId = userId
-        accountInfo = UserAccountActivities().getAccountInfo(userId)!!
+    fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, productId: String, category: String, accountInfo: AccountInfo) {
+        this.addressPage = addressPage
+        this.paymentPage = paymentPage
+        this.accountInfo = accountInfo
         this.item = checkOutActivities.createItemToBuy(productId, category)
         finalizedListOfItems.add(this.item)
     }
 
-    constructor(userId: String, items: List<Item>): this() { // from cart
-        this.userId = userId
-        accountInfo = UserAccountActivities().getAccountInfo(userId)!!
+    fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, items: List<Item>, accountInfo: AccountInfo) {
+        this.addressPage = addressPage
+        this.paymentPage = paymentPage
+        this.accountInfo = accountInfo
         this.items = items as ArrayList<Item>
         this.finalizedListOfItems = this.items
+        this.isNavigatedFromCartPage = true
     }
-
 
     fun openCheckOutPage() {
 
@@ -56,21 +57,21 @@ class CheckOutPage(): DashboardServices {
                 CheckOutPageDashboard.PROCEED_TO_BUY -> {
                     if(finalizedListOfItems.isNotEmpty()) {
                         proceedToBuy()
-                        break
                     } else {
                         println("No items selected to buy!")
                     }
 
                 }
-                CheckOutPageDashboard.GO_BACK -> break
+                CheckOutPageDashboard.GO_BACK -> {
+                    finalizedListOfItems.clear()
+                    break
+                }
             }
         }
     }
 
     private fun proceedToBuy() {
         try {
-
-            val addressPage = AddressPage(userId)
             label@while(true) {
                 println("Select an address: ")
                 addressPage.setSelectAddress(true)
@@ -80,44 +81,77 @@ class CheckOutPage(): DashboardServices {
                         val paymentPage = PaymentPage()
                         while(true) {
                             println("Select mode of payment: ")
-                            modeOfPayment = paymentPage.selectModeOfPayment()
+                            paymentPage.selectModeOfPayment()
+                            println("Do you want to place order?")
                             if(Helper.confirm()) {
-                                if(modeOfPayment != null) {
-                                    println("Do you want to place order?")
-                                    if (Helper.confirm()) {
-                                        totalBill = checkOutActivities.getTotalBill(finalizedListOfItems)
-                                        checkOutActivities.updateAvailableQuantityAndStatusOfProducts(finalizedListOfItems)
-                                        checkOutActivities.createOrders(finalizedListOfItems, shippingAddress)
-                                        orders = checkOutActivities.getOrders()
-                                        displayOrdersSummary(orders, totalBill)
-                                        if(checkOutActivities.addOrdersToOrdersHistory(
-                                                accountInfo.ordersHistoryId, orders
-                                            )) {
-                                            println("Orders added to orders  history!")
-                                        } else {
-                                            println("Orders not added to orders history!")
-                                        }
-                                        checkOutActivities.clearOrders()
-                                        if(::item.isInitialized) {
-                                            if (checkOutActivities.removeFromCart(
-                                                    accountInfo.cartId,
-                                                    item.productId,
-                                                    true
-                                                )
-                                            ) {
-                                                println("Ordered placed! Item removed from cart")
-                                            } else {
-                                                println("Order placed!")
-                                            }
-                                        } else if (::items.isInitialized) {
-                                            if (checkOutActivities.clearCartItems(accountInfo.cartId, items, true)) {
-                                                println("Orders placed! Items removed from cart")
-                                            }
-                                        }
-                                        checkOutActivities.updateAvailableQuantityAndStatusOfCartItems()
-                                        break@label
+                                totalBill = checkOutActivities.getTotalBill(finalizedListOfItems)
+                                checkOutActivities.updateAvailableQuantityAndStatusOfProducts(finalizedListOfItems)
+                                checkOutActivities.createOrders(finalizedListOfItems, shippingAddress)
+                                orders = checkOutActivities.getOrders()
+                                displayOrdersSummary(orders, totalBill)
+                                paymentPage.pay(totalBill)
+                                if(checkOutActivities.addOrdersToOrdersHistory(
+                                        accountInfo.ordersHistoryId, orders
+                                    )) {
+                                    println("Orders added to orders  history!")
+                                } else {
+                                    println("Orders not added to orders history!")
+                                }
+                                checkOutActivities.clearOrders()
+                                if(!isNavigatedFromCartPage) {
+                                    if (checkOutActivities.removeFromCart(
+                                            accountInfo.cartId,
+                                            item.productId,
+                                            true
+                                        )
+                                    ) {
+                                        println("Order placed! Item removed from cart")
+                                    } else {
+                                        println("Order placed!")
+                                    }
+                                } else {
+                                    if (checkOutActivities.clearCartItems(accountInfo.cartId, items, true)) {
+                                        println("Orders placed! Items removed from cart")
                                     }
                                 }
+                                checkOutActivities.updateAvailableQuantityAndStatusOfCartItems()
+                                finalizedListOfItems.clear()
+                                break@label
+//                                if (Helper.confirm()) {
+//                                    totalBill = checkOutActivities.getTotalBill(finalizedListOfItems)
+//                                    checkOutActivities.updateAvailableQuantityAndStatusOfProducts(finalizedListOfItems)
+//                                    checkOutActivities.createOrders(finalizedListOfItems, shippingAddress)
+//                                    orders = checkOutActivities.getOrders()
+//                                    displayOrdersSummary(orders, totalBill)
+//                                    paymentPage.pay(totalBill)
+//                                    if(checkOutActivities.addOrdersToOrdersHistory(
+//                                            accountInfo.ordersHistoryId, orders
+//                                        )) {
+//                                        println("Orders added to orders  history!")
+//                                    } else {
+//                                        println("Orders not added to order history!")
+//                                    }
+//                                    checkOutActivities.clearOrders()
+//                                    if(!isNavigatedFromCartPage) {
+//                                        if (checkOutActivities.removeFromCart(
+//                                                accountInfo.cartId,
+//                                                item.productId,
+//                                                true
+//                                            )
+//                                        ) {
+//                                            println("Order placed! Item removed from cart")
+//                                        } else {
+//                                            println("Order placed!")
+//                                        }
+//                                    } else {
+//                                        if (checkOutActivities.clearCartItems(accountInfo.cartId, items, true)) {
+//                                            println("Orders placed! Items removed from cart")
+//                                        }
+//                                    }
+//                                    checkOutActivities.updateAvailableQuantityAndStatusOfCartItems()
+//                                    finalizedListOfItems.clear()
+//                                    break@label
+//                                }
                             } else {
                                 break
                             }
@@ -141,7 +175,7 @@ class CheckOutPage(): DashboardServices {
                     "   Item price       : ${order.item.productPrice}\n" +
                     "   Quantity         : ${order.item.quantity}\n" +
                     "   Total Price      : ${order.item.totalPrice}\n" +
-                    "   Status           : ${order.item.status} " +
+                    "   Status           : ${order.item.status}\n" +
                     "   Shipping Address : $shippingAddress\n" +
                     "   Ordered Date     : ${order.orderedDate}\n" +
                     "   Delivery Date    : ${order.deliveryDate}")
@@ -168,7 +202,7 @@ class CheckOutPage(): DashboardServices {
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option, finalizedListOfItems.size)) {
-                    println("Selected address: ${finalizedListOfItems[option - 1]}")
+                    println("Selected item: ${finalizedListOfItems[option - 1]}")
                     selectedItem = finalizedListOfItems[option - 1]
                     break
                 } else {
@@ -221,11 +255,12 @@ class CheckOutPage(): DashboardServices {
                     }
                 }
                 ProductQuantityManagement.REMOVE -> {
-                        finalizedListOfItems.remove(item)
-                        println("Item removed from finalised items!")
-                        break
+                    finalizedListOfItems.remove(item)
+                    println("Item removed from finalised items!")
+                    break
                 }
                 ProductQuantityManagement.GO_BACK -> {
+                    //finalizedListOfItems.clear()
                     break
                 }
             }

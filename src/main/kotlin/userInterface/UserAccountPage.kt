@@ -7,9 +7,15 @@ import enums.UserAccountFields
 import interfaces.DashboardServices
 import utils.Helper
 
-class UserAccountPage(private val userId: String, private val accountInfo: AccountInfo): DashboardServices {
+class UserAccountPage(private val userAccountActivities: UserAccountActivities): DashboardServices {
 
-    private val userAccountActivities = UserAccountActivities()
+    private lateinit var userId: String
+    private lateinit var accountInfo: AccountInfo
+
+    fun initializer(userId: String, accountInfo: AccountInfo) {
+        this.userId = userId
+        this.accountInfo = accountInfo
+    }
 
     private fun displayUserDetails(userDetails: MutableMap<String, String>) {
         println("---------------Your Profile--------------")
@@ -18,22 +24,23 @@ class UserAccountPage(private val userId: String, private val accountInfo: Accou
                    |Email  : ${userDetails["email"]}""".trimMargin())
     }
 
-    fun openUserAccountPage() {
+    fun openUserAccountPage(wishListPage: WishListPage, ordersPage: OrdersPage, addressPage: AddressPage, shopPage: ShopPage) {
         userAccountActivities.getUser(userId)
-       // accountInfo = userAccountActivities.getAccountInfo(userId)!!
         displayUserDetails(userAccountActivities.getUserDetails())
         val userAccountDashboard = UserAccountDashboard.values()
         while(true) {
             super.showDashboard("Your Account", userAccountDashboard)
             when(super.getUserChoice(userAccountDashboard)) {
                 UserAccountDashboard.VIEW_WISHLIST -> {
-                    WishListPage(accountInfo.wishListId).openWishListPage()
+                    wishListPage.initializer(accountInfo.wishListId, shopPage)
+                    wishListPage.openWishListPage()
                 }
                 UserAccountDashboard.VIEW_ORDERS_HISTORY -> {
-                    OrdersPage(accountInfo.ordersHistoryId).displayOrdersHistory()
+                    ordersPage.initializer(accountInfo.ordersHistoryId)
+                    ordersPage.displayOrdersHistory()
                 }
                 UserAccountDashboard.EDIT_ACCOUNT -> {
-                    editUserAccountDetails()
+                    editUserAccountDetails(addressPage)
                     println("user : ${userAccountActivities.getUserDetails()}")
                 }
                 UserAccountDashboard.GO_BACK -> break
@@ -42,7 +49,7 @@ class UserAccountPage(private val userId: String, private val accountInfo: Accou
     }
 
 
-    private fun editUserAccountDetails() {
+    private fun editUserAccountDetails(addressPage: AddressPage) {
         val userAccountFields = UserAccountFields.values()
         while(true) {
             super.showDashboard("Edit User Details", userAccountFields)
@@ -65,7 +72,6 @@ class UserAccountPage(private val userId: String, private val accountInfo: Accou
                     userAccountActivities.updateEmail(email)
                 }
                 UserAccountFields.Addresses -> {
-                    val addressPage = AddressPage(userAccountActivities)
                     addressPage.openAddressPage()
                 }
                 UserAccountFields.Back -> {

@@ -14,6 +14,23 @@ object WishListTable {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //    fun getWishListsOfUser(userId: String): ArrayList<WishList>? {
 //        val wishLists: ArrayList<WishList>? = if(usersWishLists.containsKey(userId)) {
 //            usersWishLists[userId]

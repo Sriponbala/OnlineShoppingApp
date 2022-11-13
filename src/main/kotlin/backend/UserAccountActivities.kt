@@ -4,56 +4,53 @@ package backend
 import data.AccountInfo
 import data.Address
 import data.User
+import interfaces.UserDao
+import interfaces.UtilityDao
 import utils.UserData
-import utils.Utility
 
-class UserAccountActivities {
+class UserAccountActivities(private val utility: UtilityDao) {
 
     private lateinit var user: User
-    private lateinit var addressesList: MutableMap<String, Address>
-    private val userData = UserData()
-    private val utility = Utility()
+    private var addressesList: MutableMap<String, Address> = mutableMapOf()
+    private val userDao: UserDao = UserData()
 
     fun getUser(userId: String) {
         if(utility.checkIfUserExists(userId)) {
-            this.user = userData.retrieveUser(userId)
+            this.user = userDao.retrieveUser(userId)
         }
         println("User: ${this.user}")
     }
 
     fun getUserId(mobile: String): String {
-        return userData.retrieveUserId(mobile)
+        return userDao.retrieveUserId(mobile)
     }
 
     fun createAndGetUserId(userName: String, userMobile: String, userEmail: String, password: String): String {
-        return userData.createAndGetUserId(userName, userMobile, userEmail, password)
+        return userDao.createAndGetUserId(userName, userMobile, userEmail, password)
     }
 
-    fun createAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String) {
-        if(utility.checkIfUserExists(userId)) {
-            userData.createUserAccountInfo(userId, cartId, wishListId, ordersHistoryId)
-        }
+    fun createAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String): Boolean {
+        return if(utility.checkIfUserExists(userId)) {
+            userDao.createUserAccountInfo(userId, cartId, wishListId, ordersHistoryId)
+            true
+        } else false
     }
 
     fun getAccountInfo(userId: String): AccountInfo? {
         val accountInfo: AccountInfo? = if(utility.checkIfUserExists(userId)) {
             if(utility.checkIfUserAccountInfoExists(userId)) {
-                userData.retrieveAccountInfo(userId)
+                userDao.retrieveAccountInfo(userId)
             } else null
         } else null
         return accountInfo
     }
 
     fun getUserDetails(): MutableMap<String, String> {
-        return if(::user.isInitialized) {
-            mutableMapOf("name" to user.userName, "mobile" to user.userMobile, "email" to user.userEmail)
-        } else mutableMapOf()
+        return mutableMapOf("name" to user.userName, "mobile" to user.userMobile, "email" to user.userEmail)
     }
 
     fun getUserAddresses(): MutableMap<String, Address> {
-        if(::user.isInitialized) {
-            addressesList = user.addresses
-        }
+        addressesList = user.addresses
         return addressesList
     }
 

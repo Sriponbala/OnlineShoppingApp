@@ -3,38 +3,39 @@ package utils
 import data.Product
 import database.ProductsTable
 import enums.ProductStatus
+import interfaces.ProductsDao
 
-class ProductsData {
+class ProductsData: ProductsDao {
 
-    fun retrieveListOfProducts(category: String): MutableList<Product>? {
+    override fun retrieveListOfProducts(category: String): MutableList<Product>? {
         return if(ProductsTable.products.containsKey(category)) {
             ProductsTable.products[category]
         } else null
     }
 
-    fun retrieveListOfCategories(): List<String> {
+    override fun retrieveListOfCategories(): List<String> {
         return ProductsTable.products.map{
             it.key
         }
     }
 
-    fun updateAvailableQuantityOfProduct(productId: String, category: String, quantity: Int) {
+    override fun updateAvailableQuantityOfProduct(productId: String, category: String, quantity: Int) {
         retrieveProduct(productId, category).availableQuantity -= quantity
     }
 
-    fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
+    override fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
         return retrieveProduct(productId, category).status
     }
 
-    fun retrieveAvailableQuantityOfProduct(productId: String, category: String): Int {
+    override fun retrieveAvailableQuantityOfProduct(productId: String, category: String): Int {
         return retrieveProduct(productId, category).availableQuantity
     }
 
-    fun updateStatusOfProduct(productId: String, category: String, status: ProductStatus) {
+    override fun updateStatusOfProduct(productId: String, category: String, status: ProductStatus) {
         retrieveProduct(productId, category).status = status
     }
 
-    fun retrieveProduct(productId: String, category: String): Product {
+    override fun retrieveProduct(productId: String, category: String): Product {
         lateinit var productData: Product
         for(product in ProductsTable.products[category]!!) {
             if(product.productId == productId) {

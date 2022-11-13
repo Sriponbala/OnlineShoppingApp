@@ -7,12 +7,17 @@ import enums.WishListDashboard
 import interfaces.DashboardServices
 import utils.Helper
 
-class WishListPage(private val wishListId: String): DashboardServices {
+class WishListPage(private val wishListsActivities: WishListsActivities): DashboardServices {
 
-    private val wishListsActivities = WishListsActivities()
     private lateinit var wishListProducts : ArrayList<Product>
     private var isEmptyWishList: Boolean = true
+    private lateinit var wishListId: String
+    private lateinit var shopPage: ShopPage
 
+    fun initializer(wishListId: String, shopPage: ShopPage) {
+        this.wishListId = wishListId
+        this.shopPage = shopPage
+    }
 
     fun openWishListPage() {
 
@@ -30,6 +35,8 @@ class WishListPage(private val wishListId: String): DashboardServices {
                         when(super.getUserChoice(wishListDashboard)) {
                             WishListDashboard.VIEW_PRODUCT -> {
                                 println(selectedProduct)
+                                shopPage.productActivities(selectedProduct)
+                                break
                             }
                             WishListDashboard.DELETE_PRODUCT -> {
                                 wishListsActivities.removeProductFromWishList(wishListId, selectedProduct)
@@ -84,5 +91,4 @@ class WishListPage(private val wishListId: String): DashboardServices {
     private fun checkIfWishListIsEmpty(wishListProducts: ArrayList<Product>?) {
         isEmptyWishList = wishListProducts?.isEmpty() == true
     }
-
 }

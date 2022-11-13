@@ -7,9 +7,8 @@ import enums.AddressManagementOptions
 import enums.AddressSelectionOptions
 import utils.Helper
 
-class AddressPage() {
+class AddressPage(private val userAccountActivities: UserAccountActivities) {
 
-    private lateinit var userAccountActivities: UserAccountActivities
     private lateinit var addresses: MutableMap<String, Address>
     private var doorNo = ""
     private var flatName = ""
@@ -22,15 +21,6 @@ class AddressPage() {
     private var selectAddress = false
     private var shippingAddress: String = ""
 
-    constructor(userAccountActivities: UserAccountActivities): this() {
-        this.userAccountActivities = userAccountActivities
-        this.addresses = userAccountActivities.getUserAddresses()
-    }
-    constructor(userId: String) : this() {
-        this.userAccountActivities = UserAccountActivities()
-        userAccountActivities.getUser(userId)
-        this.addresses = userAccountActivities.getUserAddresses()
-    }
     fun setSelectAddress(input: Boolean) {
         this.selectAddress = input
     }
@@ -44,6 +34,7 @@ class AddressPage() {
 
     fun openAddressPage() {
 
+        this.addresses = userAccountActivities.getUserAddresses()
         displayAllAddresses()
         val addressSelectionOptions = AddressSelectionOptions.values()
         while(true) {

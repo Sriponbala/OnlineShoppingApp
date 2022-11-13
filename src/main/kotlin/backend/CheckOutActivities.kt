@@ -3,11 +3,12 @@ package backend
 import data.Item
 import data.Order
 
-class CheckOutActivities {
+class CheckOutActivities(
+    private val cartActivities: CartActivities,
+    private val productActivities: ProductActivities,
+    private val ordersHistoryActivities: OrdersHistoryActivities
+) {
 
-    private val ordersHistoryActivities = OrdersHistoryActivities()
-    private val cartActivities = CartActivities()
-    private val productActivities = ProductActivities()
     private val orders: ArrayList<Order> = arrayListOf()
 
     fun addOrdersToOrdersHistory(

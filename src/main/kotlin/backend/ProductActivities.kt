@@ -2,21 +2,21 @@ package backend
 
 import data.Product
 import enums.ProductStatus
+import interfaces.ProductsDao
+import interfaces.UtilityDao
 import utils.ProductsData
-import utils.Utility
 
-class ProductActivities {
+class ProductActivities(private val utility: UtilityDao) {
 
-    private val productsData = ProductsData()
+    private val productsDao: ProductsDao = ProductsData()
     private var productsList: List<Product>? = null
-    private val utility = Utility()
 
     fun getCategories(): List<String> {
-        return productsData.retrieveListOfCategories()
+        return productsDao.retrieveListOfCategories()
     }
 
     fun getProductsList(category: String): Map<Int, Triple<String, String, Float>> {
-        productsList = productsData.retrieveListOfProducts(category)
+        productsList = productsDao.retrieveListOfProducts(category)
         val productsDetails = mutableMapOf<Int, Triple<String, String, Float>>()
         productsList?.forEachIndexed{ index, product ->
             productsDetails[index + 1] = Triple(product.productId, product.productName, product.price)
@@ -36,30 +36,30 @@ class ProductActivities {
     }
 
     fun getProductFromDb(productId: String, category: String): Product {
-        return productsData.retrieveProduct(productId, category)
+        return productsDao.retrieveProduct(productId, category)
     }
 
     fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
         return if(utility.checkIfProductExists(productId, category)) {
-            productsData.retrieveAvailableQuantityOfProduct(productId, category)
+            productsDao.retrieveAvailableQuantityOfProduct(productId, category)
         } else 0
     }
 
     fun updateAvailableQuantityAndStatusOfProduct(productId: String, category: String, quantity: Int) {
         if(utility.checkIfProductExists(productId, category)) {
-            if((productsData.retrieveAvailableQuantityOfProduct(productId, category) - quantity) >= 0 ) {
-                productsData.updateAvailableQuantityOfProduct(productId, category, quantity)
-                if(productsData.retrieveAvailableQuantityOfProduct(productId, category) == 0) {
-                    productsData.updateStatusOfProduct(productId, category, ProductStatus.OUT_OF_STOCK)
+            if((productsDao.retrieveAvailableQuantityOfProduct(productId, category) - quantity) >= 0 ) {
+                productsDao.updateAvailableQuantityOfProduct(productId, category, quantity)
+                if(productsDao.retrieveAvailableQuantityOfProduct(productId, category) == 0) {
+                    productsDao.updateStatusOfProduct(productId, category, ProductStatus.OUT_OF_STOCK)
                 } else {
-                    productsData.updateStatusOfProduct(productId, category, ProductStatus.IN_STOCK)
+                    productsDao.updateStatusOfProduct(productId, category, ProductStatus.IN_STOCK)
                 }
             }
         }
     }
 
     fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
-        return productsData.retrieveProductAvailabilityStatus(category, productId)
+        return productsDao.retrieveProductAvailabilityStatus(category, productId)
     }
 
 }

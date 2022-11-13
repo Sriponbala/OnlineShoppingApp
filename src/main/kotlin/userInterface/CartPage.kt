@@ -1,6 +1,7 @@
 package userInterface
 
 import backend.CartActivities
+import data.AccountInfo
 import data.Item
 import enums.CartActivitiesDashboard
 import enums.ProductQuantityManagement
@@ -8,13 +9,17 @@ import enums.ProductStatus
 import interfaces.DashboardServices
 import utils.Helper
 
-class CartPage(private val userId: String, private val cartId: String): DashboardServices {
+class CartPage(private val cartActivities: CartActivities): DashboardServices {
 
-    private val cartActivities = CartActivities()
     private var isCartEmpty = false
     private lateinit var cartItems: List<Item>
+    private lateinit var cartId: String
 
-    fun openCartPage() {
+    fun initializer(cartId: String) {
+        this.cartId = cartId
+    }
+
+    fun openCartPage(addressPage: AddressPage, paymentPage: PaymentPage, checkOutPage: CheckOutPage, accountInfo: AccountInfo) {
 
         while(true) {
             isCartEmpty = checkIfCartIsEmpty(cartId)
@@ -35,7 +40,7 @@ class CartPage(private val userId: String, private val cartId: String): Dashboar
                                 items.add(cartItem)
                             }
                         }
-                        val checkOutPage = CheckOutPage(userId, items)
+                        checkOutPage.initializer(addressPage, paymentPage, items, accountInfo)
                         checkOutPage.openCheckOutPage()
                     }
                     CartActivitiesDashboard.GO_BACK -> {
@@ -51,9 +56,13 @@ class CartPage(private val userId: String, private val cartId: String): Dashboar
 
     private fun displayCartItems() {
         cartItems.forEachIndexed { index, item ->
-            println("${index + 1}. $item")
+            println("${index + 1}. Item Name        : ${item.productName}\n" +
+                    "   Item price       : ${item.productPrice}\n" +
+                    "   Quantity         : ${item.quantity}\n" +
+                    "   Total Price      : ${item.totalPrice}\n" +
+                    "   Status           : ${item.status}")
         }
-        println("Subtotal: ${cartActivities.calculateAndUpdateSubtotal(cartId, cartItems)}")
+        println("   Subtotal: ${cartActivities.calculateAndUpdateSubtotal(cartId, cartItems)}")
     }
 
     private fun doActivitiesOnSelectedItem(item: Item) {

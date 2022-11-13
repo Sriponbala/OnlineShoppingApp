@@ -1,11 +1,42 @@
-import userInterface.EntryPage
+import backend.*
+import interfaces.UtilityDao
+import userInterface.*
+import utils.Utility
 
 fun main() {
 
+    val utility: UtilityDao = Utility()
+
+    val productActivities = ProductActivities(utility)
+    val userAccountActivities = UserAccountActivities(utility)
+    val cartActivities = CartActivities(utility)
+    val wishListsActivities = WishListsActivities(utility)
+    val ordersHistoryActivities = OrdersHistoryActivities(utility)
+    val checkOutActivities = CheckOutActivities(cartActivities, productActivities, ordersHistoryActivities)
+
     val entryPage = EntryPage()
-    entryPage.openEntryPage()
+    val addressPage = AddressPage(userAccountActivities)
+    val cartPage = CartPage(cartActivities)
+    val checkOutPage = CheckOutPage(checkOutActivities)
+    val homePage = HomePage(cartActivities, wishListsActivities)
+    val ordersPage = OrdersPage(ordersHistoryActivities)
+    val paymentPage = PaymentPage()
+    val shopPage = ShopPage(productActivities)
+    val signUpPage = SignUpPage()
+    val signInPage = SignInPage()
+    val userAccountPage = UserAccountPage(userAccountActivities)
+    val wishListPage = WishListPage(wishListsActivities)
+    entryPage.openEntryPage(signUpPage, signInPage, homePage, userAccountPage, shopPage, cartPage, wishListPage, checkOutPage, addressPage, ordersPage, paymentPage, userAccountActivities, wishListsActivities, cartActivities, ordersHistoryActivities, utility)
 
 }
+
+
+
+
+
+
+
+
 
 
 /*

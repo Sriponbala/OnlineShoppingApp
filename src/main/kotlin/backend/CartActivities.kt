@@ -2,35 +2,26 @@ package backend
 
 import data.Item
 import enums.ProductStatus
+import interfaces.CartDao
+import interfaces.UtilityDao
 import utils.CartData
-import utils.Utility
 
-class CartActivities {
+class CartActivities(private val utility: UtilityDao) {
 
-    private val cartData = CartData()
-    private val utility = Utility()
-    private val productActivities = ProductActivities()
+    private val cartDao: CartDao = CartData()
+    private val productActivities = ProductActivities(utility)
 
     fun createAndGetCartId(userId: String): String {
         var cartId = ""
         if(utility.checkIfUserExists(userId)) {
-            cartId = cartData.createAndGetCartId()
+            cartId = cartDao.createAndGetCartId()
         }
-        return cartId
-    }
-
-    fun getCartId(userId: String): String {
-        val cartId = if(utility.checkIfUserExists(userId)) {
-            if(utility.checkIfUserAccountInfoExists(userId)) {
-                cartData.retrieveCartId(userId)
-            } else ""
-        } else ""
         return cartId
     }
 
     fun getCartItems(cartId: String): List<Item> {
         return if(utility.checkIfCartExists(cartId)) {
-            cartData.retrieveCartItems(cartId)
+            cartDao.retrieveCartItems(cartId)
         } else listOf()
     }
 
@@ -41,7 +32,7 @@ class CartActivities {
                     if(utility.checkIfCartExists(cartId)) {
                         if(!utility.checkIfItemIsInCart(cartId, productId)) {
                             val product = productActivities.getProductFromDb(productId, category)
-                            cartData.addToCart(cartId, product)
+                            cartDao.addToCart(cartId, product)
                             true
                         } else false
                     } else false
@@ -55,8 +46,8 @@ class CartActivities {
         val itemRemovedFromCart: Boolean = if(utility.checkIfCartExists(cartId)) {
             if(remove) {
                 if(utility.checkIfItemIsInCart(cartId, productId)) {
-                    val item = cartData.retrieveCartItem(cartId, productId)
-                    cartData.removeFromCart(cartId, item)
+                    val item = cartDao.retrieveCartItem(cartId, productId)
+                    cartDao.removeFromCart(cartId, item)
                     true
                 } else false
             } else false
@@ -68,7 +59,7 @@ class CartActivities {
         val areItemsRemoved = if(utility.checkIfCartExists(cartId)) {
             if(remove) {
                 if(cartItems.isNotEmpty()) {
-                    cartData.clearCart(cartId, cartItems)
+                    cartDao.clearCart(cartId, cartItems)
                     true
                 } else false
             } else false
@@ -84,7 +75,7 @@ class CartActivities {
                     subTotal += (item.totalPrice)
                 }
             }
-            cartData.updateSubtotal(cartId, subTotal)
+            cartDao.updateSubtotal(cartId, subTotal)
         }
         return subTotal
     }
@@ -96,50 +87,15 @@ class CartActivities {
     fun changeQuantityAndUpdateTotalPriceOfItem(cartId: String, item: Item, quantity: Int): Boolean {
         return if(utility.checkIfCartExists(cartId)) {
             if(utility.checkIfItemIsInCart(cartId, item.productId)) {
-                cartData.changeItemQuantityAndPrice(cartId ,item, quantity)
-                calculateAndUpdateSubtotal(cartId, cartData.retrieveCartItems(cartId))
+                cartDao.changeItemQuantityAndPrice(cartId ,item, quantity)
+                calculateAndUpdateSubtotal(cartId, cartDao.retrieveCartItems(cartId))
                 true
             } else false
         } else false
     }
 
     fun updateAvailabilityStatusOfCartItems() {
-       cartData.updateAvailableQuantityAndStatusOfCartItems()
+       cartDao.updateAvailableQuantityAndStatusOfCartItems()
     }
 
 }
-
-// add to cart
-/*
-//        val status = productsData.retrieveProductAvailabilityStatus(category, productId)
-//        itemAddedToCart = if(status == ProductStatus.OUT_OF_STOCK) {
-//            false
-//        } else {
-//            if(isItemInCart(cartId, productId)) {
-//                false
-//            } else {
-//
-//                cartData.addToCart(cartId, category, productId, status)
-//                true
-//            }
-//        }
- */
-
-// delete or remove from cart
-/*
-
-//        val status = productsData.retrieveProductAvailabilityStatus(category, productId)
-//            itemRemovedFromCart = if(status == ProductStatus.OUT_OF_STOCK) {
-//                if(isItemInCart(cartId, productId)) {
-//                    cartData.removeFromCart(cartId, productId)
-//                } else {
-//                    false
-//                }
-//            } else {
-//                if(isItemInCart(cartId, productId) && remove) {
-//                    cartData.removeFromCart(cartId, productId)
-//                } else {
-//                    false
-//                }
-//            }
- */
