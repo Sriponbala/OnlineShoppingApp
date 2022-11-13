@@ -57,7 +57,7 @@ class CartData: CartDao {
 
     override fun changeItemQuantityAndPrice(cartId: String, item: Item, quantity: Int) {
         for(cartItem in CartTable.carts[cartId]!!.cartItems) {
-            if(cartItem == item) {
+            if(cartItem.productId == item.productId) {
                 cartItem.quantity = quantity
                 cartItem.totalPrice = (quantity * cartItem.productPrice)
                 break
@@ -70,15 +70,17 @@ class CartData: CartDao {
     }
 
     override fun updateAvailableQuantityAndStatusOfCartItems() {
-        for((_, cart) in CartTable.carts) {
+        for((cartId, cart) in CartTable.carts) {
             for(cartItem in cart.cartItems) {
                 val availableQuantity = productsDao.retrieveAvailableQuantityOfProduct(cartItem.productId, cartItem.category)
                 val status = productsDao.retrieveProductAvailabilityStatus(cartItem.category, cartItem.productId)
                 cartItem.status = status
                 if(cartItem.quantity > availableQuantity) {
-                    cartItem.quantity = availableQuantity
+                    changeItemQuantityAndPrice(cartId, cartItem, availableQuantity)
+                    //cartItem.quantity = availableQuantity
                 } else if(status == ProductStatus.OUT_OF_STOCK) {
-                    cartItem.quantity = 0
+                    changeItemQuantityAndPrice(cartId, cartItem, 0)
+                    //cartItem.quantity = 0
                 }
             }
         }
