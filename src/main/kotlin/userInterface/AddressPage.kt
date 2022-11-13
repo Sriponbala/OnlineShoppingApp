@@ -73,10 +73,10 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
     private fun displayAllAddresses() {
 
         if(addresses.isEmpty()) {
-            println("        Empty addresses list       ")
+            println("        EMPTY ADDRESS LIST       ")
         } else {
             var sno = 1
-            println("-----------------Your Addresses------------------")
+            println("-----------------YOUR ADDRESSES------------------")
             for((addressId, address) in addresses) {
                 generateAddressMap(sno, addressId)
                 println("${sno++}. $address")
@@ -133,13 +133,13 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
                     userAccountActivities.updateAddress(addressId, "street", getUserInput("street name"))
                 }
                 AddressFields.AREA -> {
-                    userAccountActivities.updateAddress(addressId, "area", getUserInput("area"))
+                    userAccountActivities.updateAddress(addressId, "area", getUserInput("area name"))
                 }
                 AddressFields.CITY -> {
-                    userAccountActivities.updateAddress(addressId, "city", getUserInput("city "))
+                    userAccountActivities.updateAddress(addressId, "city", getUserInput("city name"))
                 }
                 AddressFields.STATE -> {
-                    userAccountActivities.updateAddress(addressId, "state", getUserInput("state"))
+                    userAccountActivities.updateAddress(addressId, "state", getUserInput("state name"))
                 }
                 AddressFields.PINCODE -> {
                     userAccountActivities.updateAddress(addressId, "pincode", getPincode())
@@ -161,12 +161,12 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
         var option: Int
         var selectedAddress: String
         while(true){
-            println("Select an address: ")
+            println("SELECT AN ADDRESS: ")
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option,addressesMap.size)) {
-                    println("Selected address: ${addresses[addressesMap[option]]}")
+                    println("SELECTED ADDRESS: ${addresses[addressesMap[option]]}")
                     selectedAddress = addressesMap[option]!!
                     break
                 } else {
@@ -207,40 +207,40 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
 
     private fun getUserInputs() {
 
-        println("Fill address fields: ")
+        println("FILL ADDRESS FIELDS: ")
 
         do{
-            println("Enter door number: ")
+            println("ENTER DOOR NUMBER: ")
             doorNo = readLine()!!
         } while(Helper.fieldValidation(doorNo) || !Helper.validateAddressFields(doorNo))
 
         do{
-            println("Enter flat name: ")
+            println("ENTER FLAT  NAME: ")
             flatName = readLine()!!
         } while(Helper.fieldValidation(flatName) || !Helper.validateAddressFields(flatName))
 
         do{
-            println("Enter street: ")
+            println("ENTER STREET NAME: ")
             street = readLine()!!
         } while(Helper.fieldValidation(street) || !Helper.validateAddressFields(street))
 
         do{
-            println("Enter area: ")
+            println("ENTER AREA NAME: ")
             area = readLine()!!
         } while(Helper.fieldValidation(area) || !Helper.validateAddressFields(area))
 
         do{
-            println("Enter city: ")
+            println("ENTER CITY NAME: ")
             city = readLine()!!
         } while(Helper.fieldValidation(city) || !Helper.validateAddressFields(city))
 
         do{
-            println("Enter state: ")
+            println("ENTER STATE NAME: ")
             state = readLine()!!
         } while(Helper.fieldValidation(state) || !Helper.validateAddressFields(state))
 
         do{
-            println("Enter pincode: ")
+            println("ENTER PINCODE: ")
             pincode = readLine()!!
         } while(Helper.fieldValidation(pincode) || !Helper.validatePincode(pincode))
     }
@@ -249,7 +249,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
 
         var userInput: String
         do {
-            println("Enter $message: ")
+            println("ENTER ${message.uppercase()}: ")
             userInput = readLine()!!
         } while(Helper.fieldValidation(userInput) || !Helper.validateAddressFields(userInput))
         return userInput
@@ -259,7 +259,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities) {
 
         var pincode: String
         do {
-            println("Enter pincode: ")
+            println("ENTER PINCODE: ")
             pincode = readLine()!!
         } while(Helper.fieldValidation(pincode) || !Helper.validatePincode(pincode))
         return pincode

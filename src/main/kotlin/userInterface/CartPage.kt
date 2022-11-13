@@ -105,19 +105,19 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
         var option: Int
         var selectedItem: Item
         while(true){
-            println("Select an item: ")
+            println("SELECT AN ITEM: ")
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option, cartItems.size)) {
-                    println("Selected address: ${cartItems[option - 1]}")
+                    println("SELECTED ITEM: ${cartItems[option - 1]}")
                     selectedItem = cartItems[option - 1]
                     break
                 } else {
                     println("Invalid option! Try again")
                 }
             } catch(exception: Exception) {
-                println("""Class: AddressPage: selectAnAddress(): Exception: $exception
+                println("""Class: CartPage: selectAnItem(): Exception: $exception
                     |Enter again!
                 """.trimMargin())
             }
@@ -133,7 +133,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
         var quantity = 1
         while(true) {
             if(Helper.confirm()) {
-                println("Enter the quantity required: ")
+                println("ENTER THE QUANTITY REQUIRED: ")
                 try {
                     val input = readLine()!!.toInt()
                     if(input in 1..4) {

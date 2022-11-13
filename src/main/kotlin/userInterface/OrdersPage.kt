@@ -12,7 +12,7 @@ class OrdersPage(private val ordersHistoryActivities: OrdersHistoryActivities) {
 
     fun displayOrdersHistory() {
         val ordersHistory = ordersHistoryActivities.getOrdersHistory(ordersHistoryId)
-        println("-----------------Orders History---------------------")
+        println("-----------------ORDERS HISTORY---------------------")
         if(ordersHistory.isEmpty()){
             println("         Empty orders history         ")
         } else {

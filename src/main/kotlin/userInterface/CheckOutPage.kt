@@ -73,16 +73,16 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     private fun proceedToBuy() {
         try {
             label@while(true) {
-                println("Select an address: ")
+                println("SELECT AN ADDRESS: ")
                 addressPage.setSelectAddress(true)
                 shippingAddress = addressPage.selectAddressForDelivery()
                 if(shippingAddress != "") {
                     if(Helper.confirm()) {
                         val paymentPage = PaymentPage()
                         while(true) {
-                            println("Select mode of payment: ")
+                            println("SELECT MODE OF PAYMENT: ")
                             paymentPage.selectModeOfPayment()
-                            println("Do you want to place order?")
+                            println("DO YOU WANT TO PLACE ORDER?")
                             if(Helper.confirm()) {
                                 totalBill = checkOutActivities.getTotalBill(finalizedListOfItems)
                                 checkOutActivities.updateAvailableQuantityAndStatusOfProducts(finalizedListOfItems)
@@ -169,7 +169,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun displayOrdersSummary(orders: ArrayList<Order>, totalBill: Float) {
-        println("---------------Orders Summary------------------")
+        println("---------------ORDERS SUMMARY------------------")
         orders.forEachIndexed { index, order ->
             println("${index + 1}. Item Name        : ${order.item.productName}\n" +
                     "   Item price       : ${order.item.productPrice}\n" +
@@ -197,12 +197,12 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
         var option: Int
         var selectedItem: Item
         while(true){
-            println("Select an item: ")
+            println("SELECT AN ITEM: ")
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option, finalizedListOfItems.size)) {
-                    println("Selected item: ${finalizedListOfItems[option - 1]}")
+                    println("SELECTED ITEM: ${finalizedListOfItems[option - 1]}")
                     selectedItem = finalizedListOfItems[option - 1]
                     break
                 } else {
@@ -221,7 +221,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
         var quantity = 1
         while(true) {
             if(Helper.confirm()) {
-                println("Enter the quantity required: ")
+                println("ENTER THE QUANTITY REQUIRED: ")
                 try {
                     val input = readLine()!!.toInt()
                     if(input in 1..4) {

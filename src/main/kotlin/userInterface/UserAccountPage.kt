@@ -18,10 +18,10 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
     }
 
     private fun displayUserDetails(userDetails: MutableMap<String, String>) {
-        println("---------------Your Profile--------------")
-        println("""|Name   : ${userDetails["name"]} 
-                   |Mobile : ${userDetails["mobile"]} 
-                   |Email  : ${userDetails["email"]}""".trimMargin())
+        println("---------------YOUR PROFILE--------------")
+        println("""|NAME   : ${userDetails["name"]} 
+                   |MOBILE : ${userDetails["mobile"]} 
+                   |EMAIL  : ${userDetails["email"]}""".trimMargin())
     }
 
     fun openUserAccountPage(wishListPage: WishListPage, ordersPage: OrdersPage, addressPage: AddressPage, shopPage: ShopPage) {
@@ -53,12 +53,12 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
         val userAccountFields = UserAccountFields.values()
         while(true) {
             super.showDashboard("Edit User Details", userAccountFields)
-            println("Select the field to edit:")
+            println("SELECT THE FIELD TO EDIT:")
             when(super.getUserChoice(userAccountFields)) {
                 UserAccountFields.Name -> {
                     var name: String
                     do{
-                        println("Enter name: ")
+                        println("ENTER NAME: ")
                         name = readLine()!!
                     } while(Helper.fieldValidation(name))
                     userAccountActivities.updateName(name)
@@ -66,7 +66,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                 UserAccountFields.Email -> {
                     var email: String
                     do {
-                        println("Enter email: ")
+                        println("ENTER EMAIL: ")
                         email = readLine()!!
                     } while(!Helper.fieldValidation(email) && !Helper.validateEmail(email))
                     userAccountActivities.updateEmail(email)

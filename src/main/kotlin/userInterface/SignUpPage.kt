@@ -39,7 +39,7 @@ class SignUpPage: OnboardingServices {
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-        println("----------SignUp Page----------")
+        println("----------SIGNUP PAGE----------")
         try {
             getUserInputs()
             while(true) {
@@ -48,7 +48,7 @@ class SignUpPage: OnboardingServices {
                             val otp = Helper.generateOTP()
                             println("OTP : $otp")
                             while(true) {
-                                println("Enter the OTP: ")
+                                println("ENTER THE OTP: ")
                                 val currentOtp = readLine()!!
                                 if(Helper.verifyOtp(currentOtp, otp)) {
                                     userId = userAccountActivities.createAndGetUserId(name, mobile, email, password)
@@ -98,29 +98,29 @@ class SignUpPage: OnboardingServices {
     override fun getUserInputs() {
 
         do{
-            println("Enter name: ")
+            println("ENTER NAME: ")
             name = readLine()!!
         } while(Helper.fieldValidation(name))
 
         do{
-            println("Enter mobile number: ")
+            println("ENTER MOBILE NUMBER: ")
             mobile = readLine()!!
         }while(Helper.fieldValidation(mobile) || !Helper.validateMobileNumber(mobile))
 
         do {
-            println("Enter email: ")
+            println("ENTER EMAIL: ")
             email = readLine()!!
         } while(!Helper.fieldValidation(email) && !Helper.validateEmail(email))
 
         do{
-            println("Enter password: " +
+            println("ENTER PASSWORD: " +
                     "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]" +
                     "[It should contain at least 4 to 8 characters]")
             password = readLine()!!
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
 
         do{
-            println("Enter confirm password: ")
+            println("ENTER CONFIRM PASSWORD: ")
             confirmPassword = readLine()!!
         } while(Helper.fieldValidation(confirmPassword) || !Helper.confirmPassword(confirmPassword,password))
     }

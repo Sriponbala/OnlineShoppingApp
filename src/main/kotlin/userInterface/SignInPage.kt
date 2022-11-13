@@ -26,7 +26,7 @@ class SignInPage: OnboardingServices {
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-        println("----------SignIn Page----------")
+        println("----------SIGNIN PAGE----------")
         try {
             getUserInputs()
             while (true) {
@@ -68,12 +68,12 @@ class SignInPage: OnboardingServices {
     override fun getUserInputs() {
 
         do {
-            println("Enter mobile number: ")
+            println("ENTER MOBILE NUMBER: ")
             mobile = readLine()!!
         } while(Helper.fieldValidation(mobile) || !Helper.validateMobileNumber(mobile))
 
         do{
-            println("Enter password: \n" +
+            println("ENTER PASSWORD: \n" +
                     "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]\n" +
                     "[It should contain at least 4 to 8 characters]")
             password = readLine()!!

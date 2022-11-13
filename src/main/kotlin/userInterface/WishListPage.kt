@@ -58,7 +58,7 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
         var option: Int
         var selectedProduct = ""
         while(true){
-            println("Select a product: ")
+            println("SELECT A PRODUCT: ")
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
@@ -69,7 +69,7 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
                 }
                 break
             } catch(exception: Exception) {
-                println("""Class: AddressPage: selectAnAddress(): Exception: $exception
+                println("""Class: WistListPage: selectAProduct(): Exception: $exception
                     |Enter again!
                 """.trimMargin())
             }
