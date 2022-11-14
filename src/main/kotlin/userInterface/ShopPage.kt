@@ -130,10 +130,11 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
 
     fun productActivities(productId: String) {
 
+        product = productActivities.getAProduct(productId)!!
         label@while(true) {
             //val productId = selectAProduct()
             //if(Helper.confirm()) {
-                displayProductDetails(productId)
+                displayProductDetails(product)
                 val productActivitiesDashboard = ProductActivitiesDashboard.values()
                 while (true) {
                     super.showDashboard("Product Dashboard", productActivitiesDashboard)
@@ -220,33 +221,28 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         return selectedProductId
     }
 
-    private fun displayProductDetails(productId: String) {
-        product = productActivities.getAProduct(productId)!!
+    private fun displayProductDetails(product: Product) {
         println("""PRODUCT NAME       : ${product.productName}
                   |PRODUCT PRICE      : ${product.price}
         """.trimMargin())
         when(product) { // Smart cast to 'Product.Book' is impossible, because 'product' is a mutable property that could have been changed by this time
             is Product.Book -> {
-                val book = product as Product.Book
-                println("""BOOK TYPE          : ${book.bookType}
+                println("""BOOK TYPE          : ${product.bookType}
                 """.trimMargin())
             }
             is Product.Mobile -> {
-                val mobile = product as Product.Mobile
-                println("""BRAND              : ${mobile.brand}
-                          |STORAGE            : ${mobile.storage}
+                println("""BRAND              : ${product.brand}
+                          |STORAGE            : ${product.storage}
                 """.trimMargin())
             }
             is Product.Clothing -> {
-                val clothing = product as Product.Clothing
-                println("""COLOUR             : ${clothing.colour}
-                          |GENDER             : ${clothing.gender}
+                println("""COLOUR             : ${product.colour}
+                          |GENDER             : ${product.gender}
                 """.trimMargin())
             }
             is Product.Earphone -> {
-                val earphone = product as Product.Earphone
-                println("""EARPHONE TYPE      : ${earphone.type}
-                          |STORAGE            : ${earphone.colour}
+                println("""EARPHONE TYPE      : ${product.type}
+                          |STORAGE            : ${product.colour}
                 """.trimMargin())
             }
 
