@@ -16,39 +16,3 @@ object UsersTable {
 }
 
 
-
-
-/*
-    fun addUser(user: User) {
-        users[user.userId] = user
-    }
-
-    fun addPassword(userId: String, password: UserPassword) {
-        usersPassword[userId] = password
-    }
-
-    fun getUserId(mobile: String): String {
-        var id = ""
-        for((userId, user) in users) {
-            if(mobile == user.userMobile) {
-                id = userId
-                break
-            }
-        }
-        return id
-    }
-
-    fun getUser(mobile: String): User? {
-        var userData: User? = null
-        for((_, user) in users) {
-            if(mobile == user.userMobile) {
-                userData = user
-                break
-            } else {
-                userData = null
-            }
-        }
-        return userData
-    }
-
- */

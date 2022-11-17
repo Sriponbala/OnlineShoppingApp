@@ -1,5 +1,7 @@
 package enums
 
 enum class Payment {
-    CARD, UPI, PAY_ON_DELIVERY
+    CARD,
+    UPI,
+    PAY_ON_DELIVERY
 }

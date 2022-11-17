@@ -7,6 +7,7 @@ import kotlin.random.Random
 object Helper {
 
     fun confirm(): Boolean {
+
         while(true) {
             println("Confirm: ")
             for (option in Confirmation.values()) {
@@ -30,46 +31,60 @@ object Helper {
     }
 
     fun fieldValidation(fieldValue: String): Boolean {
+
         return fieldValue == ""
     }
 
     fun checkValidRecord(option: Int, size: Int): Boolean {
+
         return option != 0 && option <= size
     }
 
-
     fun generateOTP(): String {
+
         return Random.nextInt(100000,1000000).toString()
     }
 
     fun verifyOtp(currentOtp: String, generatedOtp: String): Boolean {
+
         return currentOtp == generatedOtp
     }
 
     fun confirmPassword(confirmPassword: String, password: String): Boolean {
+
         return confirmPassword == password
     }
 
     fun validateMobileNumber(number: String): Boolean { // 10-digit Phone number with Country Code Prefix(max 3 characters)
+
         return Pattern.matches("^(\\+\\d{1,3}( )?)?\\d{10}$", number)
     }
 
     fun validateEmail(email: String): Boolean {
+
         return Pattern.matches("^[a-z0-9_!#$.-]{3,15}+@[a-z]{5,8}+.[a-z]{2,3}+\$", email)
     }
 
     fun validatePasswordPattern(password: String): Boolean {
+
         return Pattern.matches("^[a-zA-Z0-9!#@$%^&*_+`~]{4,8}+$", password)
     }
 
     fun validatePincode(pincode: String): Boolean {
+
         return Pattern.matches("^[1-9][0-9]{2}\\s?[0-9]{3}$", pincode)
     }
 
     fun validateAddressFields(fieldValue: String): Boolean {
+
         return Pattern.matches("^[a-zA-Z1-9][a-zA-Z0-9-.\\s]{0,30}$", fieldValue)
     }
 }
+
+
+
+
+
 
 //fun main() {
 //

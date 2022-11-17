@@ -1,5 +1,6 @@
 package enums
 
 enum class Confirmation {
-    CONTINUE, GO_BACK
+    CONTINUE,
+    GO_BACK
 }

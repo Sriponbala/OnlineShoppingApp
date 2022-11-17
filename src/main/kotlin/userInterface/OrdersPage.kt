@@ -7,10 +7,12 @@ class OrdersPage(private val ordersHistoryActivities: OrdersHistoryActivities) {
     private lateinit var ordersHistoryId: String
 
     fun initializer(ordersHistoryId: String) {
+
         this.ordersHistoryId = ordersHistoryId
     }
 
     fun displayOrdersHistory() {
+
         val ordersHistory = ordersHistoryActivities.getOrdersHistory(ordersHistoryId)
         println("-----------------ORDERS HISTORY---------------------")
         if(ordersHistory.isEmpty()){

@@ -25,4 +25,6 @@ interface UtilityDao {
 
     fun checkIfItemIsInCart(cartId: String, productId: String): Boolean
 
+    fun checkIfAddressExists(userId: String, addressId: String): Boolean
+
 }

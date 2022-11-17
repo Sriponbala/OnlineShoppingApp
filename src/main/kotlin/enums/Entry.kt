@@ -1,5 +1,8 @@
 package enums
 
 enum class Entry {
-    VIEW_APP, SIGN_UP, SIGN_IN, EXIT;
+    VIEW_APP,
+    SIGN_UP,
+    SIGN_IN,
+    EXIT
 }

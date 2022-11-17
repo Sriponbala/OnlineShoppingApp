@@ -26,6 +26,7 @@ fun main() {
     val signInPage = SignInPage()
     val userAccountPage = UserAccountPage(userAccountActivities)
     val wishListPage = WishListPage(wishListsActivities)
+
     entryPage.openEntryPage(signUpPage, signInPage, homePage, userAccountPage, shopPage, cartPage, wishListPage, checkOutPage, addressPage, ordersPage, paymentPage, userAccountActivities, wishListsActivities, cartActivities, ordersHistoryActivities, utility)
 
 }

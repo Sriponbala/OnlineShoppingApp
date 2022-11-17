@@ -12,10 +12,12 @@ class ProductActivities(private val utility: UtilityDao) {
     private var productsList: List<Product>? = null
 
     fun getCategories(): List<String> {
+
         return productsDao.retrieveListOfCategories()
     }
 
     fun getProductsList(category: String): Map<Int, Triple<String, String, Float>> {
+
         productsList = productsDao.retrieveListOfProducts(category)
         val productsDetails = mutableMapOf<Int, Triple<String, String, Float>>()
         productsList?.forEachIndexed{ index, product ->
@@ -25,6 +27,7 @@ class ProductActivities(private val utility: UtilityDao) {
     }
 
     fun getAProduct(productId: String): Product? {
+
         var selectedProduct: Product? = null
         for(product in productsList!!) {
             if(product.productId == productId) {
@@ -36,16 +39,19 @@ class ProductActivities(private val utility: UtilityDao) {
     }
 
     fun getProductFromDb(productId: String, category: String): Product {
+
         return productsDao.retrieveProduct(productId, category)
     }
 
     fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
+
         return if(utility.checkIfProductExists(productId, category)) {
             productsDao.retrieveAvailableQuantityOfProduct(productId, category)
         } else 0
     }
 
     fun updateAvailableQuantityAndStatusOfProduct(productId: String, category: String, quantity: Int) {
+
         if(utility.checkIfProductExists(productId, category)) {
             if((productsDao.retrieveAvailableQuantityOfProduct(productId, category) - quantity) >= 0 ) {
                 productsDao.updateAvailableQuantityOfProduct(productId, category, quantity)
@@ -59,6 +65,7 @@ class ProductActivities(private val utility: UtilityDao) {
     }
 
     fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
+
         return productsDao.retrieveProductAvailabilityStatus(category, productId)
     }
 

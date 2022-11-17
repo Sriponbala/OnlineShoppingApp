@@ -16,6 +16,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     private lateinit var cartId: String
 
     fun initializer(cartId: String) {
+
         this.cartId = cartId
     }
 
@@ -27,7 +28,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                 cartItems = cartActivities.getCartItems(cartId)
                 displayCartItems()
                 val cartActivitiesDashboard = CartActivitiesDashboard.values()
-                super.showDashboard("Cart Dashboard", cartActivitiesDashboard)
+                super.showDashboard("CART DASHBOARD", cartActivitiesDashboard)
                 when(super.getUserChoice(cartActivitiesDashboard)) {
                     CartActivitiesDashboard.SELECT_A_PRODUCT -> {
                         val item = selectAnItem()
@@ -55,20 +56,23 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun displayCartItems() {
+
         cartItems.forEachIndexed { index, item ->
-            println("${index + 1}. Item Name        : ${item.productName}\n" +
-                    "   Item price       : ${item.productPrice}\n" +
-                    "   Quantity         : ${item.quantity}\n" +
-                    "   Total Price      : ${item.totalPrice}\n" +
-                    "   Status           : ${item.status}")
+            println("""${index + 1}. Item Name        : ${item.productName}
+                |   Item price       : ${item.productPrice}
+                |   Quantity         : ${item.quantity}
+                |   Total Price      : ${item.totalPrice}
+                |   Status           : ${item.status}
+            """.trimMargin())
         }
         println("   Subtotal: ${cartActivities.calculateAndUpdateSubtotal(cartId, cartItems)}")
     }
 
     private fun doActivitiesOnSelectedItem(item: Item) {
+
         val productQuantityManagement = ProductQuantityManagement.values()
         while(true) {
-            super.showDashboard("Activities on selected product", productQuantityManagement)
+            super.showDashboard("ACTIVITIES ON SELECTED PRODUCT", productQuantityManagement)
             when(super.getUserChoice(productQuantityManagement)) {
                 ProductQuantityManagement.CHANGE_QUANTITY -> {
                     if(item.status == ProductStatus.IN_STOCK) {
@@ -102,6 +106,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun selectAnItem(): Item {
+
         var option: Int
         var selectedItem: Item
         while(true){
@@ -126,10 +131,12 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun checkIfCartIsEmpty(cartId: String): Boolean {
+
         return cartActivities.getCartItems(cartId).isEmpty()
     }
 
     private fun getQuantity(productId: String, category: String): Int {
+
         var quantity = 1
         while(true) {
             if(Helper.confirm()) {

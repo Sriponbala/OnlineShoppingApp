@@ -26,7 +26,8 @@ class SignInPage: OnboardingServices {
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-        println("----------SIGNIN PAGE----------")
+
+        println("--------------SIGNIN PAGE--------------")
         try {
             getUserInputs()
             while (true) {
@@ -51,7 +52,6 @@ class SignInPage: OnboardingServices {
                             } else {
                                 println("Invalid userId!")
                             }
-                            //HomePage(userId).openHomePage()
                         } else {
                             println("SignIn failed!")
                         }
@@ -81,6 +81,7 @@ class SignInPage: OnboardingServices {
     }
 
     private fun verifyAccount(utility: UtilityDao): Boolean {
+
         return utility.validateLoginCredentials(mobile, password)
     }
 

@@ -39,7 +39,8 @@ class SignUpPage: OnboardingServices {
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-        println("----------SIGNUP PAGE----------")
+
+        println("--------------SIGNUP PAGE--------------")
         try {
             getUserInputs()
             while(true) {
@@ -113,9 +114,9 @@ class SignUpPage: OnboardingServices {
         } while(!Helper.fieldValidation(email) && !Helper.validateEmail(email))
 
         do{
-            println("ENTER PASSWORD: " +
-                    "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]" +
-                    "[It should contain at least 4 to 8 characters]")
+            println("""ENTER PASSWORD:
+                |[Password can contain any of the following : a-zA-Z0-9!#@${'$'}%^&*_+`~]
+                |[It should contain at least 4 to 8 characters]""".trimMargin())
             password = readLine()!!
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
 
@@ -126,6 +127,7 @@ class SignUpPage: OnboardingServices {
     }
 
     private fun verifyAccount(utility: UtilityDao): Boolean {
+
         return utility.checkUniqueUser(mobile)
     }
 }

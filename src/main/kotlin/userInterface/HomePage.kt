@@ -14,12 +14,9 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
 
 
     fun initializeUserIdAndAccountInfo(userId: String, accountInfo: AccountInfo) {
+
         this.userId = userId
         this.accountInfo = accountInfo
-        setIsLoggedIn()
-    }
-
-    private fun setIsLoggedIn() {
         this.isLoggedIn = true
     }
 
@@ -33,9 +30,10 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
+
         val homePageDashboard = HomePageDashboard.values()
         while(true) {
-            super.showDashboard("Home Page", homePageDashboard)
+            super.showDashboard("HOME PAGE", homePageDashboard)
             when(super.getUserChoice(homePageDashboard)) {
                 HomePageDashboard.VIEW_PRODUCTS -> {
                     if(isLoggedIn) {

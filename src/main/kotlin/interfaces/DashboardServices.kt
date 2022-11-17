@@ -5,6 +5,7 @@ import utils.Helper
 interface DashboardServices {
 
     fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {
+
         println("-------------${title.uppercase()}-------------")
         for(element in enumArray) {
             println("${element.ordinal+1}. $element")
@@ -12,6 +13,7 @@ interface DashboardServices {
     }
 
     fun <E: Enum<E>> getUserChoice(enumArray: Array<E>): E {
+
         while (true) {
             try {
                 println("Enter your choice: ")
@@ -23,7 +25,7 @@ interface DashboardServices {
                     println("Enter valid option!")
                 }
             } catch (exception: Exception) {
-                println("DashboardServices: $enumArray getUserChoice(): Exception: $exception")
+                println("DashboardServices: getUserChoice(): Exception: $exception")
             }
         }
     }

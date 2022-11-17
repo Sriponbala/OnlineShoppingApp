@@ -13,23 +13,27 @@ class UserAccountActivities(private val utility: UtilityDao) {
     private lateinit var user: User
     private var addressesList: MutableMap<String, Address> = mutableMapOf()
     private val userDao: UserDao = UserData()
+    private var addressId = 1
 
     fun getUser(userId: String) {
+
         if(utility.checkIfUserExists(userId)) {
             this.user = userDao.retrieveUser(userId)
         }
-        println("User: ${this.user}")
     }
 
     fun getUserId(mobile: String): String {
+
         return userDao.retrieveUserId(mobile)
     }
 
     fun createAndGetUserId(userName: String, userMobile: String, userEmail: String, password: String): String {
+
         return userDao.createAndGetUserId(userName, userMobile, userEmail, password)
     }
 
     fun createAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String): Boolean {
+
         return if(utility.checkIfUserExists(userId)) {
             userDao.createUserAccountInfo(userId, cartId, wishListId, ordersHistoryId)
             true
@@ -37,6 +41,7 @@ class UserAccountActivities(private val utility: UtilityDao) {
     }
 
     fun getAccountInfo(userId: String): AccountInfo? {
+
         val accountInfo: AccountInfo? = if(utility.checkIfUserExists(userId)) {
             if(utility.checkIfUserAccountInfoExists(userId)) {
                 userDao.retrieveAccountInfo(userId)
@@ -46,68 +51,94 @@ class UserAccountActivities(private val utility: UtilityDao) {
     }
 
     fun getUserDetails(): MutableMap<String, String> {
+
         return mutableMapOf("name" to user.userName, "mobile" to user.userMobile, "email" to user.userEmail)
     }
 
     fun getUserAddresses(): MutableMap<String, Address> {
-        addressesList = user.addresses
+
+        addressesList = userDao.getUserAddresses(user.userId)
         return addressesList
     }
 
     fun getShippingAddress(addressId: String): String {
+
+        val selectedAddress: Address
         return if(addressesList.containsKey(addressId)) {
-            addressesList[addressId].toString()
+            selectedAddress = addressesList[addressId]!!
+            "${selectedAddress.doorNo}, ${selectedAddress.flatName}, ${selectedAddress.street}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.pincode}"
         } else ""
     }
 
-    fun updateName(name: String) {
-      user.userName = name
+    fun updateName(name: String): Boolean {
+
+        return if(utility.checkIfUserExists(user.userId)) {
+            userDao.updateName(user.userId, name)
+            true
+        } else false
     }
 
-    fun updateEmail(email: String) {
-     user.userEmail = email
+    fun updateEmail(email: String): Boolean {
+
+        return if(utility.checkIfUserExists(user.userId)) {
+            userDao.updateEmail(user.userId, email)
+            true
+        } else false
     }
 
-    fun addNewAddress(doorNo: String, flatName: String, street: String, area: String, city: String, state: String, pincode: String) {
-        user.addresses[generateAddressId()] = Address(doorNo, flatName, street, area, city, state, pincode)
+    fun addNewAddress(doorNo: String, flatName: String, street: String, area: String, city: String, state: String, pincode: String): Boolean {
+
+        return if(utility.checkIfUserExists(user.userId)) {
+            val addressId = generateAddressId()
+            userDao.addNewAddress(user.userId, addressId, Address(doorNo, flatName, street, area, city, state, pincode))
+            true
+        } else false
     }
 
     fun updateAddress(addressId: String, field: String, value: String) {
-        if(user.addresses.containsKey(addressId)) {
+
+        if(utility.checkIfUserExists(user.userId)) {
+            if(utility.checkIfAddressExists(user.userId, addressId)) {
                 when(field) {
                     "doorNo" -> {
-                        user.addresses[addressId]?.doorNo = value
+                        userDao.updateAddress(user.userId, addressId,"doorNo", value)
                     }
                     "flatName" -> {
-                        user.addresses[addressId]?.flatName = value
+                        userDao.updateAddress(user.userId, addressId,"flatName", value)
                     }
                     "street" -> {
-                        user.addresses[addressId]?.street = value
+                        userDao.updateAddress(user.userId, addressId,"street", value)
                     }
                     "area" -> {
-                        user.addresses[addressId]?.doorNo = value
+                        userDao.updateAddress(user.userId, addressId,"area", value)
                     }
                     "city" -> {
-                        user.addresses[addressId]?.doorNo = value
+                        userDao.updateAddress(user.userId, addressId,"city", value)
                     }
                     "state" -> {
-                        user.addresses[addressId]?.state = value
+                        userDao.updateAddress(user.userId, addressId,"state", value)
                     }
                     "pincode" -> {
-                        user.addresses[addressId]?.pincode = value
+                        userDao.updateAddress(user.userId, addressId,"pincode", value)
                     }
                 }
+            }
         }
     }
 
-    fun deleteAddress(addressId: String) {
-        if(user.addresses.containsKey(addressId)) {
-            user.addresses.remove(addressId)
-        }
+    fun deleteAddress(addressId: String): Boolean {
+
+        return if(utility.checkIfUserExists(user.userId)) {
+            if(utility.checkIfAddressExists(user.userId, addressId)) {
+                userDao.deleteAddress(user.userId, addressId)
+                true
+            } else false
+        } else false
     }
 
-    private var addressId = 1
+
     private fun generateAddressId(): String {
+
         return "Address${addressId++}"
     }
 }

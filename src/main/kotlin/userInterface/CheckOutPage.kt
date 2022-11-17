@@ -23,6 +23,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     private var isNavigatedFromCartPage: Boolean = false
 
     fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, productId: String, category: String, accountInfo: AccountInfo) {
+
         this.addressPage = addressPage
         this.paymentPage = paymentPage
         this.accountInfo = accountInfo
@@ -31,6 +32,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, items: List<Item>, accountInfo: AccountInfo) {
+
         this.addressPage = addressPage
         this.paymentPage = paymentPage
         this.accountInfo = accountInfo
@@ -44,7 +46,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
         while(true) {
             displayItemDetails(finalizedListOfItems)
             val checkOutPageDashboard = CheckOutPageDashboard.values()
-            super.showDashboard("Check out page", checkOutPageDashboard)
+            super.showDashboard("CHECK OUT PAGE", checkOutPageDashboard)
             when(super.getUserChoice(checkOutPageDashboard)) {
                 CheckOutPageDashboard.SELECT_A_PRODUCT -> {
                     if(finalizedListOfItems.isNotEmpty()) {
@@ -60,7 +62,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                     } else {
                         println("No items selected to buy!")
                     }
-
                 }
                 CheckOutPageDashboard.GO_BACK -> {
                     finalizedListOfItems.clear()
@@ -71,6 +72,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun proceedToBuy() {
+
         try {
             label@while(true) {
                 println("SELECT AN ADDRESS: ")
@@ -117,41 +119,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                                 checkOutActivities.updateAvailableQuantityAndStatusOfCartItems()
                                 finalizedListOfItems.clear()
                                 break@label
-//                                if (Helper.confirm()) {
-//                                    totalBill = checkOutActivities.getTotalBill(finalizedListOfItems)
-//                                    checkOutActivities.updateAvailableQuantityAndStatusOfProducts(finalizedListOfItems)
-//                                    checkOutActivities.createOrders(finalizedListOfItems, shippingAddress)
-//                                    orders = checkOutActivities.getOrders()
-//                                    displayOrdersSummary(orders, totalBill)
-//                                    paymentPage.pay(totalBill)
-//                                    if(checkOutActivities.addOrdersToOrdersHistory(
-//                                            accountInfo.ordersHistoryId, orders
-//                                        )) {
-//                                        println("Orders added to orders  history!")
-//                                    } else {
-//                                        println("Orders not added to order history!")
-//                                    }
-//                                    checkOutActivities.clearOrders()
-//                                    if(!isNavigatedFromCartPage) {
-//                                        if (checkOutActivities.removeFromCart(
-//                                                accountInfo.cartId,
-//                                                item.productId,
-//                                                true
-//                                            )
-//                                        ) {
-//                                            println("Order placed! Item removed from cart")
-//                                        } else {
-//                                            println("Order placed!")
-//                                        }
-//                                    } else {
-//                                        if (checkOutActivities.clearCartItems(accountInfo.cartId, items, true)) {
-//                                            println("Orders placed! Items removed from cart")
-//                                        }
-//                                    }
-//                                    checkOutActivities.updateAvailableQuantityAndStatusOfCartItems()
-//                                    finalizedListOfItems.clear()
-//                                    break@label
-//                                }
                             } else {
                                 break
                             }
@@ -164,36 +131,41 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                 }
             }
         } catch(exception: Exception) {
-            println("Class CheckOutPage: showDashBoard(): Exception: ${exception.message}")
+            println("Class CheckOutPage: proceedToBuy(): Exception: ${exception.message}")
         }
     }
 
     private fun displayOrdersSummary(orders: ArrayList<Order>, totalBill: Float) {
+
         println("---------------ORDERS SUMMARY------------------")
         orders.forEachIndexed { index, order ->
-            println("${index + 1}. Item Name        : ${order.item.productName}\n" +
-                    "   Item price       : ${order.item.productPrice}\n" +
-                    "   Quantity         : ${order.item.quantity}\n" +
-                    "   Total Price      : ${order.item.totalPrice}\n" +
-                    "   Status           : ${order.item.status}\n" +
-                    "   Shipping Address : $shippingAddress\n" +
-                    "   Ordered Date     : ${order.orderedDate}\n" +
-                    "   Delivery Date    : ${order.deliveryDate}")
+            println("""${index + 1}. Item Name        : ${order.item.productName}
+                |   Item price       : ${order.item.productPrice}
+                |   Quantity         : ${order.item.quantity}
+                |   Total Price      : ${order.item.totalPrice}
+                |   Status           : ${order.item.status}
+                |   Shipping Address : $shippingAddress
+                |   Ordered Date     : ${order.orderedDate}
+                |   Delivery Date    : ${order.deliveryDate}
+            """.trimMargin())
         }
             println("   Total bill paid  : $totalBill")
     }
 
     private fun displayItemDetails(items: MutableList<Item>) {
+
         items.forEachIndexed { index, item ->
-            println("${index + 1}. Item Name        : ${item.productName}\n" +
-                    "   Item price       : ${item.productPrice}\n" +
-                    "   Quantity         : ${item.quantity}\n" +
-                    "   Total Price      : ${item.totalPrice}\n" +
-                    "   Status           : ${item.status}")
+            println("""${index + 1}. Item Name        : ${item.productName}
+                |   Item price       : ${item.productPrice}
+                |   Quantity         : ${item.quantity}
+                |   Total Price      : ${item.totalPrice}
+                |   Status           : ${item.status}
+            """.trimMargin())
         }
     }
 
     private fun selectAnItem(): Item {
+
         var option: Int
         var selectedItem: Item
         while(true){
@@ -202,14 +174,13 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option, finalizedListOfItems.size)) {
-                    println("SELECTED ITEM: ${finalizedListOfItems[option - 1]}")
                     selectedItem = finalizedListOfItems[option - 1]
                     break
                 } else {
                     println("Invalid option! Try again")
                 }
             } catch(exception: Exception) {
-                println("""Class: AddressPage: selectAnAddress(): Exception: $exception
+                println("""Class: CheckoutPage: selectAnItem(): Exception: $exception
                     |Enter again!
                 """.trimMargin())
             }
@@ -218,6 +189,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun getQuantity(productId: String, category: String): Int {
+
         var quantity = 1
         while(true) {
             if(Helper.confirm()) {
@@ -244,23 +216,26 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun doActivitiesOnSelectedItem(item: Item) {
+
         val productQuantityManagement = ProductQuantityManagement.values()
         while(true) {
-            super.showDashboard("Activities on selected product", productQuantityManagement)
+            super.showDashboard("ACTIVITIES ON SELECTED PRODUCT", productQuantityManagement)
             when(super.getUserChoice(productQuantityManagement)) {
+
                 ProductQuantityManagement.CHANGE_QUANTITY -> {
                     val quantity = getQuantity(item.productId, item.category)
                     if(Helper.confirm()) {
                         checkOutActivities.changeQuantityAndUpdateTotalPriceOfItem(item, quantity)
                     }
                 }
+
                 ProductQuantityManagement.REMOVE -> {
                     finalizedListOfItems.remove(item)
                     println("Item removed from finalised items!")
                     break
                 }
+
                 ProductQuantityManagement.GO_BACK -> {
-                    //finalizedListOfItems.clear()
                     break
                 }
             }

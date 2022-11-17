@@ -28,10 +28,11 @@ class EntryPage: DashboardServices {
         ordersHistoryActivities: OrdersHistoryActivities,
         utility: UtilityDao
     ) {
-        println("------Online Shopping Application------")
+
+        println("-----ONLINE SHOPPING APPLICATION-----\n")
         val entry = Entry.values()
         while(true) {
-            super.showDashboard("Entry Page", entry)
+            super.showDashboard("ENTRY PAGE", entry)
             when(super.getUserChoice(entry)) {
                 Entry.VIEW_APP -> {
                     homePage.openHomePage(shopPage, cartPage, userAccountPage, addressPage, ordersPage, wishListPage, checkOutPage, paymentPage)

@@ -36,6 +36,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         addressPage: AddressPage,
         paymentPage: PaymentPage
     ) {
+
         this.userId = userId
         this.accountInfo = accountInfo
         this.isLoggedIn = true
@@ -47,6 +48,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     fun openShopPage() {
+
         while(true) {
             displayCategories()
             if(Helper.confirm()) {
@@ -56,25 +58,19 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                         while(true) {
                             productsList = productActivities.getProductsList(category)
                             isEmptyProductsList = productsList.isEmpty()
-                            //isEmptyProductsList = displayProducts(category)
                             if(isEmptyProductsList) {
                                 displayProducts(true)
                                 break
                             } else {
-                                //if(Helper.confirm()) {
                                     while(true) {
                                         displayProducts(false)
                                         if(Helper.confirm()) {
                                             val productId = selectAProduct()
                                             if(Helper.confirm()) {
-                                                productActivities(productId)
+                                                productActivities(category, productId)
                                             } else break
                                         } else break@label
                                     }
-                                    //productActivities()
-                                //} else {
-                                //    break@label
-                                //}
                             }
                         }
                     } else {
@@ -88,18 +84,20 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     private fun displayCategories() {
-        println("---------------CATEGORIES----------------")
+
+        println("--------------CATEGORIES---------------")
         productActivities.getCategories().forEachIndexed{ index, category ->
             println("${index + 1}. ${category.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}")
         }
     }
 
     private fun selectACategory(): String { // returns category name in lowercase
+
         var option: Int
         var selectedCategory: String
-        while(true){
+        while(true) {
             println("SELECT A CATEGORY: ")
-            try{
+            try {
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option, productActivities.getCategories().size)) {
@@ -117,27 +115,26 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         return selectedCategory
     }
 
-    private fun displayProducts(isEmptyProductsList: Boolean) {//}: Boolean {
+    private fun displayProducts(isEmptyProductsList: Boolean) {
         if(isEmptyProductsList) {
             println("       No products found        ")
         } else {
-            println("------------------${category.uppercase()}S--------------------")
+            println("---------------${category.uppercase()}S---------------")
             for((id, product) in productsList) {
                 println("${id}. ${product.second} - ${product.third}")
             }
         }
     }
 
-    fun productActivities(productId: String) {
+    fun productActivities(category: String, productId: String) {
 
+        productActivities.getProductsList(category)
         product = productActivities.getAProduct(productId)!!
         label@while(true) {
-            //val productId = selectAProduct()
-            //if(Helper.confirm()) {
                 displayProductDetails(product)
                 val productActivitiesDashboard = ProductActivitiesDashboard.values()
                 while (true) {
-                    super.showDashboard("Product Dashboard", productActivitiesDashboard)
+                    super.showDashboard("PRODUCT DASHBOARD", productActivitiesDashboard)
                     when (super.getUserChoice(productActivitiesDashboard)) {
                         ProductActivitiesDashboard.ADD_TO_CART -> {
                             if(isLoggedIn) {
@@ -193,12 +190,10 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                         }
                     }
                 }
-//            } else {
-//                break
-//            }
         }
     }
     private fun selectAProduct(): String { // returns productId
+
         var option: Int
         var selectedProductId: String
         while(true){
@@ -213,7 +208,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                     println("Invalid option! Try again!")
                 }
             } catch(exception: Exception) {
-                println("""Class: shopPage: selectAProduct(): Exception: $exception
+                println("""Class: ShopPage: selectAProduct(): Exception: $exception
                     |Enter again!
                 """.trimMargin())
             }
@@ -222,6 +217,8 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     private fun displayProductDetails(product: Product) {
+
+        println("---------------------------------------------")
         println("""PRODUCT NAME       : ${product.productName}
                   |PRODUCT PRICE      : ${product.price}
         """.trimMargin())
@@ -242,10 +239,10 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
             }
             is Product.Earphone -> {
                 println("""EARPHONE TYPE      : ${product.type}
+                          |BRAND              : ${product.brand}
                           |STORAGE            : ${product.colour}
                 """.trimMargin())
             }
-
         }
     }
 
