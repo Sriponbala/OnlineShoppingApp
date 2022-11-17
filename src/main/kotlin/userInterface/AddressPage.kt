@@ -44,12 +44,14 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
         while(true) {
             super.showDashboard("ADDRESS PAGE DASHBOARD", addressSelectionOptions)
             when(super.getUserChoice(addressSelectionOptions)) {
+
                 AddressSelectionOptions.ADD_NEW_ADDRESS -> {
                     getUserInputs()
                     if(Helper.confirm()) {
                         addNewAddress()
                     }
                 }
+
                 AddressSelectionOptions.SAVED_ADDRESS -> {
                     while(true) {
                         displayAllAddresses()
@@ -66,6 +68,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
                         }
                     }
                 }
+
                 AddressSelectionOptions.GO_BACK -> {
                     selectAddress = false
                     break
@@ -99,9 +102,9 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     private fun addNewAddress() {
 
        if(userAccountActivities.addNewAddress(doorNo, flatName, street, area, city, state, pincode)) {
-           println("Address added")
+           println("Address added!")
        } else {
-           println("Failed to add address")
+           println("Failed to add address!")
        }
     }
 
@@ -166,7 +169,9 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
 
     private fun deleteAddress(addressId: String) {
 
-        userAccountActivities.deleteAddress(addressId)
+        if(userAccountActivities.deleteAddress(addressId)) {
+            println("Address deleted!")
+        } else println("Failed to delete address!")
     }
 
     private fun selectAnAddress(): String {
