@@ -1,6 +1,7 @@
 package utils
 
 import enums.Confirmation
+import java.time.LocalDate
 import java.util.regex.Pattern
 import kotlin.random.Random
 
@@ -78,6 +79,29 @@ object Helper {
     fun validateAddressFields(fieldValue: String): Boolean {
 
         return Pattern.matches("^[a-zA-Z1-9][a-zA-Z0-9-.\\s]{0,30}$", fieldValue)
+    }
+
+    fun getDates(): Pair<LocalDate, LocalDate> {
+
+        return compareDate()
+    }
+
+    private fun compareDate(): Pair<LocalDate, LocalDate> {
+
+        while(true) {
+            val firstDate: LocalDate = generateDate()
+            val secondDate: LocalDate = generateDate()
+            if(firstDate.isBefore(secondDate)) {
+                return Pair(firstDate, secondDate)
+            }
+        }
+    }
+
+    private fun generateDate(): LocalDate {
+
+        val randomDate = LocalDate.of(2022, 11, 18).plusDays(Random.nextLong(91))
+        println(randomDate)
+        return randomDate
     }
 }
 

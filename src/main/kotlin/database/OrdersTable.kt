@@ -20,6 +20,22 @@ object OrdersTable {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //fun addOrdersHistoryRecordOfUser(ordersHistoryRecord: OrdersHistoryRecord) {
 //
 //    OrdersDatabase.usersOrdersHistory[ordersHistoryRecord.userId] = ordersHistoryRecord

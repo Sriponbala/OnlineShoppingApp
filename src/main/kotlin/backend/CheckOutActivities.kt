@@ -2,6 +2,7 @@ package backend
 
 import data.Item
 import data.Order
+import utils.Helper
 
 class CheckOutActivities(
     private val cartActivities: CartActivities,
@@ -21,8 +22,7 @@ class CheckOutActivities(
 
     fun createOrders(finalizedListOfItems: MutableList<Item>, shippingAddress: String) {
 
-        val orderedDate = "1-1-2022"
-        val deliveryDate = "2-2-2022"
+        val (orderedDate, deliveryDate) = Helper.getDates()
         for(item in finalizedListOfItems) {
             orders.add(Order(orderId = generateOrderId(), orderedDate = orderedDate, deliveryDate = deliveryDate, shippingAddress = shippingAddress, item = item))
         }

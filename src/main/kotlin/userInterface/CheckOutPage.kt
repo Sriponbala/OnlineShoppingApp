@@ -8,6 +8,7 @@ import enums.CheckOutPageDashboard
 import enums.ProductQuantityManagement
 import interfaces.DashboardServices
 import utils.Helper
+import java.time.format.DateTimeFormatter
 
 class CheckOutPage(private val checkOutActivities: CheckOutActivities): DashboardServices {
 
@@ -145,8 +146,8 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                 |   Total Price      : ${order.item.totalPrice}
                 |   Status           : ${order.item.status}
                 |   Shipping Address : $shippingAddress
-                |   Ordered Date     : ${order.orderedDate}
-                |   Delivery Date    : ${order.deliveryDate}
+                |   Ordered Date     : ${order.orderedDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))}
+                |   Delivery Date    : ${order.deliveryDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))}
             """.trimMargin())
         }
             println("   Total bill paid  : $totalBill")

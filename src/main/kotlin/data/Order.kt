@@ -1,4 +1,6 @@
 package data
 
-data class Order(val orderId: String, val orderedDate: String, val deliveryDate: String, var shippingAddress: String = "", val item: Item)
+import java.time.LocalDate
+
+data class Order(val orderId: String, val orderedDate: LocalDate, val deliveryDate: LocalDate, var shippingAddress: String = "", val item: Item)
 
