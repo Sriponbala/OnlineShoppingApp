@@ -3,11 +3,8 @@ package backend
 import data.Order
 import interfaces.OrdersDao
 import interfaces.UtilityDao
-import utils.OrdersData
 
-class OrdersHistoryActivities(private val utility: UtilityDao) {
-
-    private val ordersDao: OrdersDao = OrdersData()
+class OrdersHistoryActivities(private val utility: UtilityDao, private val ordersDao: OrdersDao) {
 
     fun addOrderToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>): Boolean {
 

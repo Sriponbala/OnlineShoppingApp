@@ -5,13 +5,11 @@ import data.Address
 import data.User
 import interfaces.UserDao
 import interfaces.UtilityDao
-import utils.UserData
 
-class UserAccountActivities(private val utility: UtilityDao) {
+class UserAccountActivities(private val utility: UtilityDao, private val userDao: UserDao) {
 
     private lateinit var user: User
     private var addressesList: MutableMap<String, Address> = mutableMapOf()
-    private val userDao: UserDao = UserData()
     private var addressId = 1
 
     fun getUser(userId: String) {

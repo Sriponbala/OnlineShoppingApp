@@ -4,12 +4,8 @@ import data.Item
 import enums.ProductStatus
 import interfaces.CartDao
 import interfaces.UtilityDao
-import utils.CartData
 
-class CartActivities(private val utility: UtilityDao) {
-
-    private val cartDao: CartDao = CartData()
-    private val productActivities = ProductActivities(utility)
+class CartActivities(private val utility: UtilityDao, private val cartDao: CartDao, private val productActivities: ProductActivities) {
 
     fun createAndGetCartId(userId: String): String {
 

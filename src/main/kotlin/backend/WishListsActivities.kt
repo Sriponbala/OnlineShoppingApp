@@ -1,15 +1,14 @@
 package backend
 
 import data.Product
+import interfaces.ProductsDao
 import interfaces.UtilityDao
 import interfaces.WishListDao
 import utils.ProductsData
-import utils.WishListsData
 
-class WishListsActivities(private val utility: UtilityDao) {
+class WishListsActivities(private val utility: UtilityDao, private val wishListsDao: WishListDao) {
 
-    private val wishListsDao: WishListDao = WishListsData()
-    private val productsData = ProductsData()
+    private val productsData: ProductsDao by lazy{ ProductsData() }
 
     fun createAndGetWishListId(userId: String): String {
 

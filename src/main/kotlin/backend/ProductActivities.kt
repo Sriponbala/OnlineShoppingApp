@@ -4,11 +4,9 @@ import data.Product
 import enums.ProductStatus
 import interfaces.ProductsDao
 import interfaces.UtilityDao
-import utils.ProductsData
 
-class ProductActivities(private val utility: UtilityDao) {
+class ProductActivities(private val utility: UtilityDao, private val productsDao: ProductsDao) {
 
-    private val productsDao: ProductsDao = ProductsData()
     private var productsList: List<Product>? = null
 
     fun getCategories(): List<String> {

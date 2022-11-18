@@ -40,6 +40,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
                         shopPage.initializer(userId, accountInfo, wishListsActivities, cartActivities, checkOutPage, addressPage, paymentPage)
                         shopPage.openShopPage()
                     } else {
+                        shopPage.initializer(false)
                         shopPage.openShopPage()
                     }
                 }
@@ -61,6 +62,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
                 }
                 HomePageDashboard.SIGN_OUT -> {
                     if(isLoggedIn) {
+                        isLoggedIn = false
                         println("Signed out...")
                     } else {
                         println("Login to your account!")

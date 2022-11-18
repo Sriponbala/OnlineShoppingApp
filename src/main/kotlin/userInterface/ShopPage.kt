@@ -47,6 +47,10 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         this.paymentPage = paymentPage
     }
 
+    fun initializer(isLoggedIn: Boolean) {
+        this.isLoggedIn = isLoggedIn
+    }
+
     fun openShopPage() {
 
         while(true) {
@@ -221,6 +225,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         println("---------------------------------------------")
         println("""PRODUCT NAME       : ${product.productName}
                   |PRODUCT PRICE      : ${product.price}
+                  |PRODUCT STATUS     : ${product.status}
         """.trimMargin())
         when(product) { // Smart cast to 'Product.Book' is impossible, because 'product' is a mutable property that could have been changed by this time
             is Product.Book -> {
