@@ -20,7 +20,7 @@ class OrdersPage(private val ordersHistoryActivities: OrdersHistoryActivities) {
             println("         Empty orders history         ")
         } else {
             ordersHistory.forEachIndexed { index, order ->
-                println("""${index + 1}. PRODUCT NAME : ${order.item.productName}
+                println("""${index + 1}. PRODUCT NAME   : ${order.item.productName}
                     |   PRODUCT PRICE    : ${order.item.productPrice}
                     |   QUANTITY         : ${order.item.quantity}
                     |   TOTAL PRICE      : ${order.item.totalPrice}

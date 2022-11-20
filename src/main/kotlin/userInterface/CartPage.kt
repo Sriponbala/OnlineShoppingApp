@@ -115,7 +115,6 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option, cartItems.size)) {
-                    println("SELECTED ITEM: ${cartItems[option - 1]}")
                     selectedItem = cartItems[option - 1]
                     break
                 } else {

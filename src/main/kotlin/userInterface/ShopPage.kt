@@ -5,6 +5,7 @@ import backend.ProductActivities
 import backend.WishListsActivities
 import data.AccountInfo
 import data.Product
+import enums.FilterDashboard
 import enums.ProductActivitiesDashboard
 import enums.ProductStatus
 import interfaces.DashboardServices
@@ -25,6 +26,9 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     private lateinit var userId: String
     private lateinit var accountInfo: AccountInfo
     private var isLoggedIn = false
+
+    private lateinit var filterOptions: List<String>
+    private lateinit var uniqueFilterOptions: List<String>
 
 
     fun initializer(
@@ -67,7 +71,22 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                                 break
                             } else {
                                     while(true) {
-                                        displayProducts(false)
+                                        while(true) {
+                                            displayProducts(false)
+                                            val filterDashboard = FilterDashboard.values()
+                                            super.showDashboard("FILTER DASHBOARD", filterDashboard)
+                                            when(super.getUserChoice(filterDashboard)) {
+                                                FilterDashboard.APPLY_FILTER -> {
+                                                    applyFilter()
+                                                }
+                                                FilterDashboard.CLEAR_FILTER -> {
+                                                    productsList = productActivities.getProductsList(category)
+                                                }
+                                                FilterDashboard.BACK -> {
+                                                    break
+                                                }
+                                            }
+                                        }
                                         if(Helper.confirm()) {
                                             val productId = selectAProduct()
                                             if(Helper.confirm()) {
@@ -205,7 +224,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                if(Helper.checkValidRecord(option, productActivities.getProductsList(category).size)) {
+                if(Helper.checkValidRecord(option, /*productActivities.getProductsList(category).size*/ productsList.size)) {
                     selectedProductId = productsList[option]!!.first
                     break
                 } else {
@@ -249,6 +268,62 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                 """.trimMargin())
             }
         }
+    }
+
+    private fun applyFilter() {
+
+        val filterOption: String
+        val value: String
+        println("Do you want to apply filter: ")
+        if(Helper.confirm()) {
+            println("Filter by: ")
+            filterOptions = productActivities.getFilterOptions(category)
+            displayFilterOptions(filterOptions)
+            if(Helper.confirm()) {
+                filterOption = getFilterOption(filterOptions)
+                uniqueFilterOptions = productActivities.getUniqueFilters(category, filterOption)
+                println("CHOICES: ")
+                displayFilterOptions(uniqueFilterOptions)
+                if(Helper.confirm()) {
+                    value = getFilterOption(uniqueFilterOptions)
+                    productActivities.getFilteredList(category, filterOption, value)
+                    if(Helper.confirm()) {
+                        productsList = productActivities.getProductsList()
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun displayFilterOptions(filterOptions: List<String>) {
+        if(filterOptions.isEmpty()) {
+            println("No filters available")
+        } else {
+            filterOptions.forEachIndexed { index, s ->
+                println("${index + 1}. $s")
+            }
+        }
+    }
+
+    private fun getFilterOption(filterOptions: List<String>): String {
+
+        var filterOption: String
+        while(true) {
+            println("ENTER THE FILTER OPTION: ")
+            try {
+                val input = readLine()!!.toInt()
+                if(input in 1..(filterOptions.size)) {
+                    filterOption = filterOptions[input - 1]
+                    break
+                } else {
+                    println("Enter valid input! Try Again!")
+                }
+            } catch(exception: Exception) {
+                println("Class ShopPage(): getFilterOption(): Exception: $exception")
+            }
+        }
+        return filterOption
     }
 
 }

@@ -33,7 +33,7 @@ fun main() {
     val wishListPage = WishListPage(wishListsActivities)
 
     entryPage.openEntryPage(signUpPage, signInPage, homePage, userAccountPage, shopPage, cartPage, wishListPage, checkOutPage, addressPage, ordersPage, paymentPage, userAccountActivities, wishListsActivities, cartActivities, ordersHistoryActivities, utility)
-
+ 
 }
 
 

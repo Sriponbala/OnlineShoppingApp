@@ -19,14 +19,14 @@ object ProductsTable {
     private val iphone14 =
         Product.Mobile(generateProductId(), "iPhone 14 128GB", 79900f, 5, "Apple", "128 GB", status = ProductStatus.IN_STOCK)
     private val samsungGalaxyM33 =
-        Product.Mobile(generateProductId(), "Samsung Galaxy M33 5G", 15499f, 9, "Samsung", "128 GB", status = ProductStatus.IN_STOCK)
+        Product.Mobile(generateProductId(), "Samsung Galaxy M33 5G", 15499f, 9, "Samsung", "64 GB", status = ProductStatus.IN_STOCK)
     private val samsungGalaxyS20 =
         Product.Mobile(generateProductId(), "Samsung Galaxy S20 FE 5G", 29900f, 4, "Samsung", "128 GB", status = ProductStatus.IN_STOCK)
     private val mobiles = mutableListOf<Product>(iphone14, samsungGalaxyM33, samsungGalaxyS20)
 
 
-    private val kurti = Product.Clothing(generateProductId(), "Kurti", 1500f, 15, "female", "yellow", status = ProductStatus.IN_STOCK)
-    private val formalShirt = Product.Clothing(generateProductId(), "Formal Shirt", 700f, 7, "male", "cream", status = ProductStatus.IN_STOCK)
+    private val kurti = Product.Clothing(generateProductId(), "Kurti", 1500f, 15, "female", "blue", status = ProductStatus.IN_STOCK)
+    private val formalShirt = Product.Clothing(generateProductId(), "Formal Shirt", 700f, 7, "male", "red", status = ProductStatus.IN_STOCK)
     private val lehengaCholi = Product.Clothing(generateProductId(), "Lehenga Choli", 3000f, 3, "female", "red", status = ProductStatus.IN_STOCK)
     private val tShirt = Product.Clothing(generateProductId(), "T-Shirt", 1500f, 10, "male", "black", status = ProductStatus.IN_STOCK)
     private val clothings = mutableListOf<Product>(kurti, formalShirt, lehengaCholi, tShirt)

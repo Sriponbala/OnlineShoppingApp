@@ -58,7 +58,7 @@ object Helper {
 
     fun validateMobileNumber(number: String): Boolean { // 10-digit Phone number with Country Code Prefix(max 3 characters)
 
-        return Pattern.matches("^(\\+\\d{1,3}( )?)?\\d{10}$", number)
+        return Pattern.matches("^\\d{10}$", number)
     }
 
     fun validateEmail(email: String): Boolean {
@@ -99,9 +99,7 @@ object Helper {
 
     private fun generateDate(): LocalDate {
 
-        val randomDate = LocalDate.of(2022, 11, 18).plusDays(Random.nextLong(91))
-        println(randomDate)
-        return randomDate
+        return LocalDate.of(2022, 11, 18).plusDays(Random.nextLong(91))
     }
 }
 
@@ -134,4 +132,7 @@ object Helper {
 //    println(Helper.validateAddressFields("abcDE123 - aZ123456")) // true
 //    println(Helper.validateAddressFields("0")) // false
 //    println(Helper.validateAddressFields("1")) // true
+
+
+// "^(\\+\\d{1,3}( )?)?\\d{10}$"
 //}
