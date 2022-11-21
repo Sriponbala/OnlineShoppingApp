@@ -24,7 +24,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     private var isNavigatedFromCartPage: Boolean = false
 
     fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, productId: String, category: String, accountInfo: AccountInfo) {
-
         this.addressPage = addressPage
         this.paymentPage = paymentPage
         this.accountInfo = accountInfo
@@ -33,7 +32,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, items: List<Item>, accountInfo: AccountInfo) {
-
         this.addressPage = addressPage
         this.paymentPage = paymentPage
         this.accountInfo = accountInfo
@@ -43,7 +41,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     fun openCheckOutPage() {
-
         while(true) {
             displayItemDetails(finalizedListOfItems)
             val checkOutPageDashboard = CheckOutPageDashboard.values()
@@ -73,7 +70,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun proceedToBuy() {
-
         try {
             label@while(true) {
                 println("SELECT AN ADDRESS: ")
@@ -119,6 +115,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                                 }
                                 checkOutActivities.updateAvailableQuantityAndStatusOfCartItems()
                                 finalizedListOfItems.clear()
+                                addressPage.deselectShippingAddress()
                                 break@label
                             } else {
                                 break
@@ -137,8 +134,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun displayOrdersSummary(orders: ArrayList<Order>, totalBill: Float) {
-
-        println("---------------ORDERS SUMMARY------------------")
+        println("---------------ORDER SUMMARY------------------")
         orders.forEachIndexed { index, order ->
             println("""${index + 1}. Item Name        : ${order.item.productName}
                 |   Item price       : ${order.item.productPrice}
@@ -154,7 +150,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun displayItemDetails(items: MutableList<Item>) {
-
         items.forEachIndexed { index, item ->
             println("""${index + 1}. Item Name        : ${item.productName}
                 |   Item price       : ${item.productPrice}
@@ -166,7 +161,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun selectAnItem(): Item {
-
         var option: Int
         var selectedItem: Item
         while(true){
@@ -190,7 +184,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun getQuantity(productId: String, category: String): Int {
-
         var quantity = 1
         while(true) {
             if(Helper.confirm()) {
@@ -217,7 +210,6 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun doActivitiesOnSelectedItem(item: Item) {
-
         val productQuantityManagement = ProductQuantityManagement.values()
         while(true) {
             super.showDashboard("ACTIVITIES ON SELECTED PRODUCT", productQuantityManagement)

@@ -26,7 +26,6 @@ class SignInPage: OnboardingServices {
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-
         println("--------------SIGNIN PAGE--------------")
         try {
             getUserInputs()
@@ -38,7 +37,7 @@ class SignInPage: OnboardingServices {
                             accountInfo = userAccountActivities.getAccountInfo(userId)
                             if(accountInfo != null) {
                                 println("SignIn Successful!")
-                                homePage.initializeUserIdAndAccountInfo(userId, accountInfo!!)
+                                homePage.initializer(userId, accountInfo!!)
                                 homePage.openHomePage(
                                     shopPage,
                                     cartPage,
@@ -66,22 +65,23 @@ class SignInPage: OnboardingServices {
     }
 
     override fun getUserInputs() {
-
         do {
-            println("ENTER MOBILE NUMBER: ")
+            println("""ENTER MOBILE NUMBER:
+                |[Should contain 10 digits] 
+            """.trimMargin())
             mobile = readLine()!!
         } while(Helper.fieldValidation(mobile) || !Helper.validateMobileNumber(mobile))
 
         do{
-            println("ENTER PASSWORD: \n" +
-                    "[Password can contain any of the following : a-zA-Z0-9!#@\$%^&*_+`~]\n" +
-                    "[It should contain at least 4 to 8 characters]")
+            println("""ENTER PASSWORD:
+                |[Password can contain any of the following : a-zA-Z0-9!#@${'$'}%^&*_+`~]
+                |[It should contain at least 4 to 8 characters]
+            """.trimMargin())
             password = readLine()!!
         } while(Helper.fieldValidation(password) || !Helper.validatePasswordPattern(password))
     }
 
     private fun verifyAccount(utility: UtilityDao): Boolean {
-
         return utility.validateLoginCredentials(mobile, password)
     }
 

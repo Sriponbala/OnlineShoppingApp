@@ -8,16 +8,14 @@ class OrdersPage(private val ordersHistoryActivities: OrdersHistoryActivities) {
     private lateinit var ordersHistoryId: String
 
     fun initializer(ordersHistoryId: String) {
-
         this.ordersHistoryId = ordersHistoryId
     }
 
     fun displayOrdersHistory() {
-
         val ordersHistory = ordersHistoryActivities.getOrdersHistory(ordersHistoryId)
         println("-----------------ORDERS HISTORY---------------------")
         if(ordersHistory.isEmpty()){
-            println("         Empty orders history         ")
+            println("         No orders found         ")
         } else {
             ordersHistory.forEachIndexed { index, order ->
                 println("""${index + 1}. PRODUCT NAME   : ${order.item.productName}

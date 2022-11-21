@@ -24,20 +24,21 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     private var shippingAddress: String = ""
 
     fun setSelectAddress(input: Boolean) {
-
         this.selectAddress = input
     }
 
     fun selectAddressForDelivery(): String {
-
         do{
             openAddressPage()
         } while(shippingAddress == "" && selectAddress)
         return shippingAddress
     }
 
-    fun openAddressPage() {
+    fun deselectShippingAddress() {
+        this.shippingAddress = ""
+    }
 
+    fun openAddressPage() {
         this.addresses = userAccountActivities.getUserAddresses()
         displayAllAddresses()
         val addressSelectionOptions = AddressSelectionOptions.values()
@@ -78,12 +79,12 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
     private fun displayAllAddresses() {
-
         if(this.addresses.isEmpty()) {
-            println("        EMPTY ADDRESS LIST       ")
+            println("        No address found       ")
         } else {
             var sno = 1
             println("-----------------YOUR ADDRESSES------------------")
+            println("Default Shipping address: $shippingAddress")
             for((addressId, address) in addresses) {
                 generateAddressMap(sno, addressId)
                 println("""${sno++}. ${address.doorNo}, ${address.flatName},
@@ -95,12 +96,10 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
     private fun generateAddressMap(sno: Int, addressId: String) {
-
         addressesMap[sno] = addressId
     }
 
     private fun addNewAddress() {
-
        if(userAccountActivities.addNewAddress(doorNo, flatName, street, area, city, state, pincode)) {
            println("Address added!")
        } else {
@@ -109,7 +108,6 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
     private fun manageAddress(): Boolean {
-
         // delete or edit
         if(addresses.isEmpty()) {
             return true
@@ -134,7 +132,6 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
     private fun editAddress(addressId: String) {
-
         val addressFields = AddressFields.values()
         while(true) {
             super.showDashboard("ADDRESS FIELDS", addressFields)
@@ -168,14 +165,12 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
     private fun deleteAddress(addressId: String) {
-
         if(userAccountActivities.deleteAddress(addressId)) {
             println("Address deleted!")
         } else println("Failed to delete address!")
     }
 
     private fun selectAnAddress(): String {
-
         var option: Int
         var selectedAddress: String
         while(true){
@@ -200,7 +195,6 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
 
 
     override fun getUserInputs() {
-
         println("FILL ADDRESS FIELDS: ")
 
         do{
@@ -240,7 +234,6 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
     private fun getUserInput(message: String = ""): String {
-
         var userInput: String
         do {
             println("ENTER ${message.uppercase()}: ")
@@ -250,7 +243,6 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
     private fun getPincode(): String {
-
         var pincode: String
         do {
             println("ENTER PINCODE: ")

@@ -40,7 +40,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         addressPage: AddressPage,
         paymentPage: PaymentPage
     ) {
-
         this.userId = userId
         this.accountInfo = accountInfo
         this.isLoggedIn = true
@@ -56,7 +55,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     fun openShopPage() {
-
         while(true) {
             displayCategories()
             if(Helper.confirm()) {
@@ -107,7 +105,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     private fun displayCategories() {
-
         println("--------------CATEGORIES---------------")
         productActivities.getCategories().forEachIndexed{ index, category ->
             println("${index + 1}. ${category.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}")
@@ -115,7 +112,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     private fun selectACategory(): String { // returns category name in lowercase
-
         var option: Int
         var selectedCategory: String
         while(true) {
@@ -150,7 +146,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     fun productActivities(category: String, productId: String) {
-
         productActivities.getProductsList(category)
         product = productActivities.getAProduct(productId)!!
         label@while(true) {
@@ -216,7 +211,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         }
     }
     private fun selectAProduct(): String { // returns productId
-
         var option: Int
         var selectedProductId: String
         while(true){
@@ -240,7 +234,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     private fun displayProductDetails(product: Product) {
-
         println("---------------------------------------------")
         println("""PRODUCT NAME       : ${product.productName}
                   |PRODUCT PRICE      : ${product.price}
@@ -271,7 +264,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     private fun applyFilter() {
-
         val filterOption: String
         val value: String
         println("Do you want to apply filter: ")
@@ -307,7 +299,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     private fun getFilterOption(filterOptions: List<String>): String {
-
         var filterOption: String
         while(true) {
             println("ENTER THE FILTER OPTION: ")

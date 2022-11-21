@@ -13,8 +13,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
     private var isLoggedIn: Boolean = false
 
 
-    fun initializeUserIdAndAccountInfo(userId: String, accountInfo: AccountInfo) {
-
+    fun initializer(userId: String, accountInfo: AccountInfo) {
         this.userId = userId
         this.accountInfo = accountInfo
         this.isLoggedIn = true
@@ -30,7 +29,6 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-
         val homePageDashboard = HomePageDashboard.values()
         while(true) {
             super.showDashboard("HOME PAGE", homePageDashboard)

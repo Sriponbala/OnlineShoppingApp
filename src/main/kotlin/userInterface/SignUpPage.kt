@@ -39,7 +39,6 @@ class SignUpPage: OnboardingServices {
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-
         println("--------------SIGNUP PAGE--------------")
         try {
             getUserInputs()
@@ -54,14 +53,14 @@ class SignUpPage: OnboardingServices {
                                 if(Helper.verifyOtp(currentOtp, otp)) {
                                     userId = userAccountActivities.createAndGetUserId(name, mobile, email, password)
                                     userAccountActivities.getUser(userId)
-                                    wishListId = wishListsActivities.createAndGetWishListId(userId)
-                                    cartId = cartActivities.createAndGetCartId(userId)
-                                    ordersHistoryId = ordersHistoryActivities.createAndGetOrdersHistoryId(userId)
+                                    wishListId = wishListsActivities.createAndGetWishListId()
+                                    cartId = cartActivities.createAndGetCartId()
+                                    ordersHistoryId = ordersHistoryActivities.createAndGetOrdersHistoryId()
                                     if(userAccountActivities.createAccountInfo(userId, cartId, wishListId, ordersHistoryId)) {
                                         accountInfo = userAccountActivities.getAccountInfo(userId)
                                         if(accountInfo != null) {
                                             println("SignUp Successful!")
-                                            homePage.initializeUserIdAndAccountInfo(userId, accountInfo!!)
+                                            homePage.initializer(userId, accountInfo!!)
                                             homePage.openHomePage(
                                                 shopPage,
                                                 cartPage,
@@ -97,19 +96,22 @@ class SignUpPage: OnboardingServices {
     }
 
     override fun getUserInputs() {
-
         do{
             println("ENTER NAME: ")
             name = readLine()!!
         } while(Helper.fieldValidation(name))
 
         do{
-            println("ENTER MOBILE NUMBER: ")
+            println("""ENTER MOBILE NUMBER:
+                |[Should contain 10 digits] 
+            """.trimMargin())
             mobile = readLine()!!
         }while(Helper.fieldValidation(mobile) || !Helper.validateMobileNumber(mobile))
 
         do {
-            println("ENTER EMAIL: ")
+            println("""ENTER EMAIL:
+                |[Format: localpart@example.com] 
+            """.trimMargin())
             email = readLine()!!
         } while(!Helper.fieldValidation(email) && !Helper.validateEmail(email))
 
@@ -127,7 +129,6 @@ class SignUpPage: OnboardingServices {
     }
 
     private fun verifyAccount(utility: UtilityDao): Boolean {
-
         return utility.checkUniqueUser(mobile)
     }
 }

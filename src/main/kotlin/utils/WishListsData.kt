@@ -24,16 +24,10 @@ class WishListsData: WishListDao {
         WishListTable.usersWishList[wishListId]!!.wishListProducts.remove(product)
     }
 
-    override fun addAndGetWishListId(): String {
-
-        createWishList()
-        return wishListId
-    }
-
-    private fun createWishList() {
-
+    override fun createAndGetWishListId(): String {
         wishListId = WishListTable.generateWishListId()
         WishListTable.usersWishList[wishListId] = WishList(wishListId = wishListId)
+        return wishListId
     }
 
     override fun retrieveProductFromWishList(wishListId: String, productId: String): Product {

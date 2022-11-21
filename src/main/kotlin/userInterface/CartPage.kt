@@ -16,12 +16,10 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     private lateinit var cartId: String
 
     fun initializer(cartId: String) {
-
         this.cartId = cartId
     }
 
     fun openCartPage(addressPage: AddressPage, paymentPage: PaymentPage, checkOutPage: CheckOutPage, accountInfo: AccountInfo) {
-
         while(true) {
             isCartEmpty = checkIfCartIsEmpty(cartId)
             if(!isCartEmpty) {
@@ -56,7 +54,6 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun displayCartItems() {
-
         cartItems.forEachIndexed { index, item ->
             println("""${index + 1}. Item Name        : ${item.productName}
                 |   Item price       : ${item.productPrice}
@@ -69,7 +66,6 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun doActivitiesOnSelectedItem(item: Item) {
-
         val productQuantityManagement = ProductQuantityManagement.values()
         while(true) {
             super.showDashboard("ACTIVITIES ON SELECTED PRODUCT", productQuantityManagement)
@@ -106,7 +102,6 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun selectAnItem(): Item {
-
         var option: Int
         var selectedItem: Item
         while(true){
@@ -130,12 +125,10 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun checkIfCartIsEmpty(cartId: String): Boolean {
-
         return cartActivities.getCartItems(cartId).isEmpty()
     }
 
     private fun getQuantity(productId: String, category: String): Int {
-
         var quantity = 1
         while(true) {
             if(Helper.confirm()) {

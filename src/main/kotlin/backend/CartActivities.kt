@@ -7,24 +7,17 @@ import interfaces.UtilityDao
 
 class CartActivities(private val utility: UtilityDao, private val cartDao: CartDao, private val productActivities: ProductActivities) {
 
-    fun createAndGetCartId(userId: String): String {
-
-        var cartId = ""
-        if(utility.checkIfUserExists(userId)) {
-            cartId = cartDao.createAndGetCartId()
-        }
-        return cartId
+    fun createAndGetCartId(): String {
+        return cartDao.createAndGetCartId()
     }
 
     fun getCartItems(cartId: String): List<Item> {
-
         return if(utility.checkIfCartExists(cartId)) {
             cartDao.retrieveCartItems(cartId)
         } else listOf()
     }
 
     fun addToCart(cartId: String, category: String, productId: String): Boolean {
-
         val itemAddedToCart: Boolean = if(utility.checkIfCategoryExistsInProductDB(category)) {
             if(utility.checkIfProductExists(productId, category)) {
                 if(productActivities.retrieveProductAvailabilityStatus(category, productId) == ProductStatus.IN_STOCK) {
@@ -42,7 +35,6 @@ class CartActivities(private val utility: UtilityDao, private val cartDao: CartD
     }
 
     fun removeFromCart(cartId: String, productId: String, remove: Boolean): Boolean {
-
         val itemRemovedFromCart: Boolean = if(utility.checkIfCartExists(cartId)) {
             if(remove) {
                 if(utility.checkIfItemIsInCart(cartId, productId)) {
@@ -56,7 +48,6 @@ class CartActivities(private val utility: UtilityDao, private val cartDao: CartD
     }
 
     fun clearCartItems(cartId: String, cartItems: ArrayList<Item>, remove: Boolean): Boolean {
-
         val areItemsRemoved = if(utility.checkIfCartExists(cartId)) {
             if(remove) {
                 if(cartItems.isNotEmpty()) {
@@ -69,7 +60,6 @@ class CartActivities(private val utility: UtilityDao, private val cartDao: CartD
     }
 
     fun calculateAndUpdateSubtotal(cartId: String, cartItems: List<Item>): Float {
-
         var subTotal = 0f
         if(utility.checkIfCartExists(cartId)) {
             for(item in cartItems) {
@@ -83,12 +73,10 @@ class CartActivities(private val utility: UtilityDao, private val cartDao: CartD
     }
 
     fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
-
         return productActivities.getAvailableQuantityOfProduct(productId, category)
     }
 
     fun changeQuantityAndUpdateTotalPriceOfItem(cartId: String, item: Item, quantity: Int): Boolean {
-
         return if(utility.checkIfCartExists(cartId)) {
             if(utility.checkIfItemIsInCart(cartId, item.productId)) {
                 cartDao.changeItemQuantityAndPrice(cartId ,item, quantity)
@@ -99,7 +87,6 @@ class CartActivities(private val utility: UtilityDao, private val cartDao: CartD
     }
 
     fun updateAvailabilityStatusOfCartItems() {
-
        cartDao.updateAvailableQuantityAndStatusOfCartItems()
     }
 

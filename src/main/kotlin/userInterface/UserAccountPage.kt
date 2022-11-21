@@ -13,13 +13,11 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
     private lateinit var accountInfo: AccountInfo
 
     fun initializer(userId: String, accountInfo: AccountInfo) {
-
         this.userId = userId
         this.accountInfo = accountInfo
     }
 
     private fun displayUserDetails(userDetails: MutableMap<String, String>) {
-
         println("---------------YOUR PROFILE--------------")
         println("""|NAME   : ${userDetails["name"]} 
                    |MOBILE : ${userDetails["mobile"]} 
@@ -27,7 +25,6 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
     }
 
     fun openUserAccountPage(wishListPage: WishListPage, ordersPage: OrdersPage, addressPage: AddressPage, shopPage: ShopPage) {
-
         userAccountActivities.getUser(userId)
         displayUserDetails(userAccountActivities.getUserDetails())
         val userAccountDashboard = UserAccountDashboard.values()
@@ -56,7 +53,6 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
 
 
     private fun editUserAccountDetails(addressPage: AddressPage) {
-
         val userAccountFields = UserAccountFields.values()
         while(true) {
             super.showDashboard("EDIT USER DETAILS", userAccountFields)

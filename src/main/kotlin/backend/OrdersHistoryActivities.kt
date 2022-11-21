@@ -7,7 +7,6 @@ import interfaces.UtilityDao
 class OrdersHistoryActivities(private val utility: UtilityDao, private val ordersDao: OrdersDao) {
 
     fun addOrderToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>): Boolean {
-
         return if(utility.checkIfOrdersHistoryExists(ordersHistoryId)) {
             ordersDao.addToOrdersHistory(ordersHistoryId, orders)
             true
@@ -15,19 +14,13 @@ class OrdersHistoryActivities(private val utility: UtilityDao, private val order
     }
 
     fun getOrdersHistory(ordersHistoryId: String): ArrayList<Order> {
-
         return if(utility.checkIfOrdersHistoryExists(ordersHistoryId)) {
             ordersDao.retrieveOrdersHistory(ordersHistoryId)
         } else arrayListOf()
     }
 
-    fun createAndGetOrdersHistoryId(userId: String): String {
-
-        var ordersHistoryId = ""
-        if(utility.checkIfUserExists(userId)) {
-            ordersHistoryId = ordersDao.createAndGetOrdersHistoryId()
-        }
-        return ordersHistoryId
+    fun createAndGetOrdersHistoryId(): String {
+        return ordersDao.createAndGetOrdersHistoryId()
     }
 }
 

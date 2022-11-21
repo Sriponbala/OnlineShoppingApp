@@ -15,15 +15,12 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
     private lateinit var shopPage: ShopPage
 
     fun initializer(wishListId: String, shopPage: ShopPage) {
-
         this.wishListId = wishListId
         this.shopPage = shopPage
     }
 
     fun openWishListPage() {
-
         while(true) {
-
             wishListProducts = wishListsActivities.getWishListProducts(wishListId)
             checkIfWishListIsEmpty(wishListProducts)
             displayWishListProducts(isEmptyWishList)
@@ -60,7 +57,6 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
     }
 
     private fun selectAProduct(): Pair<String, String> {
-
         var option: Int
         var selectedProduct = ""
         var category = ""
@@ -86,7 +82,6 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
     }
 
     private fun displayWishListProducts(isEmptyWishList: Boolean) {
-
         println("-------------------${WishList.wishListName}----------------------")
         if(isEmptyWishList) {
             println("        No items found        ")
@@ -98,7 +93,6 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
     }
 
     private fun checkIfWishListIsEmpty(wishListProducts: ArrayList<Product>?) {
-
         isEmptyWishList = wishListProducts?.isEmpty() == true
     }
 }

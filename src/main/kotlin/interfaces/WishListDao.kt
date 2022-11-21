@@ -10,7 +10,7 @@ interface WishListDao {
 
     fun deleteProductFromWishList(wishListId: String, product: Product)
 
-    fun addAndGetWishListId(): String
+    fun createAndGetWishListId(): String
 
     fun retrieveProductFromWishList(wishListId: String, productId: String): Product
 

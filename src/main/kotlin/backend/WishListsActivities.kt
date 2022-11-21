@@ -10,22 +10,17 @@ class WishListsActivities(private val utility: UtilityDao, private val wishLists
 
     private val productsData: ProductsDao by lazy{ ProductsData() }
 
-    fun createAndGetWishListId(userId: String): String {
-
-        return if(utility.checkIfUserExists(userId)) {
-            wishListsDao.addAndGetWishListId()
-        } else ""
+    fun createAndGetWishListId(): String {
+        return wishListsDao.createAndGetWishListId()
     }
 
     fun getWishListProducts(wishListId: String): ArrayList<Product> {
-
         return if(utility.checkIfWishListExists(wishListId)) {
             wishListsDao.retrieveWishListProducts(wishListId)
         } else arrayListOf()
     }
 
     fun addProductToWishList(wishListId: String, category: String, productId: String): Boolean {
-
         return if(utility.checkIfCategoryExistsInProductDB(category)) {
             if(utility.checkIfProductExists(productId, category)) {
                 if(utility.checkIfWishListExists(wishListId)) {
@@ -40,7 +35,6 @@ class WishListsActivities(private val utility: UtilityDao, private val wishLists
     }
 
     fun removeProductFromWishList(wishListId: String, productId: String): Boolean {
-
         return if(utility.checkIfWishListExists(wishListId)) {
             if(utility.checkIfProductIsInUserWishList(wishListId, productId)) {
                 val product = wishListsDao.retrieveProductFromWishList(wishListId, productId)
@@ -49,6 +43,7 @@ class WishListsActivities(private val utility: UtilityDao, private val wishLists
             } else false
         } else false
     }
+
 
 }
 

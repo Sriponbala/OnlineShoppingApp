@@ -8,7 +8,6 @@ class PaymentPage: DashboardServices {
 
     private lateinit var modeOfPayment: Payment
     fun selectModeOfPayment() {
-
         val payment = Payment.values()
         while(true) {
             super.showDashboard("PAYMENT OPTIONS", payment)
@@ -20,7 +19,6 @@ class PaymentPage: DashboardServices {
     }
 
     fun pay(totalBill: Float) {
-
        when(modeOfPayment) {
            Payment.CARD -> {
                println("   Rs.$totalBill paid via card...")
