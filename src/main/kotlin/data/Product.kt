@@ -5,16 +5,16 @@ import enums.ProductStatus
 sealed class Product {
 
     abstract val productId: String
-    abstract var productName: String
-    abstract var price: Float
+    abstract val productName: String
+    abstract val price: Float
     abstract val category: String
     abstract var availableQuantity: Int
     abstract var status: ProductStatus
 
-    data class Book(override val productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var bookType: String, override val category: String = "book", override var status: ProductStatus): Product()
-    data class Mobile(override val productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var brand: String, var storage: String, override val category: String = "mobile", override var status: ProductStatus): Product()
-    data class Clothing(override val productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var gender: String, var colour: String, override val category: String = "clothing", override var status: ProductStatus): Product()
-    data class Earphone(override val productId: String, override var productName: String, override var price: Float, override var availableQuantity: Int, var type: String, var colour: String, var brand: String, override val category: String = "earphone", override var status: ProductStatus): Product()
+    data class Book(override val productId: String, override val productName: String, override val price: Float, override var availableQuantity: Int, val bookType: String, override val category: String = "book", override var status: ProductStatus): Product()
+    data class Mobile(override val productId: String, override val productName: String, override val price: Float, override var availableQuantity: Int, val brand: String, val storage: String, override val category: String = "mobile", override var status: ProductStatus): Product()
+    data class Clothing(override val productId: String, override val productName: String, override val price: Float, override var availableQuantity: Int, val gender: String, val colour: String, override val category: String = "clothing", override var status: ProductStatus): Product()
+    data class Earphone(override val productId: String, override val productName: String, override val price: Float, override var availableQuantity: Int, val type: String, val colour: String, val brand: String, override val category: String = "earphone", override var status: ProductStatus): Product()
 
 }
 

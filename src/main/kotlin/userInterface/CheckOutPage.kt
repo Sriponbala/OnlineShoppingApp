@@ -92,9 +92,9 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                                 if(checkOutActivities.addOrdersToOrdersHistory(
                                         accountInfo.ordersHistoryId, orders
                                     )) {
-                                    println("Orders added to orders  history!")
+                                    println("Order added to orders history!")
                                 } else {
-                                    println("Orders not added to orders history!")
+                                    println("Order not added to orders history!")
                                 }
                                 checkOutActivities.clearOrders()
                                 if(!isNavigatedFromCartPage) {
@@ -110,7 +110,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                                     }
                                 } else {
                                     if (checkOutActivities.clearCartItems(accountInfo.cartId, items, true)) {
-                                        println("Orders placed! Items removed from cart")
+                                        println("Order placed! Items removed from cart")
                                     }
                                 }
                                 checkOutActivities.updateAvailableQuantityAndStatusOfCartItems()
