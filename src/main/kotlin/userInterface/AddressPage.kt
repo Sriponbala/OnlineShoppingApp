@@ -84,7 +84,6 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
         } else {
             var sno = 1
             println("-----------------YOUR ADDRESSES------------------")
-            println("Default Shipping address: $shippingAddress")
             for((addressId, address) in addresses) {
                 generateAddressMap(sno, addressId)
                 println("""${sno++}. ${address.doorNo}, ${address.flatName},

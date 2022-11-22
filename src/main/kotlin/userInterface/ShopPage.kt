@@ -89,7 +89,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                                             val productId = selectAProduct()
                                             if(Helper.confirm()) {
                                                 productActivities(category, productId)
-                                            } else break
+                                            }
                                         } else break@label
                                     }
                             }
@@ -218,7 +218,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                if(Helper.checkValidRecord(option, /*productActivities.getProductsList(category).size*/ productsList.size)) {
+                if(Helper.checkValidRecord(option, productsList.size)) {
                     selectedProductId = productsList[option]!!.first
                     break
                 } else {
@@ -239,7 +239,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                   |PRODUCT PRICE      : ${product.price}
                   |PRODUCT STATUS     : ${product.status}
         """.trimMargin())
-        when(product) { // Smart cast to 'Product.Book' is impossible, because 'product' is a mutable property that could have been changed by this time
+        when(product) {
             is Product.Book -> {
                 println("""BOOK TYPE          : ${product.bookType}
                 """.trimMargin())

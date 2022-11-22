@@ -122,6 +122,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                             }
                         }
                     } else {
+                        addressPage.deselectShippingAddress()
                         break
                     }
                 } else {
