@@ -7,10 +7,10 @@ import interfaces.ProductsDao
 
 class ProductsData: ProductsDao {
 
-    override fun retrieveListOfProducts(category: String): MutableList<Product>? {
+    override fun retrieveListOfProducts(category: String): MutableList<Product> {
         return if(ProductsTable.products.containsKey(category)) {
-            ProductsTable.products[category]
-        } else null
+            ProductsTable.products[category]!!
+        } else mutableListOf()
     }
 
     override fun retrieveListOfCategories(): List<String> {

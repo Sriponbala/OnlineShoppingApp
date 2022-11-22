@@ -7,7 +7,7 @@ import interfaces.UtilityDao
 
 class ProductActivities(private val utility: UtilityDao, private val productsDao: ProductsDao) {
 
-    private var productsList: List<Product>? = null
+    private lateinit var productsList: List<Product>
     private val filterOptions: MutableList<String> = mutableListOf()
     private val uniqueFilters: MutableList<String> = mutableListOf()
     private lateinit var filteredList: List<Product>
@@ -18,9 +18,9 @@ class ProductActivities(private val utility: UtilityDao, private val productsDao
     }
 
     fun getProductsList(category: String): Map<Int, Triple<String, String, Float>> {
-        productsList = productsDao.retrieveListOfProducts(category)
+        productsList = productsDao.retrieveListOfProducts(category)!!
         val productsDetails = mutableMapOf<Int, Triple<String, String, Float>>()
-        productsList?.forEachIndexed{ index, product ->
+        productsList.forEachIndexed{ index, product ->
             productsDetails[index + 1] = Triple(product.productId, product.productName, product.price)
         }
         return productsDetails
@@ -28,7 +28,7 @@ class ProductActivities(private val utility: UtilityDao, private val productsDao
 
     fun getAProduct(productId: String): Product? {
         var selectedProduct: Product? = null
-        for(product in productsList!!) {
+        for(product in productsList) {
             if(product.productId == productId) {
                 selectedProduct = product
                 break
