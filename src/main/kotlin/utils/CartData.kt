@@ -11,15 +11,13 @@ import interfaces.ProductsDao
 class CartData(private val userName: String = "root",
                private val password: String = "tiger"): CartDao {
 
-    private lateinit var cartId: String
     private val productsDao: ProductsDao by lazy { ProductsData() }
     private val database: Database = Database.getConnection(this.userName, this.password)!!
 
     override fun createAndGetCartId(userId: String): String {
         val cart = Cart(userId)
         database.carts.add(cart)
-        cartId = cart.cartId
-        return cartId
+        return cart.cartId
     }
 
     override fun retrieveCartItems(cartId: String): MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>> {

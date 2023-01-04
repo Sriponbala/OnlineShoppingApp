@@ -9,7 +9,6 @@ class OrdersData(private val userName: String = "root",
 
     private val database: Database = Database.getConnection(this.userName, this.password)!!
 
-    private lateinit var ordersHistoryId: String
 
     override fun retrieveOrdersHistory(ordersHistoryId: String): MutableList<OrderIdLineItemMapping> {
         val ordersHistory: MutableList<OrderIdLineItemMapping> = mutableListOf()
@@ -27,7 +26,7 @@ class OrdersData(private val userName: String = "root",
 
     override fun createAndGetOrdersHistoryId(userId: String): String {
         val ordersHistory = OrdersHistory(userId)
-        ordersHistoryId = ordersHistory.ordersHistoryId
+        val ordersHistoryId = ordersHistory.ordersHistoryId
         database.usersOrdersHistory.add(ordersHistory)
         return ordersHistoryId
     }

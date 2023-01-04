@@ -9,7 +9,6 @@ import interfaces.WishListDao
 class WishListsData(private val userName: String = "root",
                     private val password: String = "tiger"): WishListDao {
 
-    private lateinit var wishListId: String
     private val database: Database = Database.getConnection(this.userName, this.password)!!
 
     override fun retrieveWishListProducts(wishListId: String): ArrayList<ProductSku> {
@@ -45,7 +44,7 @@ class WishListsData(private val userName: String = "root",
 
     override fun createAndGetWishListId(userId: String): String {
         val wishList = WishList(userId)
-        wishListId = wishList.wishListId
+        val wishListId = wishList.wishListId
         database.usersWishList.add(wishList)
         return wishListId
     }
