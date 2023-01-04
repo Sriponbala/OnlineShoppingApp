@@ -1,27 +1,23 @@
 package interfaces
 
-import data.Item
-import data.Product
+import data.*
 
 interface CartDao {
 
-    fun createAndGetCartId(): String
+    fun createAndGetCartId(userId: String): String
 
-    fun retrieveCartId(userId: String): String
+    fun retrieveCartItems(cartId: String): MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>
 
-    fun retrieveCartItems(cartId: String): List<Item>
+    fun addToCart(cartId: String, skuId: String)
 
-    fun addToCart(cartId: String, product: Product)
+    fun removeFromCart(cartId: String, skuId: String)
 
-    fun removeFromCart(cartId: String, item: Item)
+    fun clearCart(cartId: String)
 
-    fun clearCart(cartId: String, cartItems: MutableList<Item>)
-
-    fun retrieveCartItem(cartId: String, productId: String): Item
-
-    fun changeItemQuantityAndPrice(cartId: String, item: Item, quantity: Int)
+    fun changeItemQuantity(cartId: String, skuId: String, quantity: Int)
 
     fun updateSubtotal(cartId: String, subTotal: Float)
 
-    fun updateAvailableQuantityAndStatusOfCartItems()
+    fun getCartItemQuantity(cartId: String, skuId: String): Int
+
 }

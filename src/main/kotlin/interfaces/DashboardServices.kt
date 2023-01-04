@@ -25,7 +25,7 @@ interface DashboardServices {
                     println("Enter valid option!")
                 }
             } catch (exception: Exception) {
-                println("DashboardServices: getUserChoice(): Exception: $exception")
+                println("Enter valid option!")
             }
         }
     }

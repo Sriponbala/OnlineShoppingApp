@@ -1,7 +1,7 @@
 package userInterface
 
 import backend.WishListsActivities
-import data.Product
+import data.ProductSku
 import data.WishList
 import enums.WishListDashboard
 import interfaces.DashboardServices
@@ -9,7 +9,7 @@ import utils.Helper
 
 class WishListPage(private val wishListsActivities: WishListsActivities): DashboardServices {
 
-    private lateinit var wishListProducts : ArrayList<Product>
+    private lateinit var wishListProducts : ArrayList<ProductSku>
     private var isEmptyWishList: Boolean = true
     private lateinit var wishListId: String
     private lateinit var shopPage: ShopPage
@@ -26,16 +26,15 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
             displayWishListProducts(isEmptyWishList)
             if(Helper.confirm()) {
                 if(!isEmptyWishList) {
-                    val (category, selectedProduct) = selectAProduct()
+                    val selectedProduct = selectAProduct()
                     val wishListDashboard = WishListDashboard.values()
                     while(true) {
                         super.showDashboard("WISHLIST DASHBOARD", wishListDashboard)
                         when(super.getUserChoice(wishListDashboard)) {
 
                             WishListDashboard.VIEW_PRODUCT -> {
-                                println(category)
                                 println(selectedProduct)
-                                shopPage.productActivities(category, selectedProduct)
+                                shopPage.productActivities(selectedProduct)
                                 break
                             }
 
@@ -56,29 +55,23 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
         }
     }
 
-    private fun selectAProduct(): Pair<String, String> {
+    private fun selectAProduct(): String {
         var option: Int
         var selectedProduct = ""
-        var category = ""
         while(true){
             println("SELECT A PRODUCT: ")
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option,wishListProducts.size)) {
-                    wishListProducts.let{
-                       selectedProduct = it[option - 1].productId
-                        category = it[option - 1].category
-                   }
+                    selectedProduct = wishListProducts[option - 1].skuId
                 }
                 break
             } catch(exception: Exception) {
-                println("""Class: WistListPage: selectAProduct(): Exception: $exception
-                    |Enter again!
-                """.trimMargin())
+                println("Enter valid option!")
             }
         }
-        return Pair(category, selectedProduct)
+        return selectedProduct
     }
 
     private fun displayWishListProducts(isEmptyWishList: Boolean) {
@@ -86,13 +79,13 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
         if(isEmptyWishList) {
             println("        No items found        ")
         } else {
-            wishListProducts.forEachIndexed { index, product ->
-                println("${index + 1}. ${product.productName} - ${product.price}")
+            wishListProducts.forEachIndexed { index, productSku ->
+                println("${index + 1}. ${productSku.productName} - ${productSku.price}")
             }
         }
     }
 
-    private fun checkIfWishListIsEmpty(wishListProducts: ArrayList<Product>?) {
+    private fun checkIfWishListIsEmpty(wishListProducts: ArrayList<ProductSku>?) {
         isEmptyWishList = wishListProducts?.isEmpty() == true
     }
 }

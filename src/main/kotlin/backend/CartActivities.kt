@@ -1,70 +1,68 @@
 package backend
 
-import data.Item
-import enums.ProductStatus
+import data.CartItem
+import data.Filters
+import data.ProductSku
 import interfaces.CartDao
 import interfaces.UtilityDao
 
 class CartActivities(private val utility: UtilityDao, private val cartDao: CartDao, private val productActivities: ProductActivities) {
 
-    fun createAndGetCartId(): String {
-        return cartDao.createAndGetCartId()
+    fun createAndGetCartId(userId: String): String {
+        return cartDao.createAndGetCartId(userId)
     }
 
-    fun getCartItems(cartId: String): List<Item> {
+    fun getCartItems(cartId: String): MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>> {
         return if(utility.checkIfCartExists(cartId)) {
             cartDao.retrieveCartItems(cartId)
-        } else listOf()
+        } else mutableListOf()
     }
 
-    fun addToCart(cartId: String, category: String, productId: String): Boolean {
-        val itemAddedToCart: Boolean = if(utility.checkIfCategoryExistsInProductDB(category)) {
-            if(utility.checkIfProductExists(productId, category)) {
-                if(productActivities.retrieveProductAvailabilityStatus(category, productId) == ProductStatus.IN_STOCK) {
-                    if(utility.checkIfCartExists(cartId)) {
-                        if(!utility.checkIfItemIsInCart(cartId, productId)) {
-                            val product = productActivities.getProductFromDb(productId, category)
-                            cartDao.addToCart(cartId, product)
-                            true
-                        } else false
-                    } else false
-                } else false
+    fun addToCart(cartId: String, skuId: String): Boolean {
+        val itemAddedToCart: Boolean = if(utility.checkIfCartExists(cartId)) {
+            if(!utility.checkIfItemIsInCart(cartId, skuId)) {
+                cartDao.addToCart(cartId, skuId)
+                true
             } else false
         } else false
         return itemAddedToCart
     }
 
-    fun removeFromCart(cartId: String, productId: String, remove: Boolean): Boolean {
+    fun removeFromCart(cartId: String, skuId: String): Boolean {
         val itemRemovedFromCart: Boolean = if(utility.checkIfCartExists(cartId)) {
-            if(remove) {
-                if(utility.checkIfItemIsInCart(cartId, productId)) {
-                    val item = cartDao.retrieveCartItem(cartId, productId)
-                    cartDao.removeFromCart(cartId, item)
-                    true
-                } else false
+            if(utility.checkIfItemIsInCart(cartId, skuId)) {
+                cartDao.removeFromCart(cartId, skuId)
+                true
             } else false
         } else false
         return itemRemovedFromCart
     }
 
-    fun clearCartItems(cartId: String, cartItems: ArrayList<Item>, remove: Boolean): Boolean {
-        val areItemsRemoved = if(utility.checkIfCartExists(cartId)) {
-            if(remove) {
-                if(cartItems.isNotEmpty()) {
-                    cartDao.clearCart(cartId, cartItems)
+    fun removeFromCart(cartId: String, skuId: String, quantity: Int): Boolean {
+        val isItemRemoved: Boolean = if(utility.checkIfCartExists(cartId)) {
+            if(utility.checkIfItemIsInCart(cartId,skuId)) {
+                if(quantity >= cartDao.getCartItemQuantity(cartId, skuId)) {
+                    removeFromCart(cartId, skuId)
                     true
-                } else false
+                } else {
+                    cartDao.changeItemQuantity(cartId, skuId, quantity)
+                    true
+                }
             } else false
         } else false
-        return areItemsRemoved
+        return isItemRemoved
     }
 
-    fun calculateAndUpdateSubtotal(cartId: String, cartItems: List<Item>): Float {
+    fun checkIfCartIsEmpty(cartId: String): Boolean {
+        return utility.checkIfCartIsEmpty(cartId)
+    }
+
+    fun calculateAndUpdateSubtotal(cartId: String, cartItems: MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>): Float {
         var subTotal = 0f
         if(utility.checkIfCartExists(cartId)) {
-            for(item in cartItems) {
-                if(item.status == ProductStatus.IN_STOCK) {
-                    subTotal += (item.totalPrice)
+            for(cartItem in cartItems) {
+                if(cartItem.third == Filters.StatusFilters.InStock()) {
+                    subTotal += (cartItem.second.price * cartItem.first.quantity)
                 }
             }
             cartDao.updateSubtotal(cartId, subTotal)
@@ -72,22 +70,18 @@ class CartActivities(private val utility: UtilityDao, private val cartDao: CartD
         return subTotal
     }
 
-    fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
-        return productActivities.getAvailableQuantityOfProduct(productId, category)
+    fun getAvailableQuantityOfProduct(skuId: String): Int {
+        return productActivities.getAvailableQuantityOfProduct(skuId)
     }
 
-    fun changeQuantityAndUpdateTotalPriceOfItem(cartId: String, item: Item, quantity: Int): Boolean {
+    fun changeQuantityOfCartItem(cartId: String, skuId: String, quantity: Int): Boolean {
         return if(utility.checkIfCartExists(cartId)) {
-            if(utility.checkIfItemIsInCart(cartId, item.productId)) {
-                cartDao.changeItemQuantityAndPrice(cartId ,item, quantity)
+            if(utility.checkIfItemIsInCart(cartId, skuId)) {
+                cartDao.changeItemQuantity(cartId , skuId, quantity)
                 calculateAndUpdateSubtotal(cartId, cartDao.retrieveCartItems(cartId))
                 true
             } else false
         } else false
-    }
-
-    fun updateAvailabilityStatusOfCartItems() {
-       cartDao.updateAvailableQuantityAndStatusOfCartItems()
     }
 
 }

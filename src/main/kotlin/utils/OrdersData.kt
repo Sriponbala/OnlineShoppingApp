@@ -1,27 +1,83 @@
 package utils
 
-import data.Order
-import database.OrdersTable
+import data.*
+import database.*
 import interfaces.OrdersDao
 
-class OrdersData: OrdersDao {
+class OrdersData(private val userName: String = "root",
+                 private val password: String = "tiger"): OrdersDao {
+
+    private val database: Database = Database.getConnection(this.userName, this.password)!!
 
     private lateinit var ordersHistoryId: String
 
-    override fun retrieveOrdersHistory(ordersHistoryId: String): ArrayList<Order> {
-        return OrdersTable.usersOrdersHistory[ordersHistoryId]!!
+    override fun retrieveOrdersHistory(ordersHistoryId: String): MutableList<OrderIdLineItemMapping> {
+        val ordersHistory: MutableList<OrderIdLineItemMapping> = mutableListOf()
+        for(order in database.orders) {
+            if(ordersHistoryId == order.ordersHistoryId) {
+                for(orderLineItemMapping in database.orderLineItemMappings) {
+                    if(order.orderId == orderLineItemMapping.orderId) {
+                        ordersHistory.add(orderLineItemMapping)
+                    }
+                }
+            }
+        }
+        return ordersHistory
     }
 
-    override fun addToOrdersHistory(ordersHistoryId: String, orders: ArrayList<Order>) {
-        for(order in orders) {
-            retrieveOrdersHistory(ordersHistoryId).add(order)
+    override fun createAndGetOrdersHistoryId(userId: String): String {
+        val ordersHistory = OrdersHistory(userId)
+        ordersHistoryId = ordersHistory.ordersHistoryId
+        database.usersOrdersHistory.add(ordersHistory)
+        return ordersHistoryId
+    }
+
+    override fun getLineItemQuantity(skuId: String): Int {
+        var quantity = 0
+        for(lineItem in database.lineItems) {
+            if(skuId == lineItem.skuId) {
+                quantity += 1
+            }
+        }
+        return quantity
+    }
+
+    override fun addLineItemsToDb(lineItems: MutableList<LineItem>) {
+        for(lineItem in lineItems) {
+            database.lineItems.add(lineItem)
         }
     }
 
-    override fun createAndGetOrdersHistoryId(): String {
-        ordersHistoryId = OrdersTable.generateOrdersHistoryId()
-        OrdersTable.usersOrdersHistory[ordersHistoryId] = arrayListOf() // ArrayList<Order>
-        return ordersHistoryId
+    override fun createOrder(order: Order) {
+        database.orders.add(order)
+    }
+
+    override fun getLineItem(lineItemId: String): LineItem {
+        var item: LineItem? = null
+        for(lineItem in database.lineItems) {
+            if(lineItemId == lineItem.lineItemId) {
+                item = lineItem
+                break
+            }
+        }
+        return item!!
+    }
+
+    override fun getOrder(orderId: String): Order {
+        var order: Order? = null
+        for(localOrder in database.orders) {
+            if(orderId == localOrder.orderId) {
+                order = localOrder
+                break
+            }
+        }
+        return order!!
+    }
+
+    override fun createOrderAndLineItemMapping(orderId: String, lineItems: MutableList<LineItem>) {
+        for(lineItem in lineItems) {
+            database.orderLineItemMappings.add(OrderIdLineItemMapping(orderId, lineItem.lineItemId))
+        }
     }
 
 }

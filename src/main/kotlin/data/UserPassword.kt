@@ -1,3 +1,3 @@
 package data
 
-data class UserPassword(val password: String)
+data class UserPassword(val userId: String, var password: String)

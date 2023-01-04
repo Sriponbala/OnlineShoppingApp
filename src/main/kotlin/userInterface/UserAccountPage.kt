@@ -2,6 +2,7 @@ package userInterface
 
 import backend.UserAccountActivities
 import data.AccountInfo
+import data.User
 import enums.UserAccountDashboard
 import enums.UserAccountFields
 import interfaces.DashboardServices
@@ -9,24 +10,24 @@ import utils.Helper
 
 class UserAccountPage(private val userAccountActivities: UserAccountActivities): DashboardServices {
 
-    private lateinit var userId: String
     private lateinit var accountInfo: AccountInfo
+    private lateinit var user: User
 
-    fun initializer(userId: String, accountInfo: AccountInfo) {
-        this.userId = userId
+    fun initializer(accountInfo: AccountInfo) {
         this.accountInfo = accountInfo
     }
 
-    private fun displayUserDetails(userDetails: MutableMap<String, String>) {
+    private fun displayUserDetails(user: User) {
         println("---------------YOUR PROFILE--------------")
-        println("""|NAME   : ${userDetails["name"]} 
-                   |MOBILE : ${userDetails["mobile"]} 
-                   |EMAIL  : ${userDetails["email"]}""".trimMargin())
+        println("""|NAME   : ${user.userName} 
+                   |MOBILE : ${user.userMobile} 
+                   |EMAIL  : ${user.userEmail}""".trimMargin())
     }
 
     fun openUserAccountPage(wishListPage: WishListPage, ordersPage: OrdersPage, addressPage: AddressPage, shopPage: ShopPage) {
-        userAccountActivities.getUser(userId)
-        displayUserDetails(userAccountActivities.getUserDetails())
+        userAccountActivities.getUser(accountInfo.userId)
+        this.user = userAccountActivities.retrieveUser()
+        displayUserDetails(this.user)
         val userAccountDashboard = UserAccountDashboard.values()
         while(true) {
             super.showDashboard("YOUR ACCOUNT", userAccountDashboard)

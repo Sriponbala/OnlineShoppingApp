@@ -1,4 +1,11 @@
 package data
 
-data class Cart(var cartItems: MutableList<Item> = mutableListOf(), var subTotal: Float = 0f)
+import utils.Helper
+
+data class Cart(val userId: String) {
+    val cartId = Helper.generateCartId()
+    var subTotal: Float = 0f
+}
+
+
 

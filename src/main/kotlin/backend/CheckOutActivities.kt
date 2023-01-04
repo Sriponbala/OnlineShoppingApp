@@ -1,8 +1,8 @@
 package backend
 
-import data.Item
-import data.Order
-import utils.Helper
+import data.*
+import enums.Payment
+import java.time.LocalDate
 
 class CheckOutActivities(
     private val cartActivities: CartActivities,
@@ -10,74 +10,105 @@ class CheckOutActivities(
     private val ordersHistoryActivities: OrdersHistoryActivities
 ) {
 
-    private val orders: ArrayList<Order> = arrayListOf()
+    private var lineItems: MutableList<LineItem> = mutableListOf()
 
-    fun addOrdersToOrdersHistory(
-        ordersHistoryId: String,
-        orders: ArrayList<Order>,
-    ): Boolean {
-        return ordersHistoryActivities.addOrderToOrdersHistory(ordersHistoryId, orders)
+    fun clearLineItems() {
+        this.lineItems = mutableListOf()
     }
 
-    fun createOrders(finalizedListOfItems: MutableList<Item>, shippingAddress: String) {
-        val (orderedDate, deliveryDate) = Helper.getDates()
-        for(item in finalizedListOfItems) {
-            orders.add(Order(orderId = generateOrderId(), orderedDate = orderedDate, deliveryDate = deliveryDate, shippingAddress = shippingAddress, item = item))
+    fun removeFromCart(cartId: String, lineItem: LineItem, quantity: Int): Boolean {
+        return cartActivities.removeFromCart(cartId, lineItem.skuId, quantity)
+    }
+
+    fun clearCartItems(cartId: String, cartItems: MutableList<Pair<ProductSku, Filters.StatusFilters>>) {
+        for(cartItem in cartItems) {
+            cartActivities.removeFromCart(cartId, cartItem.first.skuId, getLineItemQuantity(cartItem.first.skuId))
         }
     }
 
-    fun getOrders(): ArrayList<Order> {
-        return orders
+    fun createItemToBuy(skuId: String, orderedDate: LocalDate, quantity: Int): MutableList<LineItem> {
+        val productDetails = productActivities.getProducts(skuId, quantity, lineItems)
+        val tempLineItems: MutableList<LineItem> = mutableListOf()
+        for(product in productDetails) {
+            val lineItem = LineItem(skuId, product.productId, orderedDate)
+            tempLineItems.add(lineItem)
+            lineItems.add(lineItem)
+        }
+        return tempLineItems
     }
 
-    fun clearOrders() {
-        this.orders.clear()
+    fun getProductDetails(items: MutableList<LineItem>): MutableList<Pair<ProductSku, Filters.StatusFilters>> {
+        val finalizedSet: MutableSet<Pair<ProductSku, Filters.StatusFilters>> = mutableSetOf()
+        val finalizedItems: MutableList<Pair<ProductSku, Filters.StatusFilters>> = mutableListOf()
+        for(item in items) {
+            finalizedSet.add(productActivities.getProductDetails(item.skuId))
+        }
+        for(setItem in finalizedSet) {
+            finalizedItems.add(setItem)
+        }
+        return finalizedItems
     }
 
-    private var orderId = 1
-
-    private fun generateOrderId(): String {
-        return "Order${orderId++}"
+    fun getAvailableQuantityOfProduct(skuId: String): Int {
+        return productActivities.getAvailableQuantityOfProduct(skuId)
     }
 
-    fun removeFromCart(cartId: String, productId: String, remove: Boolean): Boolean {
-        return cartActivities.removeFromCart(cartId, productId, remove)
-    }
-
-    fun clearCartItems(cartId: String, cartItems: ArrayList<Item>, remove: Boolean): Boolean {
-        return cartActivities.clearCartItems(cartId, cartItems, remove)
-    }
-
-    fun createItemToBuy(productId: String, category: String): Item {
-        val product = productActivities.getProductFromDb(productId, category)
-        return Item(product.productId, product.productName, product.price, product.price, category, 1, product.status)
-    }
-
-    fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
-        return productActivities.getAvailableQuantityOfProduct(productId, category)
-    }
-
-    fun changeQuantityAndUpdateTotalPriceOfItem(item: Item, quantity: Int) {
-        item.quantity = quantity
-        item.totalPrice = (quantity * item.productPrice)
-    }
-
-    fun getTotalBill(finalizedListOfItems: ArrayList<Item>): Float {
+    fun getTotalBill(finalizedItems: MutableList<Pair<ProductSku, Filters.StatusFilters>>): Float {
         var totalBill = 0f
-        for(item in finalizedListOfItems) {
-            totalBill += item.totalPrice
+        for(item in finalizedItems) {
+            totalBill += (item.first.price * getLineItemQuantity(item.first.skuId))
         }
         return totalBill
     }
 
-    fun updateAvailableQuantityAndStatusOfProducts(finalizedListOfItems: ArrayList<Item>) {
-        for(item in finalizedListOfItems) {
-            productActivities.updateAvailableQuantityAndStatusOfProduct(item.productId, item.category, item.quantity)
+    fun updateStatusOfProducts() {
+        for(lineItem in lineItems) {
+            productActivities.updateStatusOfProduct(lineItem)
         }
     }
 
-    fun updateAvailableQuantityAndStatusOfCartItems() {
-        cartActivities.updateAvailabilityStatusOfCartItems()
+    fun getLineItemQuantity(skuId: String): Int {
+        var quantity = 0
+        for(lineItem in lineItems) {
+            if(skuId == lineItem.skuId) {
+                quantity += 1
+            }
+        }
+        return quantity
     }
+
+    fun updateQuantityOfLineItem(lineItem: LineItem, quantity: Int) {
+        val newQuantity: Int
+        if(quantity > getLineItemQuantity(lineItem.skuId)) {
+            newQuantity = quantity - getLineItemQuantity(lineItem.skuId)
+            createItemToBuy(lineItem.skuId, lineItem.orderedDate, newQuantity)
+        } else if (quantity < getLineItemQuantity(lineItem.skuId)) {
+            newQuantity = getLineItemQuantity(lineItem.skuId) - quantity
+            var count = 0
+            val iter = lineItems.iterator()
+            for(it in iter) {
+                if(count < newQuantity) {
+                    if(lineItem.skuId == it.skuId) {
+                        iter.remove()
+                        count++
+                    }
+                } else break
+            }
+        }
+    }
+
+    fun addAllLineItemsToDb() {
+        ordersHistoryActivities.addLineItemsToDb(lineItems)
+    }
+
+    fun createOrder(ordersHistoryId: String, orderedDate: LocalDate, shippingAddress: Address, payment: Payment) {
+        ordersHistoryActivities.createOrder(ordersHistoryId, orderedDate, shippingAddress, payment)
+    }
+
+    fun createOrderAndLineItemMapping(finalizedListOfItems: MutableList<LineItem>) {
+        ordersHistoryActivities.createOrderAndLineItemMapping(finalizedListOfItems)
+    }
+
+    fun getLineItems() = lineItems
 
 }

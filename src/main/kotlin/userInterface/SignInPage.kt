@@ -37,7 +37,7 @@ class SignInPage: OnboardingServices {
                             accountInfo = userAccountActivities.getAccountInfo(userId)
                             if(accountInfo != null) {
                                 println("SignIn Successful!")
-                                homePage.initializer(userId, accountInfo!!)
+                                homePage.initializer(accountInfo!!)
                                 homePage.openHomePage(
                                     shopPage,
                                     cartPage,
@@ -60,7 +60,7 @@ class SignInPage: OnboardingServices {
                     }
             }
         } catch (exception: Exception) {
-            println("Class SignInPage: signIn(): Exception: $exception")
+            println("Some technical error occurred!")
         }
     }
 

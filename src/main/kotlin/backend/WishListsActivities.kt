@@ -1,49 +1,38 @@
 package backend
 
-import data.Product
-import interfaces.ProductsDao
+import data.ProductSku
 import interfaces.UtilityDao
 import interfaces.WishListDao
-import utils.ProductsData
 
 class WishListsActivities(private val utility: UtilityDao, private val wishListsDao: WishListDao) {
 
-    private val productsData: ProductsDao by lazy{ ProductsData() }
-
-    fun createAndGetWishListId(): String {
-        return wishListsDao.createAndGetWishListId()
+    fun createAndGetWishListId(userId: String): String {
+        return wishListsDao.createAndGetWishListId(userId)
     }
 
-    fun getWishListProducts(wishListId: String): ArrayList<Product> {
+    fun getWishListProducts(wishListId: String): ArrayList<ProductSku> {
         return if(utility.checkIfWishListExists(wishListId)) {
             wishListsDao.retrieveWishListProducts(wishListId)
         } else arrayListOf()
     }
 
-    fun addProductToWishList(wishListId: String, category: String, productId: String): Boolean {
-        return if(utility.checkIfCategoryExistsInProductDB(category)) {
-            if(utility.checkIfProductExists(productId, category)) {
-                if(utility.checkIfWishListExists(wishListId)) {
-                    if(!utility.checkIfProductIsInUserWishList(wishListId, productId)) {
-                        val product = productsData.retrieveProduct(productId, category)
-                        wishListsDao.addAProductToWishList(wishListId, product)
-                        true
-                    } else false
-                } else false
-            } else false
-        } else false
-    }
-
-    fun removeProductFromWishList(wishListId: String, productId: String): Boolean {
+    fun addProductToWishList(wishListId: String, skuId: String): Boolean {
         return if(utility.checkIfWishListExists(wishListId)) {
-            if(utility.checkIfProductIsInUserWishList(wishListId, productId)) {
-                val product = wishListsDao.retrieveProductFromWishList(wishListId, productId)
-                wishListsDao.deleteProductFromWishList(wishListId, product)
+            if(!utility.checkIfProductIsInUserWishList(wishListId, skuId)) {
+                wishListsDao.addAProductToWishList(wishListId, skuId)
                 true
             } else false
         } else false
     }
 
+    fun removeProductFromWishList(wishListId: String, skuId: String): Boolean {
+        return if(utility.checkIfWishListExists(wishListId)) {
+            if(utility.checkIfProductIsInUserWishList(wishListId, skuId)) {
+                wishListsDao.deleteProductFromWishList(wishListId, skuId)
+                true
+            } else false
+        } else false
+    }
 
 }
 

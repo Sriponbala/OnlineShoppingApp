@@ -1,18 +1,16 @@
 package userInterface
 
 import backend.CartActivities
-import data.AccountInfo
-import data.Item
+import data.*
 import enums.CartActivitiesDashboard
 import enums.ProductQuantityManagement
-import enums.ProductStatus
 import interfaces.DashboardServices
 import utils.Helper
 
 class CartPage(private val cartActivities: CartActivities): DashboardServices {
 
     private var isCartEmpty = false
-    private lateinit var cartItems: List<Item>
+    private lateinit var cartItems: MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>
     private lateinit var cartId: String
 
     fun initializer(cartId: String) {
@@ -21,7 +19,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
 
     fun openCartPage(addressPage: AddressPage, paymentPage: PaymentPage, checkOutPage: CheckOutPage, accountInfo: AccountInfo) {
         while(true) {
-            isCartEmpty = checkIfCartIsEmpty(cartId)
+            isCartEmpty = cartActivities.checkIfCartIsEmpty(cartId)
             if(!isCartEmpty) {
                 cartItems = cartActivities.getCartItems(cartId)
                 displayCartItems()
@@ -29,13 +27,13 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                 super.showDashboard("CART DASHBOARD", cartActivitiesDashboard)
                 when(super.getUserChoice(cartActivitiesDashboard)) {
                     CartActivitiesDashboard.SELECT_A_PRODUCT -> {
-                        val item = selectAnItem()
-                        doActivitiesOnSelectedItem(item)
+                        val cartItem = selectACartItem()
+                        doActivitiesOnSelectedItem(cartItem)
                     }
                     CartActivitiesDashboard.PROCEED_TO_BUY -> {
-                        val items = mutableListOf<Item>()
+                        val items = mutableListOf<Triple<CartItem, ProductSku, Filters.StatusFilters>>()
                         for(cartItem in cartItems) {
-                            if(cartItem.status != ProductStatus.OUT_OF_STOCK) {
+                            if(cartItem.third != Filters.StatusFilters.OutOfStock()) {
                                 items.add(cartItem)
                             }
                         }
@@ -54,27 +52,26 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
     }
 
     private fun displayCartItems() {
-        cartItems.forEachIndexed { index, item ->
-            println("""${index + 1}. Item Name        : ${item.productName}
-                |   Item price       : ${item.productPrice}
-                |   Quantity         : ${item.quantity}
-                |   Total Price      : ${item.totalPrice}
-                |   Status           : ${item.status}
+        cartItems.forEachIndexed { index, cartItem ->
+            println("""${index + 1}. Item Name        : ${cartItem.second.productName}
+                |   Item price       : ${cartItem.second.price}
+                |   Quantity         : ${cartItem.first.quantity}
+                |   Status           : ${cartItem.third.status}
             """.trimMargin())
         }
         println("   Subtotal: ${cartActivities.calculateAndUpdateSubtotal(cartId, cartItems)}")
     }
 
-    private fun doActivitiesOnSelectedItem(item: Item) {
+    private fun doActivitiesOnSelectedItem(cartItem: Triple<CartItem, ProductSku, Filters.StatusFilters>) {
         val productQuantityManagement = ProductQuantityManagement.values()
         while(true) {
             super.showDashboard("ACTIVITIES ON SELECTED PRODUCT", productQuantityManagement)
             when(super.getUserChoice(productQuantityManagement)) {
                 ProductQuantityManagement.CHANGE_QUANTITY -> {
-                    if(item.status == ProductStatus.IN_STOCK) {
-                        val quantity = getQuantity(item.productId, item.category)
+                    if(cartItem.third == Filters.StatusFilters.InStock()) {
+                        val quantity = getQuantity(cartItem.first.skuId)
                         if(Helper.confirm()) {
-                            if(cartActivities.changeQuantityAndUpdateTotalPriceOfItem(cartId, item, quantity)) {
+                            if(cartActivities.changeQuantityOfCartItem(cartId, cartItem.first.skuId, quantity)) {
                                 println("Quantity changed!")
                             } else {
                                 println("Failed to change quantity")
@@ -86,7 +83,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
 
                 }
                 ProductQuantityManagement.REMOVE -> {
-                    if(cartActivities.removeFromCart(cartId, item.productId, true)){
+                    if(cartActivities.removeFromCart(cartId, cartItem.first.skuId)){
                         println("Item removed from cart!")
                         break
                     } else {
@@ -101,9 +98,9 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
         }
     }
 
-    private fun selectAnItem(): Item {
+    private fun selectACartItem(): Triple<CartItem, ProductSku, Filters.StatusFilters> {
         var option: Int
-        var selectedItem: Item
+        var selectedItem: Triple<CartItem, ProductSku, Filters.StatusFilters>
         while(true){
             println("SELECT AN ITEM: ")
             try{
@@ -116,19 +113,13 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                     println("Invalid option! Try again")
                 }
             } catch(exception: Exception) {
-                println("""Class: CartPage: selectAnItem(): Exception: $exception
-                    |Enter again!
-                """.trimMargin())
+                println("Enter valid option!")
             }
         }
         return selectedItem
     }
 
-    private fun checkIfCartIsEmpty(cartId: String): Boolean {
-        return cartActivities.getCartItems(cartId).isEmpty()
-    }
-
-    private fun getQuantity(productId: String, category: String): Int {
+    private fun getQuantity(skuId: String): Int {
         var quantity = 1
         while(true) {
             if(Helper.confirm()) {
@@ -136,7 +127,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                 try {
                     val input = readLine()!!.toInt()
                     if(input in 1..4) {
-                        val availableQuantity = cartActivities.getAvailableQuantityOfProduct(productId, category)
+                        val availableQuantity = cartActivities.getAvailableQuantityOfProduct(skuId)
                         if(availableQuantity >= input) {
                             quantity = input
                             break
@@ -147,7 +138,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                         println("You can select a maximum of 4 items!")
                     }
                 } catch(exception: Exception) {
-                    println("Class CartPage(): getQuantity(): Exception: $exception")
+                    println("Enter valid value!")
                 }
             } else break
         }

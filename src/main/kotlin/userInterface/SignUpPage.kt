@@ -8,7 +8,6 @@ import data.AccountInfo
 import interfaces.OnboardingServices
 import interfaces.UtilityDao
 import utils.Helper
-import java.lang.Exception
 
 class SignUpPage: OnboardingServices {
 
@@ -53,14 +52,14 @@ class SignUpPage: OnboardingServices {
                                 if(Helper.verifyOtp(currentOtp, otp)) {
                                     userId = userAccountActivities.createAndGetUserId(name, mobile, email, password)
                                     userAccountActivities.getUser(userId)
-                                    wishListId = wishListsActivities.createAndGetWishListId()
-                                    cartId = cartActivities.createAndGetCartId()
-                                    ordersHistoryId = ordersHistoryActivities.createAndGetOrdersHistoryId()
+                                    wishListId = wishListsActivities.createAndGetWishListId(userId)
+                                    cartId = cartActivities.createAndGetCartId(userId)
+                                    ordersHistoryId = ordersHistoryActivities.createAndGetOrdersHistoryId(userId)
                                     if(userAccountActivities.createAccountInfo(userId, cartId, wishListId, ordersHistoryId)) {
                                         accountInfo = userAccountActivities.getAccountInfo(userId)
                                         if(accountInfo != null) {
                                             println("SignUp Successful!")
-                                            homePage.initializer(userId, accountInfo!!)
+                                            homePage.initializer(accountInfo!!)
                                             homePage.openHomePage(
                                                 shopPage,
                                                 cartPage,
@@ -91,7 +90,7 @@ class SignUpPage: OnboardingServices {
                     }
             }
         } catch (exception: Exception) {
-            println("Class SignUpPage: signUp(): Exception: $exception")
+            println("Some technical error occurred!")
         }
     }
 

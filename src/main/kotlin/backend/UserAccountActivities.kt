@@ -3,19 +3,24 @@ package backend
 import data.AccountInfo
 import data.Address
 import data.User
+import data.UserAddress
+import enums.AddressFields
 import interfaces.UserDao
 import interfaces.UtilityDao
 
 class UserAccountActivities(private val utility: UtilityDao, private val userDao: UserDao) {
 
     private lateinit var user: User
-    private var addressesList: MutableMap<String, Address> = mutableMapOf()
-    private var addressId = 1
+    private lateinit var addressesList: List<Address>
 
     fun getUser(userId: String) {
         if(utility.checkIfUserExists(userId)) {
             this.user = userDao.retrieveUser(userId)
         }
+    }
+
+    fun retrieveUser(): User {
+        return user
     }
 
     fun getUserId(mobile: String): String {
@@ -42,21 +47,20 @@ class UserAccountActivities(private val utility: UtilityDao, private val userDao
         return accountInfo
     }
 
-    fun getUserDetails(): MutableMap<String, String> {
-        return mutableMapOf("name" to user.userName, "mobile" to user.userMobile, "email" to user.userEmail)
-    }
-
-    fun getUserAddresses(): MutableMap<String, Address> {
+    fun getUserAddresses(): List<Address> {
         addressesList = userDao.getUserAddresses(user.userId)
         return addressesList
     }
 
-    fun getShippingAddress(addressId: String): String {
-        val selectedAddress: Address
-        return if(addressesList.containsKey(addressId)) {
-            selectedAddress = addressesList[addressId]!!
-            "${selectedAddress.doorNo}, ${selectedAddress.flatName}, ${selectedAddress.street}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.pincode}"
-        } else ""
+    fun getShippingAddress(addressId: String): Address {
+        lateinit var selectedAddress: Address
+        for(address in addressesList) {
+            if(addressId == address.addressId) {
+                selectedAddress = address
+                break
+            }
+        }
+        return selectedAddress
     }
 
     fun updateName(name: String): Boolean {
@@ -75,37 +79,40 @@ class UserAccountActivities(private val utility: UtilityDao, private val userDao
 
     fun addNewAddress(doorNo: String, flatName: String, street: String, area: String, city: String, state: String, pincode: String): Boolean {
         return if(utility.checkIfUserExists(user.userId)) {
-            val addressId = generateAddressId()
-            userDao.addNewAddress(user.userId, addressId, Address(doorNo, flatName, street, area, city, state, pincode))
+            val address = Address(doorNo, flatName, street, area, city, state, pincode)
+            userDao.addAddress(address)
+            val userAddress = UserAddress(user.userId, address.addressId)
+            userDao.addNewAddress(userAddress)
             true
         } else false
     }
 
-    fun updateAddress(addressId: String, field: String, value: String) {
+    fun updateAddress(addressId: String, field: AddressFields, value: String) {
         if(utility.checkIfUserExists(user.userId)) {
-            if(utility.checkIfAddressExists(user.userId, addressId)) {
+            if(utility.checkIfAddressExists(addressId)) {
                 when(field) {
-                    "doorNo" -> {
-                        userDao.updateAddress(user.userId, addressId,"doorNo", value)
+                    AddressFields.DOORNUMBER -> {
+                        userDao.updateAddress(user.userId, addressId, AddressFields.DOORNUMBER, value)
                     }
-                    "flatName" -> {
-                        userDao.updateAddress(user.userId, addressId,"flatName", value)
+                    AddressFields.FLATNAME -> {
+                        userDao.updateAddress(user.userId, addressId, AddressFields.FLATNAME, value)
                     }
-                    "street" -> {
-                        userDao.updateAddress(user.userId, addressId,"street", value)
+                    AddressFields.STREET -> {
+                        userDao.updateAddress(user.userId, addressId, AddressFields.STREET, value)
                     }
-                    "area" -> {
-                        userDao.updateAddress(user.userId, addressId,"area", value)
+                    AddressFields.AREA -> {
+                        userDao.updateAddress(user.userId, addressId, AddressFields.AREA, value)
                     }
-                    "city" -> {
-                        userDao.updateAddress(user.userId, addressId,"city", value)
+                    AddressFields.CITY -> {
+                        userDao.updateAddress(user.userId, addressId, AddressFields.CITY, value)
                     }
-                    "state" -> {
-                        userDao.updateAddress(user.userId, addressId,"state", value)
+                    AddressFields.STATE -> {
+                        userDao.updateAddress(user.userId, addressId, AddressFields.STATE, value)
                     }
-                    "pincode" -> {
-                        userDao.updateAddress(user.userId, addressId,"pincode", value)
+                    AddressFields.PINCODE -> {
+                        userDao.updateAddress(user.userId, addressId, AddressFields.PINCODE, value)
                     }
+                    else -> {}
                 }
             }
         }
@@ -113,15 +120,11 @@ class UserAccountActivities(private val utility: UtilityDao, private val userDao
 
     fun deleteAddress(addressId: String): Boolean {
         return if(utility.checkIfUserExists(user.userId)) {
-            if(utility.checkIfAddressExists(user.userId, addressId)) {
-                userDao.deleteAddress(user.userId, addressId)
+            if(utility.checkIfAddressExists(addressId)) {
+                userDao.deleteAddress(addressId)
                 true
             } else false
         } else false
     }
 
-
-    private fun generateAddressId(): String {
-        return "Address${addressId++}"
-    }
 }

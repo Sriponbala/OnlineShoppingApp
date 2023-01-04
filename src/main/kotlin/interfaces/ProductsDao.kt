@@ -1,22 +1,24 @@
 package interfaces
 
-import data.Product
-import enums.ProductStatus
+import data.Filters
+import data.LineItem
+import data.ProductDetails
+import data.ProductSku
 
 interface ProductsDao {
 
-    fun retrieveListOfProducts(category: String): MutableList<Product>?
+    fun retrieveAllProducts(): MutableList<Pair<ProductSku, Filters.StatusFilters>>
 
-    fun retrieveListOfCategories(): List<String>
+    fun retrieveAvailableQuantityOfProduct(skuId: String): Int
 
-    fun updateAvailableQuantityOfProduct(productId: String, category: String, quantity: Int)
+    fun updateStatusOfProduct(lineItem: LineItem)
 
-    fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus
+    fun retrieveAProduct(skuId: String): ProductDetails
 
-    fun retrieveAvailableQuantityOfProduct(productId: String, category: String): Int
+    fun retrieveProductDetails(skuId: String): Pair<ProductSku, Filters.StatusFilters>
 
-    fun updateStatusOfProduct(productId: String, category: String, status: ProductStatus)
+    fun addProductDetails()
 
-    fun retrieveProduct(productId: String, category: String): Product
+    fun getProducts(skuId: String, quantity: Int, lineItems: MutableList<LineItem>): MutableList<ProductDetails>
 
 }

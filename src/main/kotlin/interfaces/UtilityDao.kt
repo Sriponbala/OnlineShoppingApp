@@ -1,6 +1,5 @@
 package interfaces
 
-
 interface UtilityDao {
 
     fun checkUniqueUser(mobile: String): Boolean
@@ -13,18 +12,18 @@ interface UtilityDao {
 
     fun checkIfWishListExists(wishListId: String): Boolean
 
-    fun checkIfProductIsInUserWishList(wishListId: String, productId: String): Boolean
+    fun checkIfProductIsInUserWishList(wishListId: String, skuId: String): Boolean
 
-    fun checkIfCategoryExistsInProductDB(category: String): Boolean
-
-    fun checkIfProductExists(productId: String, category: String): Boolean
+    fun checkIfProductExists(skuId: String): Boolean
 
     fun checkIfOrdersHistoryExists(ordersHistoryId: String): Boolean
 
     fun checkIfCartExists(cartId: String): Boolean
 
-    fun checkIfItemIsInCart(cartId: String, productId: String): Boolean
+    fun checkIfItemIsInCart(cartId: String, skuId: String): Boolean
 
-    fun checkIfAddressExists(userId: String, addressId: String): Boolean
+    fun checkIfAddressExists(addressId: String): Boolean
+
+    fun checkIfCartIsEmpty(cartId: String): Boolean
 
 }

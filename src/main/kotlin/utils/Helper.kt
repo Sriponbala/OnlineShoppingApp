@@ -7,6 +7,31 @@ import kotlin.random.Random
 
 object Helper {
 
+    private var userId = 1
+    private var addressId = 1
+    private var cartId = 1
+    private var wishListId = 1
+    private var orderId = 1
+    private var orderHistoryId = 1
+    private var productId = 1
+    private var lineItemId = 1
+
+    fun generateProductId(): String = "PDT${productId++}"
+
+    fun generateUserId(): String = "USR${userId++}"
+
+    fun generateAddressId(): String = "ARS${addressId++}"
+
+    fun generateCartId(): String = "CRT${cartId++}"
+
+    fun generateWishListId(): String = "WL${wishListId++}"
+
+    fun generateOrderId(): String = "ODR${orderId++}"
+
+    fun generateOrdersHistoryId(): String = "OH${orderHistoryId++}"
+
+    fun generateLineItemId(): String = "LID${lineItemId++}"
+
     fun confirm(): Boolean {
         while(true) {
             println("Confirm: ")
@@ -25,7 +50,7 @@ object Helper {
                     println("Enter proper input: ")
                 }
             } catch(exception: Exception) {
-                println("Class Helper: confirm(): Exception: $exception")
+                println("Enter valid option!")
             }
         }
     }
@@ -70,23 +95,10 @@ object Helper {
         return Pattern.matches("^[a-zA-Z1-9][a-zA-Z0-9-.\\s]{0,30}$", fieldValue)
     }
 
-    fun getDates(): Pair<LocalDate, LocalDate> {
-        return compareDate()
-    }
-
-    private fun compareDate(): Pair<LocalDate, LocalDate> {
-        while(true) {
-            val firstDate: LocalDate = generateDate()
-            val secondDate: LocalDate = generateDate()
-            if(firstDate.isBefore(secondDate)) {
-                return Pair(firstDate, secondDate)
-            }
-        }
-    }
-
-    private fun generateDate(): LocalDate {
+    fun generateOrderedDate(): LocalDate {
         return LocalDate.of(2022, 11, 18).plusDays(Random.nextLong(91))
     }
+
 }
 
 

@@ -1,280 +1,229 @@
 package backend
 
-import data.Product
-import enums.ProductStatus
+import data.Filters
+import data.LineItem
+import data.ProductDetails
+import data.ProductSku
+import enums.*
 import interfaces.ProductsDao
 import interfaces.UtilityDao
 
 class ProductActivities(private val utility: UtilityDao, private val productsDao: ProductsDao) {
 
-    private lateinit var productsList: List<Product>
-    private val filterOptions: MutableList<String> = mutableListOf()
-    private val uniqueFilters: MutableList<String> = mutableListOf()
-    private lateinit var filteredList: List<Product>
-    private lateinit var list: MutableList<Product>
+    private lateinit var productsList: MutableList<Pair<ProductSku, Filters.StatusFilters>>
+    private lateinit var filteredList: List<Pair<ProductSku, Filters.StatusFilters>>
 
-    fun getCategories(): List<String> {
-        return productsDao.retrieveListOfCategories()
+    fun getProductsList(): MutableList<Pair<ProductSku, Filters.StatusFilters>> {
+        productsList = productsDao.retrieveAllProducts()
+        return productsList
     }
 
-    fun getProductsList(category: String): Map<Int, Triple<String, String, Float>> {
-        productsList = productsDao.retrieveListOfProducts(category)!!
-        val productsDetails = mutableMapOf<Int, Triple<String, String, Float>>()
-        productsList.forEachIndexed{ index, product ->
-            productsDetails[index + 1] = Triple(product.productId, product.productName, product.price)
+    fun getProductsList(category: ProductCategories): List<Pair<ProductSku, Filters.StatusFilters>> {
+        return when(category) {
+            ProductCategories.BOOK -> productsList.filter { it.first.category == Filters.CategoryFilters.Book() }
+            ProductCategories.MOBILE -> productsList.filter { it.first.category == Filters.CategoryFilters.Mobile() }
+            ProductCategories.CLOTHING -> productsList.filter { it.first.category == Filters.CategoryFilters.Clothing() }
+            ProductCategories.EARPHONE -> productsList.filter { it.first.category == Filters.CategoryFilters.Earphone() }
         }
-        return productsDetails
     }
 
-    fun getAProduct(productId: String): Product? {
-        var selectedProduct: Product? = null
-        for(product in productsList) {
-            if(product.productId == productId) {
-                selectedProduct = product
-                break
-            }
-        }
-        return selectedProduct
+    fun getProductDetails(skuId: String): Pair<ProductSku, Filters.StatusFilters> {
+        return productsDao.retrieveProductDetails(skuId)
     }
 
-    fun getProductFromDb(productId: String, category: String): Product {
-        return productsDao.retrieveProduct(productId, category)
+    fun getProducts(skuId: String, quantity: Int, lineItems: MutableList<LineItem>): MutableList<ProductDetails> {
+        return productsDao.getProducts(skuId, quantity, lineItems)
     }
 
-    fun getAvailableQuantityOfProduct(productId: String, category: String): Int {
-        return if(utility.checkIfProductExists(productId, category)) {
-            productsDao.retrieveAvailableQuantityOfProduct(productId, category)
+    fun getAvailableQuantityOfProduct(skuId: String): Int {
+        return if(utility.checkIfProductExists(skuId)) {
+            productsDao.retrieveAvailableQuantityOfProduct(skuId)
         } else 0
     }
 
-    fun updateAvailableQuantityAndStatusOfProduct(productId: String, category: String, quantity: Int) {
-        if(utility.checkIfProductExists(productId, category)) {
-            if((productsDao.retrieveAvailableQuantityOfProduct(productId, category) - quantity) >= 0 ) {
-                productsDao.updateAvailableQuantityOfProduct(productId, category, quantity)
-                if(productsDao.retrieveAvailableQuantityOfProduct(productId, category) == 0) {
-                    productsDao.updateStatusOfProduct(productId, category, ProductStatus.OUT_OF_STOCK)
-                } else {
-                    productsDao.updateStatusOfProduct(productId, category, ProductStatus.IN_STOCK)
-                }
-            }
-        }
-    }
-
-    fun retrieveProductAvailabilityStatus(category: String, productId: String): ProductStatus {
-        return productsDao.retrieveProductAvailabilityStatus(category, productId)
-    }
-
-    fun getFilterOptions(category: String): List<String> {
-        if (utility.checkIfCategoryExistsInProductDB(category)) {
-            when(category) {
-                "book" -> {
-                    filterOptions.clear()
-                    filterOptions.add("bookType")
-                }
-                "mobile" -> {
-                    filterOptions.clear()
-                    filterOptions.add("brand")
-                    filterOptions.add("storage")
-                }
-                "clothing" -> {
-                    filterOptions.clear()
-                    filterOptions.add("gender")
-                    filterOptions.add("colour")
-                }
-                "earphone" -> {
-                    filterOptions.clear()
-                    filterOptions.add("brand")
-                    filterOptions.add("colour")
-                    filterOptions.add("type")
-                }
-            }
-        }
-        return filterOptions
-    }
-
-    fun getUniqueFilters(category: String, filterOption: String): List<String> {
-        if(utility.checkIfCategoryExistsInProductDB(category)) {
-            list = productsDao.retrieveListOfProducts(category)!!
-            when(category) {
-                "book" -> {
-                    when(filterOption) {
-                        "bookType" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("fiction")
-                            uniqueFilters.add("nonfiction")
+    fun getFilteredList(category: ProductCategories, filterOption: FilterOptions, finalFilter: Any): List<Pair<ProductSku, Filters.StatusFilters>> {
+        filteredList = when(category) {
+            ProductCategories.BOOK -> {
+                when(filterOption) {
+                    FilterOptions.PRICE -> {
+                        when(finalFilter as PriceFilters) {
+                            PriceFilters.BELOW_100 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && (it.first.price.toLong() in Filters.PriceFilters.Below_100().start..Filters.PriceFilters.Below_100().end)}
+                            }
+                            PriceFilters.BETWEEN_100_AND_500 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.first.price.toLong() in Filters.PriceFilters.Between_100_And_500().start..Filters.PriceFilters.Between_100_And_500().end}
+                            }
+                            PriceFilters.FROM_500_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.first.price.toLong() in Filters.PriceFilters.From_500_To_3000().start..Filters.PriceFilters.From_500_To_3000().end}
+                            }
+                            PriceFilters.ABOVE_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.first.price.toLong() in Filters.PriceFilters.Above_3000().start..Filters.PriceFilters.Above_3000().end}
+                            }
+                            PriceFilters.BELOW_15000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.first.price.toLong() in Filters.PriceFilters.Below_15000().start..Filters.PriceFilters.Below_15000().end}
+                            }
+                            PriceFilters.FROM_15000_TO_40000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.first.price.toLong() in Filters.PriceFilters.From_15000_To_40000().start..Filters.PriceFilters.From_15000_To_40000().end}
+                            }
+                            PriceFilters.FROM_40000_TO_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.first.price.toLong() in Filters.PriceFilters.From_40000_100000().start..Filters.PriceFilters.From_40000_100000().end}
+                            }
+                            PriceFilters.ABOVE_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.first.price.toLong() in Filters.PriceFilters.Above_100000().start..Filters.PriceFilters.Above_100000().end}
+                            }
                         }
                     }
-                }
-                "mobile" -> {
-                    when(filterOption) {
-                        "brand" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("Apple")
-                            uniqueFilters.add("Samsung")
-                        }
-                        "storage" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("128 GB")
-                            uniqueFilters.add("64 GB")
-                        }
-                    }
-                }
-                "clothing" -> {
-                    when(filterOption) {
-                        "gender" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("male")
-                            uniqueFilters.add("female")
-                        }
-                        "colour" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("blue")
-                            uniqueFilters.add("red")
-                            uniqueFilters.add("black")
-                        }
-                    }
-                }
-                "earphone" -> {
-                    when(filterOption) {
-                        "brand" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("boAt")
-                            uniqueFilters.add("zebronics")
-                            uniqueFilters.add("generic")
-                        }
-                        "colour" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("black")
-                            uniqueFilters.add("red")
-                        }
-                        "type" -> {
-                            uniqueFilters.clear()
-                            uniqueFilters.add("wired")
-                            uniqueFilters.add("wireless")
+                    FilterOptions.STATUS -> {
+                        when(finalFilter as StatusFilters) {
+                            StatusFilters.INSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.second == Filters.StatusFilters.InStock()}
+                            }
+                            StatusFilters.OUTOFSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Book() && it.second == Filters.StatusFilters.OutOfStock()}
+                            }
                         }
                     }
                 }
             }
-        }
-        return uniqueFilters
-    }
 
-    fun getFilteredList(category: String, filterOption: String, value: String) {
-        if(utility.checkIfCategoryExistsInProductDB(category)) {
-            when(category) {
-                "book" -> {
-                    when(filterOption) {
-                        "bookType" -> {
-                            when(value) {
-                                "fiction" -> {
-                                    filteredList = list.filter { it is Product.Book && it.bookType == "fiction" }
-                                }
-                                "nonfiction" -> {
-                                    filteredList = list.filter { it is Product.Book && it.bookType == "nonfiction" }
-                                }
+            ProductCategories.MOBILE -> {
+                when(filterOption) {
+                    FilterOptions.PRICE -> {
+                        when(finalFilter as PriceFilters) {
+                            PriceFilters.BELOW_100 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && (it.first.price.toLong() in Filters.PriceFilters.Below_100().start..Filters.PriceFilters.Below_100().end)}
+                            }
+                            PriceFilters.BETWEEN_100_AND_500 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.first.price.toLong() in Filters.PriceFilters.Between_100_And_500().start..Filters.PriceFilters.Between_100_And_500().end}
+                            }
+                            PriceFilters.FROM_500_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.first.price.toLong() in Filters.PriceFilters.From_500_To_3000().start..Filters.PriceFilters.From_500_To_3000().end}
+                            }
+                            PriceFilters.ABOVE_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.first.price.toLong() in Filters.PriceFilters.Above_3000().start..Filters.PriceFilters.Above_3000().end}
+                            }
+                            PriceFilters.BELOW_15000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.first.price.toLong() in Filters.PriceFilters.Below_15000().start..Filters.PriceFilters.Below_15000().end}
+                            }
+                            PriceFilters.FROM_15000_TO_40000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.first.price.toLong() in Filters.PriceFilters.From_15000_To_40000().start..Filters.PriceFilters.From_15000_To_40000().end}
+                            }
+                            PriceFilters.FROM_40000_TO_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.first.price.toLong() in Filters.PriceFilters.From_40000_100000().start..Filters.PriceFilters.From_40000_100000().end}
+                            }
+                            PriceFilters.ABOVE_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.first.price.toLong() in Filters.PriceFilters.Above_100000().start..Filters.PriceFilters.Above_100000().end}
+                            }
+                        }
+                    }
+                    FilterOptions.STATUS -> {
+                        when(finalFilter as StatusFilters) {
+                            StatusFilters.INSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.second == Filters.StatusFilters.InStock()}
+                            }
+                            StatusFilters.OUTOFSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Mobile() && it.second == Filters.StatusFilters.OutOfStock()}
                             }
                         }
                     }
                 }
-                "mobile" -> {
-                    when(filterOption) {
-                        "brand" -> {
-                            when(value) {
-                                "Apple" -> {
-                                    filteredList = list.filter { it is Product.Mobile && it.brand == "Apple" }
-                                }
-                                "Samsung" -> {
-                                    filteredList = list.filter { it is Product.Mobile && it.brand == "Samsung" }
-                                }
-                            }
-                        }
-                        "storage" -> {
-                            when(value) {
-                                "128 GB" -> {
-                                    filteredList = list.filter { it is Product.Mobile && it.storage == "128 GB" }
-                                }
-                                "64 GB" -> {
-                                    filteredList = list.filter { it is Product.Mobile && it.storage == "64 GB" }
-                                }
-                            }
-                        }
-                    }
+            }
 
-                }
-                "clothing" -> {
-                    when(filterOption) {
-                        "gender" -> {
-                            when(value) {
-                                "male" -> {
-                                    filteredList = list.filter { it is Product.Clothing && it.gender == "male" }
-                                }
-                                "female" -> {
-                                    filteredList = list.filter { it is Product.Clothing && it.gender == "female" }
-                                }
+
+            ProductCategories.CLOTHING -> {
+                when(filterOption) {
+                    FilterOptions.PRICE -> {
+                        when(finalFilter as PriceFilters) {
+                            PriceFilters.BELOW_100 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && (it.first.price.toLong() in Filters.PriceFilters.Below_100().start..Filters.PriceFilters.Below_100().end)}
+                            }
+                            PriceFilters.BETWEEN_100_AND_500 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.first.price.toLong() in Filters.PriceFilters.Between_100_And_500().start..Filters.PriceFilters.Between_100_And_500().end}
+                            }
+                            PriceFilters.FROM_500_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.first.price.toLong() in Filters.PriceFilters.From_500_To_3000().start..Filters.PriceFilters.From_500_To_3000().end}
+                            }
+                            PriceFilters.ABOVE_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.first.price.toLong() in Filters.PriceFilters.Above_3000().start..Filters.PriceFilters.Above_3000().end}
+                            }
+                            PriceFilters.BELOW_15000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.first.price.toLong() in Filters.PriceFilters.Below_15000().start..Filters.PriceFilters.Below_15000().end}
+                            }
+                            PriceFilters.FROM_15000_TO_40000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.first.price.toLong() in Filters.PriceFilters.From_15000_To_40000().start..Filters.PriceFilters.From_15000_To_40000().end}
+                            }
+                            PriceFilters.FROM_40000_TO_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.first.price.toLong() in Filters.PriceFilters.From_40000_100000().start..Filters.PriceFilters.From_40000_100000().end}
+                            }
+                            PriceFilters.ABOVE_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.first.price.toLong() in Filters.PriceFilters.Above_100000().start..Filters.PriceFilters.Above_100000().end}
                             }
                         }
-                        "colour" -> {
-                            when(value) {
-                                "blue" -> {
-                                    filteredList = list.filter { it is Product.Clothing && it.colour == "blue" }
-                                }
-                                "red" -> {
-                                    filteredList = list.filter { it is Product.Clothing && it.colour == "red" }
-                                }
-                                "black" -> {
-                                    filteredList = list.filter { it is Product.Clothing && it.colour == "black" }
-                                }
+                    }
+                    FilterOptions.STATUS -> {
+                        when(finalFilter as StatusFilters) {
+                            StatusFilters.INSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.second == Filters.StatusFilters.InStock()}
+                            }
+                            StatusFilters.OUTOFSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Clothing() && it.second == Filters.StatusFilters.OutOfStock()}
                             }
                         }
                     }
                 }
-                "earphone" -> {
-                    when(filterOption) {
-                        "brand" -> {
-                            when(value) {
-                                "boAt" -> {
-                                    filteredList = list.filter { it is Product.Earphone && it.brand == "boAt" }
-                                }
-                                "zebronics" -> {
-                                    filteredList = list.filter { it is Product.Earphone && it.brand == "zebronics" }
-                                }
-                                "generic" -> {
-                                    filteredList = list.filter { it is Product.Earphone && it.brand == "generic" }
-                                }
+            }
+            ProductCategories.EARPHONE -> {
+                when(filterOption) {
+                    FilterOptions.PRICE -> {
+                        when(finalFilter as PriceFilters) {
+                            PriceFilters.BELOW_100 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && (it.first.price.toLong() in Filters.PriceFilters.Below_100().start..Filters.PriceFilters.Below_100().end)}
+                            }
+                            PriceFilters.BETWEEN_100_AND_500 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.first.price.toLong() in Filters.PriceFilters.Between_100_And_500().start..Filters.PriceFilters.Between_100_And_500().end}
+                            }
+                            PriceFilters.FROM_500_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.first.price.toLong() in Filters.PriceFilters.From_500_To_3000().start..Filters.PriceFilters.From_500_To_3000().end}
+                            }
+                            PriceFilters.ABOVE_3000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.first.price.toLong() in Filters.PriceFilters.Above_3000().start..Filters.PriceFilters.Above_3000().end}
+                            }
+                            PriceFilters.BELOW_15000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.first.price.toLong() in Filters.PriceFilters.Below_15000().start..Filters.PriceFilters.Below_15000().end}
+                            }
+                            PriceFilters.FROM_15000_TO_40000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.first.price.toLong() in Filters.PriceFilters.From_15000_To_40000().start..Filters.PriceFilters.From_15000_To_40000().end}
+                            }
+                            PriceFilters.FROM_40000_TO_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.first.price.toLong() in Filters.PriceFilters.From_40000_100000().start..Filters.PriceFilters.From_40000_100000().end}
+                            }
+                            PriceFilters.ABOVE_100000 -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.first.price.toLong() in Filters.PriceFilters.Above_100000().start..Filters.PriceFilters.Above_100000().end}
                             }
                         }
-                        "type" -> {
-                            when(value) {
-                                "wired" -> {
-                                    filteredList = list.filter { it is Product.Earphone && it.type == "wired" }
-                                }
-                                "wireless" -> {
-                                    filteredList = list.filter { it is Product.Earphone && it.type == "wireless" }
-                                }
+                    }
+                    FilterOptions.STATUS -> {
+                        when(finalFilter as StatusFilters) {
+                            StatusFilters.INSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.second == Filters.StatusFilters.InStock()}
                             }
-                        }
-                        "colour" -> {
-                            when(value) {
-                                "red" -> {
-                                    filteredList = list.filter { it is Product.Earphone && it.colour == "red" }
-                                }
-                                "black" -> {
-                                    filteredList = list.filter { it is Product.Earphone && it.colour == "black" }
-                                }
+                            StatusFilters.OUTOFSTOCK -> {
+                                productsList.filter {  it.first.category == Filters.CategoryFilters.Earphone() && it.second == Filters.StatusFilters.OutOfStock()}
                             }
                         }
                     }
                 }
             }
         }
+        return filteredList
     }
 
-    fun getProductsList(): Map<Int, Triple<String, String, Float>> {
-        val productsDetails = mutableMapOf<Int, Triple<String, String, Float>>()
-        filteredList.forEachIndexed{ index, product ->
-            productsDetails[index + 1] = Triple(product.productId, product.productName, product.price)
-        }
-        return productsDetails
+    fun addProductDetails() {
+        productsDao.addProductDetails()
+    }
+
+    fun updateStatusOfProduct(lineItem: LineItem) {
+        productsDao.updateStatusOfProduct(lineItem)
     }
 
 }

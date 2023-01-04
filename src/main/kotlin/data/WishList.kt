@@ -1,6 +1,10 @@
 package data
 
-data class WishList(val wishListId: String, val wishListProducts: ArrayList<Product> = arrayListOf()) { // map - productId, product
+import utils.Helper
+
+data class WishList(val userId: String) {
+
+    val wishListId = Helper.generateWishListId()
     companion object {
         const val wishListName = "MY WISHLIST"
     }

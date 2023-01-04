@@ -1,7 +1,8 @@
 package data
 
-import enums.ProductStatus
+import utils.Helper
 
-data class User(val userId: String, var userName: String, val userMobile: String, var userEmail: String, val userPassword: UserPassword?) {
-    val addresses =  mutableMapOf<String, Address>() // addressId, address
+data class User(var userName: String, val userMobile: String, var userEmail: String) {
+    val userId = Helper.generateUserId()
 }
+

@@ -4,13 +4,11 @@ import backend.CartActivities
 import backend.ProductActivities
 import backend.WishListsActivities
 import data.AccountInfo
-import data.Product
-import enums.FilterDashboard
-import enums.ProductActivitiesDashboard
-import enums.ProductStatus
+import data.Filters
+import data.ProductSku
+import enums.*
 import interfaces.DashboardServices
 import utils.Helper
-import java.util.*
 
 class ShopPage(private val productActivities: ProductActivities) : DashboardServices {
 
@@ -19,20 +17,15 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     private lateinit var checkOutPage: CheckOutPage
     private lateinit var addressPage: AddressPage
     private lateinit var paymentPage: PaymentPage
-    private lateinit var category: String
-    private lateinit var productsList: Map<Int, Triple<String, String, Float>>
-    private lateinit var product: Product
+    private lateinit var productsList: List<Pair<ProductSku, Filters.StatusFilters>>
+    private lateinit var productSku: Pair<ProductSku, Filters.StatusFilters>
     private var isEmptyProductsList = false
-    private lateinit var userId: String
     private lateinit var accountInfo: AccountInfo
     private var isLoggedIn = false
-
-    private lateinit var filterOptions: List<String>
-    private lateinit var uniqueFilterOptions: List<String>
-
+    private lateinit var filterOption: FilterOptions
+    private lateinit var finalFilterOption: Any
 
     fun initializer(
-        userId: String,
         accountInfo: AccountInfo,
         wishListsActivities: WishListsActivities,
         cartActivities: CartActivities,
@@ -40,7 +33,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         addressPage: AddressPage,
         paymentPage: PaymentPage
     ) {
-        this.userId = userId
         this.accountInfo = accountInfo
         this.isLoggedIn = true
         this.wishListsActivities = wishListsActivities
@@ -55,162 +47,145 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     }
 
     fun openShopPage() {
-        while(true) {
-            displayCategories()
-            if(Helper.confirm()) {
-                label@while(true) {
-                    category = selectACategory()
-                    if(Helper.confirm()) {
-                        while(true) {
-                            productsList = productActivities.getProductsList(category)
-                            isEmptyProductsList = productsList.isEmpty()
-                            if(isEmptyProductsList) {
-                                displayProducts(true)
-                                break
-                            } else {
-                                    while(true) {
-                                        while(true) {
-                                            displayProducts(false)
-                                            val filterDashboard = FilterDashboard.values()
-                                            super.showDashboard("FILTER DASHBOARD", filterDashboard)
-                                            when(super.getUserChoice(filterDashboard)) {
-                                                FilterDashboard.APPLY_FILTER -> {
-                                                    applyFilter()
-                                                }
-                                                FilterDashboard.CLEAR_FILTER -> {
-                                                    productsList = productActivities.getProductsList(category)
-                                                }
-                                                FilterDashboard.BACK -> {
-                                                    break
-                                                }
-                                            }
-                                        }
+        label@while(true) {
+            productsList = productActivities.getProductsList()
+            isEmptyProductsList = productsList.isEmpty()
+            if(isEmptyProductsList) {
+                displayProducts(true)
+                break
+            } else {
+                while(true) {
+                    productsList = productActivities.getProductsList()
+                    while(true) {
+                        if(productsList.isEmpty()) {
+                            displayProducts(true)
+                        } else {
+                            displayProducts(false)
+                        }
+                        val filterDashboard = FilterDashboard.values()
+                        super.showDashboard("FILTER DASHBOARD", filterDashboard)
+                        when(super.getUserChoice(filterDashboard)) {
+                            FilterDashboard.APPLY_FILTER -> {
+                                val categories = ProductCategories.values()
+                                lateinit var category: ProductCategories
+                                while(true) {
+                                    if(Helper.confirm()) {
+                                        println("Select a category:")
+                                        super.showDashboard("CATEGORIES", categories)
+                                        category = super.getUserChoice(categories)
+                                        productsList = productActivities.getProductsList(category)
+                                        println("Do you want to apply filters?")
                                         if(Helper.confirm()) {
-                                            val productId = selectAProduct()
-                                            if(Helper.confirm()) {
-                                                productActivities(category, productId)
-                                            }
-                                        } else break@label
-                                    }
+                                            applyFilter(category)
+                                            println("Filter applied!")
+                                            break
+                                        } else break
+                                    } else break
+                                }
+                            }
+                            FilterDashboard.CLEAR_FILTER -> {
+                                productsList = productActivities.getProductsList()
+                            }
+                            FilterDashboard.BACK -> {
+                                break
                             }
                         }
-                    } else {
-                        break
                     }
+                    if(productsList.isEmpty()) break@label
+                    if(Helper.confirm()) {
+                        val skuId = selectAProduct()
+                        if(Helper.confirm()) {
+                            productActivities(skuId)
+                        }
+                    } else break@label
                 }
-            } else {
-                break
             }
         }
-    }
-
-    private fun displayCategories() {
-        println("--------------CATEGORIES---------------")
-        productActivities.getCategories().forEachIndexed{ index, category ->
-            println("${index + 1}. ${category.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}")
-        }
-    }
-
-    private fun selectACategory(): String { // returns category name in lowercase
-        var option: Int
-        var selectedCategory: String
-        while(true) {
-            println("SELECT A CATEGORY: ")
-            try {
-                val userInput = readLine()!!
-                option = userInput.toInt()
-                if(Helper.checkValidRecord(option, productActivities.getCategories().size)) {
-                    selectedCategory = productActivities.getCategories()[option - 1].lowercase()
-                    break
-                } else {
-                    println("Invalid option! Try again!")
-                }
-            } catch(exception: Exception) {
-                println("""Class: ShopPage: selectACategory(): Exception: $exception
-                    |Enter again!
-                """.trimMargin())
-            }
-        }
-        return selectedCategory
     }
 
     private fun displayProducts(isEmptyProductsList: Boolean) {
+        println("--------------------PRODUCTS----------------------")
         if(isEmptyProductsList) {
             println("       No products found        ")
         } else {
-            println("---------------${category.uppercase()}S---------------")
-            for((id, product) in productsList) {
-                println("${id}. ${product.second} - ${product.third}")
+            var sno = 1
+            for(productDetails in productsList) {
+                println("${sno++}. ${productDetails.first.productName} - ${productDetails.first.price} - ${productDetails.first.category.category} - ${productDetails.second.status}")
             }
         }
     }
 
-    fun productActivities(category: String, productId: String) {
-        productActivities.getProductsList(category)
-        product = productActivities.getAProduct(productId)!!
-        label@while(true) {
-                displayProductDetails(product)
+    fun productActivities(skuId: String) {
+        try {
+            while (true) {
+                productSku = productActivities.getProductDetails(skuId)
+                displayProductDetails(productSku)
                 val productActivitiesDashboard = ProductActivitiesDashboard.values()
-                while (true) {
-                    super.showDashboard("PRODUCT DASHBOARD", productActivitiesDashboard)
-                    when (super.getUserChoice(productActivitiesDashboard)) {
-                        ProductActivitiesDashboard.ADD_TO_CART -> {
-                            if(isLoggedIn) {
-                                if(cartActivities.addToCart(accountInfo.cartId, category, productId)) {
+                super.showDashboard("PRODUCT DASHBOARD", productActivitiesDashboard)
+                when (super.getUserChoice(productActivitiesDashboard)) {
+                    ProductActivitiesDashboard.ADD_TO_CART -> {
+                        if(isLoggedIn) {
+                            if(this.productSku.second == Filters.StatusFilters.InStock()) {
+                                if(cartActivities.addToCart(accountInfo.cartId, skuId)) {
                                     println("Product added to cart!")
                                 } else {
                                     println("Can't add to cart!")
                                 }
                             } else {
-                                println("Login to your account!")
+                                println("Product Out of Stock! Can't add to cart!")
                             }
-                        }
-
-                        ProductActivitiesDashboard.ADD_TO_WISHLIST -> {
-                            if(isLoggedIn) {
-                                if(wishListsActivities.addProductToWishList(accountInfo.wishListId, category, productId)) {
-                                    println("Product added to wishlist!")
-                                } else {
-                                    println("Product already added to wishlist!")
-                                }
-                            } else {
-                                println("Login to your account!")
-                            }
-                        }
-
-                        ProductActivitiesDashboard.REMOVE_FROM_WISHLIST -> {
-                            if(isLoggedIn) {
-                                if(wishListsActivities.removeProductFromWishList(accountInfo.wishListId, productId)) {
-                                    println("Product removed from wishlist!")
-                                } else {
-                                    println("Product not yet added to wishlist!")
-                                }
-                            } else {
-                                println("Login to your account!")
-                            }
-                        }
-
-                        ProductActivitiesDashboard.BUY_NOW -> {
-                            if(isLoggedIn) {
-                                if(product.status == ProductStatus.IN_STOCK) {
-                                    checkOutPage.initializer(addressPage, paymentPage, productId, category, accountInfo)
-                                    checkOutPage.openCheckOutPage()
-                                } else {
-                                    println("Product out of stock!")
-                                }
-                            } else {
-                                println("Login to your account!")
-                            }
-                        }
-
-                        ProductActivitiesDashboard.GO_BACK -> {
-                            break@label
+                        } else {
+                            println("Login to your account!")
                         }
                     }
+
+                    ProductActivitiesDashboard.ADD_TO_WISHLIST -> {
+                        if(isLoggedIn) {
+                            if(wishListsActivities.addProductToWishList(accountInfo.wishListId, skuId)) {
+                                println("Product added to wishlist!")
+                            } else {
+                                println("Product already added to wishlist!")
+                            }
+                        } else {
+                            println("Login to your account!")
+                        }
+                    }
+
+                    ProductActivitiesDashboard.REMOVE_FROM_WISHLIST -> {
+                        if(isLoggedIn) {
+                            if(wishListsActivities.removeProductFromWishList(accountInfo.wishListId, skuId)) {
+                                println("Product removed from wishlist!")
+                            } else {
+                                println("Product not yet added to wishlist!")
+                            }
+                        } else {
+                            println("Login to your account!")
+                        }
+                    }
+
+                    ProductActivitiesDashboard.BUY_NOW -> {
+                        if(isLoggedIn) {
+                            if(this.productSku.second == Filters.StatusFilters.InStock()) {
+                                checkOutPage.initializer(addressPage, paymentPage, skuId, accountInfo)
+                                checkOutPage.openCheckOutPage()
+                            } else {
+                                println("Product out of stock!")
+                            }
+                        } else {
+                            println("Login to your account!")
+                        }
+                    }
+
+                    ProductActivitiesDashboard.GO_BACK -> {
+                        break
+                    }
                 }
+            }
+        } catch(exception: Exception) {
+            println("Something went wrong!")
         }
     }
-    private fun selectAProduct(): String { // returns productId
+    private fun selectAProduct(): String { // returns skuId
         var option: Int
         var selectedProductId: String
         while(true){
@@ -219,102 +194,91 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                 val userInput = readLine()!!
                 option = userInput.toInt()
                 if(Helper.checkValidRecord(option, productsList.size)) {
-                    selectedProductId = productsList[option]!!.first
+                    selectedProductId = productsList[option - 1].first.skuId
                     break
                 } else {
                     println("Invalid option! Try again!")
                 }
             } catch(exception: Exception) {
-                println("""Class: ShopPage: selectAProduct(): Exception: $exception
-                    |Enter again!
-                """.trimMargin())
+                println("Enter valid option!")
             }
         }
         return selectedProductId
     }
 
-    private fun displayProductDetails(product: Product) {
+    private fun displayProductDetails(product: Pair<ProductSku, Filters.StatusFilters>) {
         println("---------------------------------------------")
-        println("""PRODUCT NAME       : ${product.productName}
-                  |PRODUCT PRICE      : ${product.price}
-                  |PRODUCT STATUS     : ${product.status}
+        println("""PRODUCT NAME       : ${product.first.productName}
+                  |PRODUCT PRICE      : ${product.first.price}
         """.trimMargin())
-        when(product) {
-            is Product.Book -> {
-                println("""BOOK TYPE          : ${product.bookType}
+        when(product.first) {
+            is ProductSku.Book -> {
+                val selectedProduct = product.first as ProductSku.Book
+                println("""CATEGORY           : ${selectedProduct.category.category}
+                          |BOOK TYPE          : ${selectedProduct.bookType.type}
+                          |PRODUCT STATUS     : ${product.second.status} 
                 """.trimMargin())
             }
-            is Product.Mobile -> {
-                println("""BRAND              : ${product.brand}
-                          |STORAGE            : ${product.storage}
+            is ProductSku.Mobile -> {
+                val selectedProduct = product.first as ProductSku.Mobile
+                println("""CATEGORY           : ${selectedProduct.category.category}
+                          |BRAND              : ${selectedProduct.brand.brandName}
+                          |STORAGE            : ${selectedProduct.storage.storage}
+                          |PRODUCT STATUS     : ${product.second.status}
                 """.trimMargin())
             }
-            is Product.Clothing -> {
-                println("""COLOUR             : ${product.colour}
-                          |GENDER             : ${product.gender}
+            is ProductSku.Clothing -> {
+                val selectedProduct = product.first as ProductSku.Clothing
+                println("""CATEGORY           : ${selectedProduct.category.category}
+                          |COLOUR             : ${selectedProduct.colour.colour}
+                          |GENDER             : ${selectedProduct.gender.gender}
+                          |PRODUCT STATUS     : ${product.second.status}
                 """.trimMargin())
             }
-            is Product.Earphone -> {
-                println("""EARPHONE TYPE      : ${product.type}
-                          |BRAND              : ${product.brand}
-                          |STORAGE            : ${product.colour}
+            is ProductSku.Earphone -> {
+                val selectedProduct = product.first as ProductSku.Earphone
+                println("""CATEGORY           : ${selectedProduct.category.category}
+                          |EARPHONE TYPE      : ${selectedProduct.type.type}
+                          |BRAND              : ${selectedProduct.brand.brandName}
+                          |PRODUCT STATUS     : ${product.second.status}
                 """.trimMargin())
             }
         }
     }
 
-    private fun applyFilter() {
-        val filterOption: String
-        val value: String
-        println("Do you want to apply filter: ")
+    private fun applyFilter(category: ProductCategories) {
+        filterOption = when(category) {
+            ProductCategories.BOOK -> {
+                getFilterChoice("FILTERS FOR BOOK", FilterOptions.values())
+            }
+            ProductCategories.MOBILE -> {
+                getFilterChoice("FILTERS FOR MOBILE", FilterOptions.values())
+            }
+            ProductCategories.CLOTHING -> {
+                getFilterChoice("FILTERS FOR CLOTHING", FilterOptions.values())
+            }
+            ProductCategories.EARPHONE -> {
+                getFilterChoice("FILTERS FOR EARPHONE", FilterOptions.values())
+            }
+        }
         if(Helper.confirm()) {
-            println("Filter by: ")
-            filterOptions = productActivities.getFilterOptions(category)
-            displayFilterOptions(filterOptions)
+            finalFilterOption = when(filterOption) {
+                FilterOptions.PRICE -> {
+                    getFilterChoice("PRICE", PriceFilters.values())
+                }
+                FilterOptions.STATUS -> {
+                    getFilterChoice("STATUS", StatusFilters.values())
+                }
+            }
             if(Helper.confirm()) {
-                filterOption = getFilterOption(filterOptions)
-                uniqueFilterOptions = productActivities.getUniqueFilters(category, filterOption)
-                println("CHOICES: ")
-                displayFilterOptions(uniqueFilterOptions)
-                if(Helper.confirm()) {
-                    value = getFilterOption(uniqueFilterOptions)
-                    productActivities.getFilteredList(category, filterOption, value)
-                    if(Helper.confirm()) {
-                        productsList = productActivities.getProductsList()
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun displayFilterOptions(filterOptions: List<String>) {
-        if(filterOptions.isEmpty()) {
-            println("No filters available")
-        } else {
-            filterOptions.forEachIndexed { index, s ->
-                println("${index + 1}. $s")
+                productsList = productActivities.getFilteredList(category, filterOption, finalFilterOption)
             }
         }
     }
 
-    private fun getFilterOption(filterOptions: List<String>): String {
-        var filterOption: String
-        while(true) {
-            println("ENTER THE FILTER OPTION: ")
-            try {
-                val input = readLine()!!.toInt()
-                if(input in 1..(filterOptions.size)) {
-                    filterOption = filterOptions[input - 1]
-                    break
-                } else {
-                    println("Enter valid input! Try Again!")
-                }
-            } catch(exception: Exception) {
-                println("Class ShopPage(): getFilterOption(): Exception: $exception")
-            }
-        }
-        return filterOption
+    private fun <E: Enum<E>> getFilterChoice(title: String, filters: Array<E>): E {
+        super.showDashboard(title, filters)
+        return super.getUserChoice(filters)
     }
 
 }

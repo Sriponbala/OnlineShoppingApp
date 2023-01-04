@@ -1,34 +1,43 @@
 package utils
 
-import data.AccountInfo
-import data.Address
-import data.User
-import data.UserPassword
-import database.UsersTable
+import data.*
+import database.*
+import enums.AddressFields
 import interfaces.UserDao
 
-class UserData: UserDao {
+class UserData(private val userName: String = "root",
+               private val password: String = "tiger"): UserDao {
+
+    private val database: Database = Database.getConnection(this.userName, this.password)!!
 
     override fun createAndGetUserId(userName: String, userMobile: String, userEmail: String, password: String): String {
-        val userId = UsersTable.generateUserId()
-        val user = User(userId, userName, userMobile,userEmail, UserPassword(password))
-        UsersTable.users[user.userId] = user
+        val user = User(userName, userMobile,userEmail)
+        database.users.add(user)
+        val userPassword = UserPassword(user.userId, password)
+        database.usersPassword.add(userPassword)
         return user.userId
     }
 
     override fun createUserAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String) {
-        UsersTable.usersAccountInfo[userId] = AccountInfo(cartId, wishListId, ordersHistoryId)
+        val accountInfo = AccountInfo(userId, cartId, wishListId, ordersHistoryId)
+        database.usersAccountInfo.add(accountInfo)
     }
 
     override fun retrieveAccountInfo(userId: String): AccountInfo {
-        return UsersTable.usersAccountInfo[userId]!!
+        var accountInfo: AccountInfo? = null
+        for(userAccountInfo in database.usersAccountInfo) {
+            if(userId == userAccountInfo.userId) {
+                accountInfo = userAccountInfo
+            }
+        }
+        return accountInfo!!
     }
 
     override fun retrieveUserId(mobile: String): String {
         var id = ""
-        for((userId, user) in UsersTable.users) {
+        for(user in database.users) {
             if(mobile == user.userMobile) {
-                id = userId
+                id = user.userId
                 break
             }
         }
@@ -36,52 +45,127 @@ class UserData: UserDao {
     }
 
     override fun retrieveUser(userId: String): User {
-        return UsersTable.users[userId]!!.copy(userPassword = null)
+        var activeUser: User? = null
+        for(user in database.users) {
+            if(userId == user.userId) {
+                activeUser = user
+            }
+        }
+        return activeUser!!
     }
 
-    override fun addNewAddress(userId: String, addressId: String, address: Address) {
-        UsersTable.users[userId]!!.addresses[addressId] = address
+    override fun addAddress(address: Address) {
+        database.addresses.add(address)
+    }
+
+    override fun addNewAddress(userAddress: UserAddress) {
+        database.usersAddress.add(userAddress)
     }
 
     override fun updateName(userId: String, name: String) {
-        UsersTable.users[userId]!!.userName = name
+        for(user in database.users) {
+            if(userId == user.userId) {
+                user.userName = name
+            }
+        }
     }
 
     override fun updateEmail(userId: String, email: String) {
-        UsersTable.users[userId]!!.userEmail = email
+        for(user in database.users) {
+            if(userId == user.userId) {
+                user.userEmail = email
+            }
+        }
     }
 
-    override fun getUserAddresses(userId: String): MutableMap<String, Address> {
-        return UsersTable.users[userId]!!.addresses
+    override fun getUserAddresses(userId: String): MutableList<Address> {
+        val addresses: MutableList<Address> = mutableListOf()
+        for(userAddress in database.usersAddress) {
+            if(userId == userAddress.userId) {
+                for(address in database.addresses) {
+                    if(userAddress.addressId == address.addressId) {
+                        addresses.add(address)
+                    }
+                }
+            }
+        }
+        return addresses
     }
 
-    override fun deleteAddress(userId: String, addressId: String) {
-        UsersTable.users[userId]!!.addresses.remove(addressId)
+    override fun deleteAddress(addressId: String) {
+        for(address in database.addresses) {
+            if(addressId == address.addressId) {
+                database.addresses.remove(address)
+                break
+            }
+        }
+        for(userAddress in database.usersAddress) {
+            if(addressId == userAddress.addressId) {
+                database.usersAddress.remove(userAddress)
+                break
+            }
+        }
     }
 
-    override fun updateAddress(userId: String, addressId: String, field: String, value: String) {
+    override fun updateAddress(userId: String, addressId: String, field: AddressFields, value: String) {
             when(field) {
-                "doorNo" -> {
-                    UsersTable.users[userId]!!.addresses[addressId]!!.doorNo = value
+                AddressFields.DOORNUMBER -> {
+                    for(address in database.addresses) {
+                        if(addressId == address.addressId) {
+                            address.doorNo = value
+                            break
+                        }
+                    }
                 }
-                "flatName" -> {
-                    UsersTable.users[userId]!!.addresses[addressId]!!.flatName = value
+                AddressFields.FLATNAME -> {
+                    for(address in database.addresses) {
+                        if(addressId == address.addressId) {
+                            address.flatName = value
+                            break
+                        }
+                    }
                 }
-                "street" -> {
-                    UsersTable.users[userId]!!.addresses[addressId]!!.street = value
+                AddressFields.STREET -> {
+                    for(address in database.addresses) {
+                        if(addressId == address.addressId) {
+                            address.street = value
+                            break
+                        }
+                    }
                 }
-                "area" -> {
-                    UsersTable.users[userId]!!.addresses[addressId]!!.area = value
+                AddressFields.AREA -> {
+                    for(address in database.addresses) {
+                        if(addressId == address.addressId) {
+                            address.area = value
+                            break
+                        }
+                    }
                 }
-                "city" -> {
-                    UsersTable.users[userId]!!.addresses[addressId]!!.city = value
+                AddressFields.CITY -> {
+                    for(address in database.addresses) {
+                        if(addressId == address.addressId) {
+                            address.city = value
+                            break
+                        }
+                    }
                 }
-                "state" -> {
-                    UsersTable.users[userId]!!.addresses[addressId]!!.state = value
+                AddressFields.STATE -> {
+                    for(address in database.addresses) {
+                        if(addressId == address.addressId) {
+                            address.state = value
+                            break
+                        }
+                    }
                 }
-                "pincode" -> {
-                    UsersTable.users[userId]!!.addresses[addressId]!!.pincode = value
+                AddressFields.PINCODE -> {
+                    for(address in database.addresses) {
+                        if(addressId == address.addressId) {
+                            address.pincode = value
+                            break
+                        }
+                    }
                 }
+                else -> {}
             }
     }
 

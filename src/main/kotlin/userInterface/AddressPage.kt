@@ -11,7 +11,7 @@ import utils.Helper
 
 class AddressPage(private val userAccountActivities: UserAccountActivities): DashboardServices, OnboardingServices {
 
-    private lateinit var addresses: MutableMap<String, Address>
+    private lateinit var addresses: List<Address>
     private var doorNo = ""
     private var flatName = ""
     private var street = ""
@@ -19,23 +19,22 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     private var city = ""
     private var state = ""
     private var pincode = ""
-    private val addressesMap = mutableMapOf<Int, String>()
     private var selectAddress = false
-    private var shippingAddress: String = ""
+    private var shippingAddress: Address? = null
 
     fun setSelectAddress(input: Boolean) {
         this.selectAddress = input
     }
 
-    fun selectAddressForDelivery(): String {
+    fun selectAddressForDelivery(): Address? {
         do{
             openAddressPage()
-        } while(shippingAddress == "" && selectAddress)
+        } while(shippingAddress == null && selectAddress)
         return shippingAddress
     }
 
     fun deselectShippingAddress() {
-        this.shippingAddress = ""
+        this.shippingAddress = null
     }
 
     fun openAddressPage() {
@@ -54,6 +53,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
                 }
 
                 AddressSelectionOptions.SAVED_ADDRESS -> {
+                    this.addresses = userAccountActivities.getUserAddresses()
                     while(true) {
                         displayAllAddresses()
                         if(selectAddress) {
@@ -84,18 +84,13 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
         } else {
             var sno = 1
             println("-----------------YOUR ADDRESSES------------------")
-            for((addressId, address) in addresses) {
-                generateAddressMap(sno, addressId)
+            for(address in addresses) {
                 println("""${sno++}. ${address.doorNo}, ${address.flatName},
                     |   ${address.street}, ${address.area},
                     |   ${address.city}, ${address.state} - ${address.pincode}
                 """.trimMargin())
             }
         }
-    }
-
-    private fun generateAddressMap(sno: Int, addressId: String) {
-        addressesMap[sno] = addressId
     }
 
     private fun addNewAddress() {
@@ -136,25 +131,25 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
             super.showDashboard("ADDRESS FIELDS", addressFields)
             when(super.getUserChoice(addressFields)) {
                 AddressFields.DOORNUMBER -> {
-                    userAccountActivities.updateAddress(addressId, "doorNo", getUserInput("door number"))
+                    userAccountActivities.updateAddress(addressId, AddressFields.DOORNUMBER, getUserInput("door number"))
                 }
                 AddressFields.FLATNAME -> {
-                    userAccountActivities.updateAddress(addressId, "flatName", getUserInput("flat name"))
+                    userAccountActivities.updateAddress(addressId, AddressFields.FLATNAME, getUserInput("flat name"))
                 }
                 AddressFields.STREET -> {
-                    userAccountActivities.updateAddress(addressId, "street", getUserInput("street name"))
+                    userAccountActivities.updateAddress(addressId, AddressFields.STREET, getUserInput("street name"))
                 }
                 AddressFields.AREA -> {
-                    userAccountActivities.updateAddress(addressId, "area", getUserInput("area name"))
+                    userAccountActivities.updateAddress(addressId, AddressFields.AREA, getUserInput("area name"))
                 }
                 AddressFields.CITY -> {
-                    userAccountActivities.updateAddress(addressId, "city", getUserInput("city name"))
+                    userAccountActivities.updateAddress(addressId, AddressFields.CITY, getUserInput("city name"))
                 }
                 AddressFields.STATE -> {
-                    userAccountActivities.updateAddress(addressId, "state", getUserInput("state name"))
+                    userAccountActivities.updateAddress(addressId, AddressFields.STATE, getUserInput("state name"))
                 }
                 AddressFields.PINCODE -> {
-                    userAccountActivities.updateAddress(addressId, "pincode", getPincode())
+                    userAccountActivities.updateAddress(addressId, AddressFields.PINCODE, getPincode())
                 }
                 AddressFields.BACK -> {
                     break
@@ -177,16 +172,14 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                if(Helper.checkValidRecord(option,addressesMap.size)) {
-                    selectedAddress = addressesMap[option]!!
+                if(Helper.checkValidRecord(option,addresses.size)) {
+                    selectedAddress = addresses[option - 1].addressId
                     break
                 } else {
                     println("Invalid option! Try again")
                 }
             } catch(exception: Exception) {
-                println("""Class: AddressPage: selectAnAddress(): Exception: $exception
-                    |Enter again!
-                """.trimMargin())
+                println("Invalid option! Try again!")
             }
         }
         return selectedAddress

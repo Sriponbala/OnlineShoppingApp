@@ -1,17 +1,15 @@
 package interfaces
 
-import data.Product
+import data.ProductSku
 
 interface WishListDao {
 
-    fun retrieveWishListProducts(wishListId: String): ArrayList<Product>
+    fun retrieveWishListProducts(wishListId: String): ArrayList<ProductSku>
 
-    fun addAProductToWishList(wishListId: String, product: Product)
+    fun addAProductToWishList(wishListId: String, skuId: String)
 
-    fun deleteProductFromWishList(wishListId: String, product: Product)
+    fun deleteProductFromWishList(wishListId: String, skuId: String)
 
-    fun createAndGetWishListId(): String
-
-    fun retrieveProductFromWishList(wishListId: String, productId: String): Product
+    fun createAndGetWishListId(userId: String): String
 
 }

@@ -8,13 +8,10 @@ import interfaces.DashboardServices
 
 class HomePage(private val cartActivities: CartActivities, private val wishListsActivities: WishListsActivities): DashboardServices {
 
-    private lateinit var userId: String
     private lateinit var accountInfo: AccountInfo
     private var isLoggedIn: Boolean = false
 
-
-    fun initializer(userId: String, accountInfo: AccountInfo) {
-        this.userId = userId
+    fun initializer(accountInfo: AccountInfo) {
         this.accountInfo = accountInfo
         this.isLoggedIn = true
     }
@@ -35,7 +32,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
             when(super.getUserChoice(homePageDashboard)) {
                 HomePageDashboard.VIEW_PRODUCTS -> {
                     if(isLoggedIn) {
-                        shopPage.initializer(userId, accountInfo, wishListsActivities, cartActivities, checkOutPage, addressPage, paymentPage)
+                        shopPage.initializer(accountInfo, wishListsActivities, cartActivities, checkOutPage, addressPage, paymentPage)
                         shopPage.openShopPage()
                     } else {
                         shopPage.initializer(false)
@@ -52,7 +49,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
                 }
                 HomePageDashboard.YOUR_ACCOUNT -> {
                     if(isLoggedIn) {
-                        userAccountPage.initializer(userId, accountInfo)
+                        userAccountPage.initializer(accountInfo)
                         userAccountPage.openUserAccountPage(wishListPage, ordersPage, addressPage, shopPage)
                     } else {
                         println("Login to your account!")

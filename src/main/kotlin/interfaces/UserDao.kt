@@ -3,6 +3,8 @@ package interfaces
 import data.AccountInfo
 import data.Address
 import data.User
+import data.UserAddress
+import enums.AddressFields
 
 interface UserDao {
 
@@ -16,16 +18,18 @@ interface UserDao {
 
     fun retrieveUser(userId: String): User
 
-    fun addNewAddress(userId: String, addressId: String, address: Address)
+    fun addAddress(address: Address)
+
+    fun addNewAddress(userAddress: UserAddress)
 
     fun updateName(userId: String, name: String)
 
     fun updateEmail(userId: String, email: String)
 
-    fun getUserAddresses(userId: String): MutableMap<String, Address>
+    fun getUserAddresses(userId: String): MutableList<Address>
 
-    fun deleteAddress(userId: String, addressId: String)
+    fun deleteAddress(addressId: String)
 
-    fun updateAddress(userId: String, addressId: String, field: String, value: String)
+    fun updateAddress(userId: String, addressId: String, field: AddressFields, value: String)
 
 }
