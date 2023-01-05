@@ -130,6 +130,36 @@ class ProductsData(private val userName: String = "root",
         }
     }
 
+    override fun getProducts(skuId: String, quantity: Int): MutableList<ProductDetails> {
+        val products = mutableListOf<ProductDetails>()
+        var count = 0
+        for(productDetails in database.productsDetails) {
+            var present = false
+            if(skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
+                if(count == quantity) {
+                    break
+                } else {
+                    if(products.isEmpty()) {
+                        products.add(productDetails)
+                        count++
+                    } else {
+                        for(product in products) {
+                            if(productDetails.productId == product.productId) {
+                                present = true
+                                break
+                            }
+                        }
+                        if(!present) {
+                            products.add(productDetails)
+                            count++
+                        }
+                    }
+                }
+            }
+        }
+        return products
+    }
+
     override fun getProducts(skuId: String, quantity: Int, lineItems: MutableList<LineItem>): MutableList<ProductDetails> {
         val products = mutableListOf<ProductDetails>()
         var count = 0

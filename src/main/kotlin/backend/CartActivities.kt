@@ -45,7 +45,7 @@ class CartActivities(private val utility: UtilityDao, private val cartDao: CartD
                     removeFromCart(cartId, skuId)
                     true
                 } else {
-                    cartDao.changeItemQuantity(cartId, skuId, quantity)
+                    cartDao.updateItemQuantity(cartId, skuId, quantity)
                     true
                 }
             } else false

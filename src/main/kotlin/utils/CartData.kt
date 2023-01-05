@@ -65,6 +65,15 @@ class CartData(private val userName: String = "root",
         }
     }
 
+    override fun updateItemQuantity(cartId: String, skuId: String, quantity: Int) {
+        for(cartItem in database.cartItems) {
+            if(cartId == cartItem.cartId && skuId == cartItem.skuId) {
+                cartItem.quantity -= quantity
+                break
+            }
+        }
+    }
+
     override fun updateSubtotal(cartId: String, subTotal: Float) {
         for(cart in database.carts) {
             if(cartId == cart.cartId) {

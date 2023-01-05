@@ -21,4 +21,6 @@ interface ProductsDao {
 
     fun getProducts(skuId: String, quantity: Int, lineItems: MutableList<LineItem>): MutableList<ProductDetails>
 
+    fun getProducts(skuId: String, quantity: Int): MutableList<ProductDetails>
+
 }

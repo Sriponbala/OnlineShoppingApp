@@ -110,7 +110,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         } else {
             var sno = 1
             for(productDetails in productsList) {
-                println("${sno++}. ${productDetails.first.productName} - ${productDetails.first.price} - ${productDetails.first.category.category} - ${productDetails.second.status}")
+                println("${sno++}. ${productDetails.first.productName} - Rs.${productDetails.first.price} - ${productDetails.first.category.category} - ${productDetails.second.status}")
             }
         }
     }

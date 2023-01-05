@@ -35,6 +35,10 @@ class ProductActivities(private val utility: UtilityDao, private val productsDao
         return productsDao.getProducts(skuId, quantity, lineItems)
     }
 
+    fun getProducts(skuId: String, quantity: Int): MutableList<ProductDetails> {
+        return productsDao.getProducts(skuId, quantity)
+    }
+
     fun getAvailableQuantityOfProduct(skuId: String): Int {
         return if(utility.checkIfProductExists(skuId)) {
             productsDao.retrieveAvailableQuantityOfProduct(skuId)

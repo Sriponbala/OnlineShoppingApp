@@ -26,8 +26,12 @@ class CheckOutActivities(
         }
     }
 
-    fun createItemToBuy(skuId: String, orderedDate: LocalDate, quantity: Int): MutableList<LineItem> {
-        val productDetails = productActivities.getProducts(skuId, quantity, lineItems)
+    fun createItemToBuy(skuId: String, orderedDate: LocalDate, quantity: Int, update: Boolean): MutableList<LineItem> {
+        val productDetails: MutableList<ProductDetails> = if(update) {
+            productActivities.getProducts(skuId, quantity, lineItems)
+        } else {
+            productActivities.getProducts(skuId, quantity)
+        }
         val tempLineItems: MutableList<LineItem> = mutableListOf()
         for(product in productDetails) {
             val lineItem = LineItem(skuId, product.productId, orderedDate)
@@ -81,7 +85,7 @@ class CheckOutActivities(
         val newQuantity: Int
         if(quantity > getLineItemQuantity(lineItem.skuId)) {
             newQuantity = quantity - getLineItemQuantity(lineItem.skuId)
-            createItemToBuy(lineItem.skuId, lineItem.orderedDate, newQuantity)
+            createItemToBuy(lineItem.skuId, lineItem.orderedDate, newQuantity, update = true)
         } else if (quantity < getLineItemQuantity(lineItem.skuId)) {
             newQuantity = getLineItemQuantity(lineItem.skuId) - quantity
             var count = 0

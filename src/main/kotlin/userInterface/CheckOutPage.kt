@@ -30,7 +30,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
         this.paymentPage = paymentPage
         this.accountInfo = accountInfo
         this.orderedDate = Helper.generateOrderedDate()
-        finalizedListOfItems = checkOutActivities.createItemToBuy(skuId, orderedDate, 1)
+        finalizedListOfItems = checkOutActivities.createItemToBuy(skuId, orderedDate, 1, update = false)
     }
 
     fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, items: MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>, accountInfo: AccountInfo) {
@@ -40,7 +40,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
         this.items = items
         this.orderedDate = Helper.generateOrderedDate()
         for(product in items) {
-            val selectedItems = checkOutActivities.createItemToBuy(product.first.skuId, orderedDate, product.first.quantity)
+            val selectedItems = checkOutActivities.createItemToBuy(product.first.skuId, orderedDate, product.first.quantity, update = false)
             for(item in selectedItems) {
                 finalizedListOfItems.add(item)
             }

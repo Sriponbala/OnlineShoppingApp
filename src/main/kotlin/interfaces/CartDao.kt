@@ -20,4 +20,6 @@ interface CartDao {
 
     fun getCartItemQuantity(cartId: String, skuId: String): Int
 
+    fun updateItemQuantity(cartId: String, skuId: String, quantity: Int)
+
 }
