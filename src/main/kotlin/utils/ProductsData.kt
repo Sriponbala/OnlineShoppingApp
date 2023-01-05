@@ -163,7 +163,6 @@ class ProductsData(private val userName: String = "root",
     override fun getProducts(skuId: String, quantity: Int, lineItems: MutableList<LineItem>): MutableList<ProductDetails> {
         val products = mutableListOf<ProductDetails>()
         var count = 0
-        try {
             for(productDetails in database.productsDetails) {
                 var present = false
                 if(lineItems.isEmpty()) {
@@ -199,9 +198,6 @@ class ProductsData(private val userName: String = "root",
                     }
                 }
             }
-        } catch(exception: Exception) {
-            println("Some technical error occurred!")
-        }
         return products
     }
 

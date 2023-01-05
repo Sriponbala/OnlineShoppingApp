@@ -5,15 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d77e5c4-4287-4fed-9fe1-e5dfde21868d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/CartActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/CartActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/CheckOutActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/CheckOutActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/backend/ProductActivities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/backend/ProductActivities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/interfaces/CartDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/interfaces/CartDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/interfaces/ProductsDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/interfaces/ProductsDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/CheckOutPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/CheckOutPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/userInterface/ShopPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/CartData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/CartData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/utils/ProductsData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/utils/ProductsData.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -356,7 +347,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672811148768</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Commit!">
+      <created>1672901761746</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1672901761746</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
