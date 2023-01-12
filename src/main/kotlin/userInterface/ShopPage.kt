@@ -248,39 +248,19 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         lateinit var filterArray: ArrayList<FilterBy>
         filterOption = when(category) {
             ProductCategory.BOOK -> {
-                filterArray = arrayListOf()
-                FilterBy.values().forEach {
-                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.BOOKTYPE) {
-                        filterArray.add(it)
-                    }
-                }
+                filterArray = arrayListOf(FilterBy.PRICE, FilterBy.STATUS, FilterBy.BOOKTYPE)
                 getFilterChoice("FILTERS FOR BOOK", filterArray.toTypedArray())
             }
             ProductCategory.MOBILE -> {
-                filterArray = arrayListOf()
-                FilterBy.values().forEach {
-                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.BRAND) {
-                        filterArray.add(it)
-                    }
-                }
+                filterArray = arrayListOf(FilterBy.PRICE, FilterBy.STATUS, FilterBy.BRAND)
                 getFilterChoice("FILTERS FOR MOBILE", filterArray.toTypedArray())
             }
             ProductCategory.CLOTHING -> {
-                filterArray = arrayListOf()
-                FilterBy.values().forEach {
-                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.GENDER || it == FilterBy.COLOUR) {
-                        filterArray.add(it)
-                    }
-                }
+                filterArray = arrayListOf(FilterBy.PRICE, FilterBy.STATUS, FilterBy.GENDER, FilterBy.COLOUR)
                 getFilterChoice("FILTERS FOR CLOTHING", filterArray.toTypedArray())
             }
             ProductCategory.EARPHONE -> {
-                filterArray = arrayListOf()
-                FilterBy.values().forEach {
-                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.BRAND) {
-                        filterArray.add(it)
-                    }
-                }
+                filterArray = arrayListOf(FilterBy.PRICE, FilterBy.STATUS, FilterBy.BRAND)
                 getFilterChoice("FILTERS FOR EARPHONE", filterArray.toTypedArray())
             }
         }
