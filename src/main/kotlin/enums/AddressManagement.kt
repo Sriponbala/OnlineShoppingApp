@@ -1,6 +1,6 @@
 package enums
 
-enum class AddressManagementOptions {
+enum class AddressManagement {
     EDIT,
     DELETE,
     BACK

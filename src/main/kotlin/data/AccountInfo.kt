@@ -1,3 +1,3 @@
 package data
 
-data class AccountInfo(val userId: String, val cartId: String, val wishListId: String, val ordersHistoryId: String)
+data class AccountInfo(val userId: String, val cartId: String, val wishListId: String)

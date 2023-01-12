@@ -3,8 +3,7 @@ package backend
 import data.AccountInfo
 import data.Address
 import data.User
-import data.UserAddress
-import enums.AddressFields
+import enums.AddressField
 import interfaces.UserDao
 import interfaces.UtilityDao
 
@@ -31,9 +30,9 @@ class UserAccountActivities(private val utility: UtilityDao, private val userDao
         return userDao.createAndGetUserId(userName, userMobile, userEmail, password)
     }
 
-    fun createAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String): Boolean {
+    fun createAccountInfo(userId: String, cartId: String, wishListId: String): Boolean {
         return if(utility.checkIfUserExists(userId)) {
-            userDao.createUserAccountInfo(userId, cartId, wishListId, ordersHistoryId)
+            userDao.createUserAccountInfo(userId, cartId, wishListId)
             true
         } else false
     }
@@ -79,38 +78,36 @@ class UserAccountActivities(private val utility: UtilityDao, private val userDao
 
     fun addNewAddress(doorNo: String, flatName: String, street: String, area: String, city: String, state: String, pincode: String): Boolean {
         return if(utility.checkIfUserExists(user.userId)) {
-            val address = Address(doorNo, flatName, street, area, city, state, pincode)
+            val address = Address(doorNo, flatName, street, area, city, state, pincode, user.userId)
             userDao.addAddress(address)
-            val userAddress = UserAddress(user.userId, address.addressId)
-            userDao.addNewAddress(userAddress)
             true
         } else false
     }
 
-    fun updateAddress(addressId: String, field: AddressFields, value: String) {
+    fun updateAddress(addressId: String, field: AddressField, value: String) {
         if(utility.checkIfUserExists(user.userId)) {
             if(utility.checkIfAddressExists(addressId)) {
                 when(field) {
-                    AddressFields.DOORNUMBER -> {
-                        userDao.updateAddress(user.userId, addressId, AddressFields.DOORNUMBER, value)
+                    AddressField.DOORNUMBER -> {
+                        userDao.updateAddress(addressId, AddressField.DOORNUMBER, value)
                     }
-                    AddressFields.FLATNAME -> {
-                        userDao.updateAddress(user.userId, addressId, AddressFields.FLATNAME, value)
+                    AddressField.FLATNAME -> {
+                        userDao.updateAddress(addressId, AddressField.FLATNAME, value)
                     }
-                    AddressFields.STREET -> {
-                        userDao.updateAddress(user.userId, addressId, AddressFields.STREET, value)
+                    AddressField.STREET -> {
+                        userDao.updateAddress(addressId, AddressField.STREET, value)
                     }
-                    AddressFields.AREA -> {
-                        userDao.updateAddress(user.userId, addressId, AddressFields.AREA, value)
+                    AddressField.AREA -> {
+                        userDao.updateAddress(addressId, AddressField.AREA, value)
                     }
-                    AddressFields.CITY -> {
-                        userDao.updateAddress(user.userId, addressId, AddressFields.CITY, value)
+                    AddressField.CITY -> {
+                        userDao.updateAddress(addressId, AddressField.CITY, value)
                     }
-                    AddressFields.STATE -> {
-                        userDao.updateAddress(user.userId, addressId, AddressFields.STATE, value)
+                    AddressField.STATE -> {
+                        userDao.updateAddress(addressId, AddressField.STATE, value)
                     }
-                    AddressFields.PINCODE -> {
-                        userDao.updateAddress(user.userId, addressId, AddressFields.PINCODE, value)
+                    AddressField.PINCODE -> {
+                        userDao.updateAddress(addressId, AddressField.PINCODE, value)
                     }
                     else -> {}
                 }

@@ -5,10 +5,10 @@ import utils.Helper
 interface DashboardServices {
 
     fun <E: Enum<E>> showDashboard(title: String, enumArray: Array<E>) {
-
+        var sno = 1
         println("-------------${title.uppercase()}-------------")
         for(element in enumArray) {
-            println("${element.ordinal+1}. $element")
+            println("${sno++}. $element")
         }
     }
 

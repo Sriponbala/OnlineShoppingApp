@@ -10,10 +10,10 @@ class OrdersData(private val userName: String = "root",
     private val database: Database = Database.getConnection(this.userName, this.password)!!
 
 
-    override fun retrieveOrdersHistory(ordersHistoryId: String): MutableList<OrderIdLineItemMapping> {
+    override fun retrieveOrdersHistory(userId: String): MutableList<OrderIdLineItemMapping> {
         val ordersHistory: MutableList<OrderIdLineItemMapping> = mutableListOf()
         for(order in database.orders) {
-            if(ordersHistoryId == order.ordersHistoryId) {
+            if(userId == order.userId) {
                 for(orderLineItemMapping in database.orderLineItemMappings) {
                     if(order.orderId == orderLineItemMapping.orderId) {
                         ordersHistory.add(orderLineItemMapping)
@@ -22,13 +22,6 @@ class OrdersData(private val userName: String = "root",
             }
         }
         return ordersHistory
-    }
-
-    override fun createAndGetOrdersHistoryId(userId: String): String {
-        val ordersHistory = OrdersHistory(userId)
-        val ordersHistoryId = ordersHistory.ordersHistoryId
-        database.usersOrdersHistory.add(ordersHistory)
-        return ordersHistoryId
     }
 
     override fun getLineItemQuantity(skuId: String): Int {

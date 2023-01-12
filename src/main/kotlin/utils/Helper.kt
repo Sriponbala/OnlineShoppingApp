@@ -12,7 +12,6 @@ object Helper {
     private var cartId = 1
     private var wishListId = 1
     private var orderId = 1
-    private var orderHistoryId = 1
     private var productId = 1
     private var lineItemId = 1
 
@@ -27,8 +26,6 @@ object Helper {
     fun generateWishListId(): String = "WL${wishListId++}"
 
     fun generateOrderId(): String = "ODR${orderId++}"
-
-    fun generateOrdersHistoryId(): String = "OH${orderHistoryId++}"
 
     fun generateLineItemId(): String = "LID${lineItemId++}"
 

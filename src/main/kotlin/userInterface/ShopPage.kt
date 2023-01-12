@@ -4,7 +4,7 @@ import backend.CartActivities
 import backend.ProductActivities
 import backend.WishListsActivities
 import data.AccountInfo
-import data.Filters
+import data.Filter
 import data.ProductSku
 import enums.*
 import interfaces.DashboardServices
@@ -17,13 +17,13 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     private lateinit var checkOutPage: CheckOutPage
     private lateinit var addressPage: AddressPage
     private lateinit var paymentPage: PaymentPage
-    private lateinit var productsList: List<Pair<ProductSku, Filters.StatusFilters>>
-    private lateinit var productSku: Pair<ProductSku, Filters.StatusFilters>
+    private lateinit var productsList: List<Pair<ProductSku, StockStatus>>
+    private lateinit var productSku: Pair<ProductSku, StockStatus>
     private var isEmptyProductsList = false
     private lateinit var accountInfo: AccountInfo
     private var isLoggedIn = false
-    private lateinit var filterOption: FilterOptions
-    private lateinit var finalFilterOption: Any
+    private lateinit var filterOption: FilterBy
+    private lateinit var filter: Filter
 
     fun initializer(
         accountInfo: AccountInfo,
@@ -66,8 +66,8 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                         super.showDashboard("FILTER DASHBOARD", filterDashboard)
                         when(super.getUserChoice(filterDashboard)) {
                             FilterDashboard.APPLY_FILTER -> {
-                                val categories = ProductCategories.values()
-                                lateinit var category: ProductCategories
+                                val categories = ProductCategory.values()
+                                lateinit var category: ProductCategory
                                 while(true) {
                                     if(Helper.confirm()) {
                                         println("Select a category:")
@@ -125,7 +125,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                 when (super.getUserChoice(productActivitiesDashboard)) {
                     ProductActivitiesDashboard.ADD_TO_CART -> {
                         if(isLoggedIn) {
-                            if(this.productSku.second == Filters.StatusFilters.InStock()) {
+                            if(this.productSku.second == StockStatus.INSTOCK) {
                                 if(cartActivities.addToCart(accountInfo.cartId, skuId)) {
                                     println("Product added to cart!")
                                 } else {
@@ -165,7 +165,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
 
                     ProductActivitiesDashboard.BUY_NOW -> {
                         if(isLoggedIn) {
-                            if(this.productSku.second == Filters.StatusFilters.InStock()) {
+                            if(this.productSku.second == StockStatus.INSTOCK) {
                                 checkOutPage.initializer(addressPage, paymentPage, skuId, accountInfo)
                                 checkOutPage.openCheckOutPage()
                             } else {
@@ -206,72 +206,112 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
         return selectedProductId
     }
 
-    private fun displayProductDetails(product: Pair<ProductSku, Filters.StatusFilters>) {
+    private fun displayProductDetails(productSku: Pair<ProductSku, StockStatus>) {
         println("---------------------------------------------")
-        println("""PRODUCT NAME       : ${product.first.productName}
-                  |PRODUCT PRICE      : ${product.first.price}
+        println("""PRODUCT NAME       : ${productSku.first.productName}
+                  |PRODUCT PRICE      : Rs.${productSku.first.price}
         """.trimMargin())
-        when(product.first) {
+        when(productSku.first) {
             is ProductSku.Book -> {
-                val selectedProduct = product.first as ProductSku.Book
-                println("""CATEGORY           : ${selectedProduct.category.category}
-                          |BOOK TYPE          : ${selectedProduct.bookType.type}
-                          |PRODUCT STATUS     : ${product.second.status} 
+                val selectedProductSku = productSku.first as ProductSku.Book
+                println("""CATEGORY           : ${selectedProductSku.category.category}
+                          |BOOK TYPE          : ${selectedProductSku.bookType.type}
+                          |PRODUCT STATUS     : ${productSku.second.status} 
                 """.trimMargin())
             }
             is ProductSku.Mobile -> {
-                val selectedProduct = product.first as ProductSku.Mobile
-                println("""CATEGORY           : ${selectedProduct.category.category}
-                          |BRAND              : ${selectedProduct.brand.brandName}
-                          |STORAGE            : ${selectedProduct.storage.storage}
-                          |PRODUCT STATUS     : ${product.second.status}
+                val selectedProductSku = productSku.first as ProductSku.Mobile
+                println("""CATEGORY           : ${selectedProductSku.category.category}
+                          |BRAND              : ${selectedProductSku.brand.brandName}
+                          |PRODUCT STATUS     : ${productSku.second.status}
                 """.trimMargin())
             }
             is ProductSku.Clothing -> {
-                val selectedProduct = product.first as ProductSku.Clothing
-                println("""CATEGORY           : ${selectedProduct.category.category}
-                          |COLOUR             : ${selectedProduct.colour.colour}
-                          |GENDER             : ${selectedProduct.gender.gender}
-                          |PRODUCT STATUS     : ${product.second.status}
+                val selectedProductSku = productSku.first as ProductSku.Clothing
+                println("""CATEGORY           : ${selectedProductSku.category.category}
+                          |COLOUR             : ${selectedProductSku.colour.colour}
+                          |GENDER             : ${selectedProductSku.gender.gender}
+                          |PRODUCT STATUS     : ${productSku.second.status}
                 """.trimMargin())
             }
             is ProductSku.Earphone -> {
-                val selectedProduct = product.first as ProductSku.Earphone
-                println("""CATEGORY           : ${selectedProduct.category.category}
-                          |EARPHONE TYPE      : ${selectedProduct.type.type}
-                          |BRAND              : ${selectedProduct.brand.brandName}
-                          |PRODUCT STATUS     : ${product.second.status}
+                val selectedProductSku = productSku.first as ProductSku.Earphone
+                println("""CATEGORY           : ${selectedProductSku.category.category}
+                          |BRAND              : ${selectedProductSku.brand.brandName}
+                          |PRODUCT STATUS     : ${productSku.second.status}
                 """.trimMargin())
             }
         }
     }
 
-    private fun applyFilter(category: ProductCategories) {
+    private fun applyFilter(category: ProductCategory) {
+        lateinit var filterArray: ArrayList<FilterBy>
         filterOption = when(category) {
-            ProductCategories.BOOK -> {
-                getFilterChoice("FILTERS FOR BOOK", FilterOptions.values())
+            ProductCategory.BOOK -> {
+                filterArray = arrayListOf()
+                FilterBy.values().forEach {
+                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.BOOKTYPE) {
+                        filterArray.add(it)
+                    }
+                }
+                getFilterChoice("FILTERS FOR BOOK", filterArray.toTypedArray())
             }
-            ProductCategories.MOBILE -> {
-                getFilterChoice("FILTERS FOR MOBILE", FilterOptions.values())
+            ProductCategory.MOBILE -> {
+                filterArray = arrayListOf()
+                FilterBy.values().forEach {
+                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.BRAND) {
+                        filterArray.add(it)
+                    }
+                }
+                getFilterChoice("FILTERS FOR MOBILE", filterArray.toTypedArray())
             }
-            ProductCategories.CLOTHING -> {
-                getFilterChoice("FILTERS FOR CLOTHING", FilterOptions.values())
+            ProductCategory.CLOTHING -> {
+                filterArray = arrayListOf()
+                FilterBy.values().forEach {
+                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.GENDER || it == FilterBy.COLOUR) {
+                        filterArray.add(it)
+                    }
+                }
+                getFilterChoice("FILTERS FOR CLOTHING", filterArray.toTypedArray())
             }
-            ProductCategories.EARPHONE -> {
-                getFilterChoice("FILTERS FOR EARPHONE", FilterOptions.values())
+            ProductCategory.EARPHONE -> {
+                filterArray = arrayListOf()
+                FilterBy.values().forEach {
+                    if(it == FilterBy.PRICE || it == FilterBy.STATUS || it == FilterBy.BRAND) {
+                        filterArray.add(it)
+                    }
+                }
+                getFilterChoice("FILTERS FOR EARPHONE", filterArray.toTypedArray())
             }
         }
         if(Helper.confirm()) {
-            finalFilterOption = when(filterOption) {
-                FilterOptions.PRICE -> {
-                    getFilterChoice("PRICE", PriceFilters.values())
+            filter = when(filterOption) {
+                FilterBy.PRICE -> {
+                    Filter.PriceFilter(getFilterChoice("PRICE", Price.values()))
                 }
-                FilterOptions.STATUS -> {
-                    getFilterChoice("STATUS", StatusFilters.values())
+
+                FilterBy.STATUS -> {
+                    Filter.StatusFilter(getFilterChoice("STATUS", StockStatus.values()))
+                }
+
+                FilterBy.BRAND -> {
+                    Filter.BrandFilter(getFilterChoice("BRAND", Brand.values()))
+                }
+
+                FilterBy.BOOKTYPE -> {
+                    Filter.BookTypeFilter(getFilterChoice("BOOK TYPE", BookType.values()))
+                }
+
+                FilterBy.GENDER -> {
+                    Filter.GenderFilter(getFilterChoice("GENDER", Gender.values()))
+                }
+
+                FilterBy.COLOUR -> {
+                    Filter.ColourFilter(getFilterChoice("COLOUR", Colour.values()))
                 }
             }
             if(Helper.confirm()) {
-                productsList = productActivities.getFilteredList(category, filterOption, finalFilterOption)
+                productsList = productActivities.getFilteredList(category, filterOption, filter)
             }
         }
     }

@@ -1,26 +1,28 @@
 package data
 
+import enums.*
+
 sealed class ProductSku {
 
     abstract val skuId: String
     abstract val productName: String
     abstract val price: Float
-    abstract val category: Filters.CategoryFilters
+    abstract val category: ProductCategory
 
-    data class Book(override val skuId: String, override val productName: String, override val price: Float, val bookType: Filters.BookTypeFilters): ProductSku() {
-        override val category: Filters.CategoryFilters = Filters.CategoryFilters.Book()
+    data class Book(override val skuId: String, override val productName: String, override val price: Float, val bookType: BookType): ProductSku() {
+        override val category: ProductCategory = ProductCategory.BOOK
     }
 
-    data class Mobile(override val skuId: String, override val productName: String, override val price: Float, val brand: Filters.BrandFilters, val storage: Filters.StorageFilters): ProductSku() {
-        override val category: Filters.CategoryFilters = Filters.CategoryFilters.Mobile()
+    data class Mobile(override val skuId: String, override val productName: String, override val price: Float, val brand: Brand): ProductSku() {
+        override val category: ProductCategory = ProductCategory.MOBILE
     }
 
-    data class Clothing(override val skuId: String, override val productName: String, override val price: Float, val gender: Filters.GenderFilters, val colour: Filters.ColourFilters): ProductSku() {
-        override val category: Filters.CategoryFilters = Filters.CategoryFilters.Clothing()
+    data class Clothing(override val skuId: String, override val productName: String, override val price: Float, val gender: Gender, val colour: Colour): ProductSku() {
+        override val category: ProductCategory = ProductCategory.CLOTHING
     }
 
-    data class Earphone(override val skuId: String, override val productName: String, override val price: Float, val type: Filters.EarPhoneTypeFilters, val brand: Filters.BrandFilters): ProductSku() {
-        override val category: Filters.CategoryFilters = Filters.CategoryFilters.Earphone()
+    data class Earphone(override val skuId: String, override val productName: String, override val price: Float, val brand: Brand): ProductSku() {
+        override val category: ProductCategory = ProductCategory.EARPHONE
     }
 
 }

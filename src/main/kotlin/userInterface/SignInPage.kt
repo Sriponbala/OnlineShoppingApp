@@ -2,11 +2,11 @@ package userInterface
 
 import backend.UserAccountActivities
 import data.AccountInfo
-import interfaces.OnboardingServices
+import interfaces.OnboardingService
 import interfaces.UtilityDao
 import utils.Helper
 
-class SignInPage: OnboardingServices {
+class SignInPage: OnboardingService {
 
     private var mobile: String = ""
     private var password: String = ""

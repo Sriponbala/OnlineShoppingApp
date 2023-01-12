@@ -6,9 +6,7 @@ import data.OrderIdLineItemMapping
 
 interface OrdersDao {
 
-    fun retrieveOrdersHistory(ordersHistoryId: String): MutableList<OrderIdLineItemMapping>
-
-    fun createAndGetOrdersHistoryId(userId: String): String
+    fun retrieveOrdersHistory(userId: String): MutableList<OrderIdLineItemMapping>
 
     fun getLineItemQuantity(skuId: String): Int
 

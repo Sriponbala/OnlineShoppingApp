@@ -1,7 +1,6 @@
 package userInterface
 
 import backend.CartActivities
-import backend.OrdersHistoryActivities
 import backend.UserAccountActivities
 import backend.WishListsActivities
 import enums.Entry
@@ -25,7 +24,6 @@ class EntryPage: DashboardServices {
         userAccountActivities: UserAccountActivities,
         wishListsActivities: WishListsActivities,
         cartActivities: CartActivities,
-        ordersHistoryActivities: OrdersHistoryActivities,
         utility: UtilityDao
     ) {
         println("-----ONLINE SHOPPING APPLICATION-----\n")
@@ -37,7 +35,7 @@ class EntryPage: DashboardServices {
                     homePage.openHomePage(shopPage, cartPage, userAccountPage, addressPage, ordersPage, wishListPage, checkOutPage, paymentPage)
                 }
                 Entry.SIGN_UP -> {
-                    signUpPage.signUp(homePage, userAccountActivities, wishListsActivities, cartActivities, ordersHistoryActivities, utility, shopPage, cartPage, userAccountPage, addressPage, ordersPage, wishListPage, checkOutPage, paymentPage)
+                    signUpPage.signUp(homePage, userAccountActivities, wishListsActivities, cartActivities, utility, shopPage, cartPage, userAccountPage, addressPage, ordersPage, wishListPage, checkOutPage, paymentPage)
                 }
                 Entry.SIGN_IN -> {
                     signInPage.signIn(homePage, userAccountActivities, utility, shopPage, cartPage, userAccountPage, addressPage, ordersPage, wishListPage, checkOutPage, paymentPage)

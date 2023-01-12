@@ -16,8 +16,6 @@ interface UtilityDao {
 
     fun checkIfProductExists(skuId: String): Boolean
 
-    fun checkIfOrdersHistoryExists(ordersHistoryId: String): Boolean
-
     fun checkIfCartExists(cartId: String): Boolean
 
     fun checkIfItemIsInCart(cartId: String, skuId: String): Boolean

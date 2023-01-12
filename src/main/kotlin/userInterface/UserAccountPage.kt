@@ -4,7 +4,7 @@ import backend.UserAccountActivities
 import data.AccountInfo
 import data.User
 import enums.UserAccountDashboard
-import enums.UserAccountFields
+import enums.UserAccountField
 import interfaces.DashboardServices
 import utils.Helper
 
@@ -39,8 +39,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                 }
 
                 UserAccountDashboard.VIEW_ORDERS_HISTORY -> {
-                    ordersPage.initializer(accountInfo.ordersHistoryId)
-                    ordersPage.displayOrdersHistory()
+                    ordersPage.displayOrdersHistory(accountInfo.userId)
                 }
 
                 UserAccountDashboard.EDIT_ACCOUNT -> {
@@ -54,13 +53,13 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
 
 
     private fun editUserAccountDetails(addressPage: AddressPage) {
-        val userAccountFields = UserAccountFields.values()
+        val userAccountFields = UserAccountField.values()
         while(true) {
             super.showDashboard("EDIT USER DETAILS", userAccountFields)
             println("SELECT THE FIELD TO EDIT:")
             when(super.getUserChoice(userAccountFields)) {
 
-                UserAccountFields.Name -> {
+                UserAccountField.Name -> {
                     var name: String
                     do{
                         println("ENTER NAME: ")
@@ -71,7 +70,7 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                     } else println("Failed to update name!")
                 }
 
-                UserAccountFields.Email -> {
+                UserAccountField.Email -> {
                     var email: String
                     do {
                         println("ENTER EMAIL: ")
@@ -82,11 +81,11 @@ class UserAccountPage(private val userAccountActivities: UserAccountActivities):
                     } else println("Failed to update email!")
 
                 }
-                UserAccountFields.Addresses -> {
+                UserAccountField.Addresses -> {
                     addressPage.openAddressPage()
                 }
 
-                UserAccountFields.Back -> {
+                UserAccountField.Back -> {
                     break
                 }
             }

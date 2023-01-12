@@ -2,16 +2,15 @@ package utils
 
 import data.Cart
 import data.CartItem
-import data.Filters
 import data.ProductSku
 import database.*
+import enums.StockStatus
 import interfaces.CartDao
 import interfaces.ProductsDao
 
 class CartData(private val userName: String = "root",
                private val password: String = "tiger"): CartDao {
 
-    private val productsDao: ProductsDao by lazy { ProductsData() }
     private val database: Database = Database.getConnection(this.userName, this.password)!!
 
     override fun createAndGetCartId(userId: String): String {
@@ -20,8 +19,8 @@ class CartData(private val userName: String = "root",
         return cart.cartId
     }
 
-    override fun retrieveCartItems(cartId: String): MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>> {
-        val cartItems: MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>> = mutableListOf()
+    override fun retrieveCartItems(cartId: String, productsDao: ProductsDao): MutableList<Triple<CartItem, ProductSku, StockStatus>> {
+        val cartItems: MutableList<Triple<CartItem, ProductSku, StockStatus>> = mutableListOf()
         for(cartItem in database.cartItems) {
             if(cartId == cartItem.cartId) {
                 val productDetails = productsDao.retrieveProductDetails(cartItem.skuId)

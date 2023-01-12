@@ -2,14 +2,14 @@ package userInterface
 
 import backend.UserAccountActivities
 import data.Address
-import enums.AddressFields
-import enums.AddressManagementOptions
-import enums.AddressSelectionOptions
+import enums.AddressField
+import enums.AddressManagement
+import enums.AddressSelection
 import interfaces.DashboardServices
-import interfaces.OnboardingServices
+import interfaces.OnboardingService
 import utils.Helper
 
-class AddressPage(private val userAccountActivities: UserAccountActivities): DashboardServices, OnboardingServices {
+class AddressPage(private val userAccountActivities: UserAccountActivities): DashboardServices, OnboardingService {
 
     private lateinit var addresses: List<Address>
     private var doorNo = ""
@@ -40,19 +40,19 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     fun openAddressPage() {
         this.addresses = userAccountActivities.getUserAddresses()
         displayAllAddresses()
-        val addressSelectionOptions = AddressSelectionOptions.values()
+        val addressSelectionOptions = AddressSelection.values()
         while(true) {
             super.showDashboard("ADDRESS PAGE DASHBOARD", addressSelectionOptions)
             when(super.getUserChoice(addressSelectionOptions)) {
 
-                AddressSelectionOptions.ADD_NEW_ADDRESS -> {
+                AddressSelection.ADD_NEW_ADDRESS -> {
                     getUserInputs()
                     if(Helper.confirm()) {
                         addNewAddress()
                     }
                 }
 
-                AddressSelectionOptions.SAVED_ADDRESS -> {
+                AddressSelection.SAVED_ADDRESS -> {
                     this.addresses = userAccountActivities.getUserAddresses()
                     while(true) {
                         displayAllAddresses()
@@ -70,7 +70,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
                     }
                 }
 
-                AddressSelectionOptions.GO_BACK -> {
+                AddressSelection.GO_BACK -> {
                     selectAddress = false
                     break
                 }
@@ -107,51 +107,51 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
             return true
         } else {
             val addressId = selectAnAddress()
-            val addressManagementOptions = AddressManagementOptions.values()
+            val addressManagementOptions = AddressManagement.values()
             while(true) {
                 super.showDashboard("ADDRESS MANAGEMENT OPTIONS", addressManagementOptions)
                 return when(super.getUserChoice(addressManagementOptions)) {
-                    AddressManagementOptions.EDIT -> { // edit address
+                    AddressManagement.EDIT -> { // edit address
                         editAddress(addressId)
                         false
                     }
-                    AddressManagementOptions.DELETE -> { // delete address
+                    AddressManagement.DELETE -> { // delete address
                         deleteAddress(addressId)
                         true
                     }
-                    AddressManagementOptions.BACK ->  true
+                    AddressManagement.BACK ->  true
                 }
             }
         }
     }
 
     private fun editAddress(addressId: String) {
-        val addressFields = AddressFields.values()
+        val addressFields = AddressField.values()
         while(true) {
             super.showDashboard("ADDRESS FIELDS", addressFields)
             when(super.getUserChoice(addressFields)) {
-                AddressFields.DOORNUMBER -> {
-                    userAccountActivities.updateAddress(addressId, AddressFields.DOORNUMBER, getUserInput("door number"))
+                AddressField.DOORNUMBER -> {
+                    userAccountActivities.updateAddress(addressId, AddressField.DOORNUMBER, getUserInput("door number"))
                 }
-                AddressFields.FLATNAME -> {
-                    userAccountActivities.updateAddress(addressId, AddressFields.FLATNAME, getUserInput("flat name"))
+                AddressField.FLATNAME -> {
+                    userAccountActivities.updateAddress(addressId, AddressField.FLATNAME, getUserInput("flat name"))
                 }
-                AddressFields.STREET -> {
-                    userAccountActivities.updateAddress(addressId, AddressFields.STREET, getUserInput("street name"))
+                AddressField.STREET -> {
+                    userAccountActivities.updateAddress(addressId, AddressField.STREET, getUserInput("street name"))
                 }
-                AddressFields.AREA -> {
-                    userAccountActivities.updateAddress(addressId, AddressFields.AREA, getUserInput("area name"))
+                AddressField.AREA -> {
+                    userAccountActivities.updateAddress(addressId, AddressField.AREA, getUserInput("area name"))
                 }
-                AddressFields.CITY -> {
-                    userAccountActivities.updateAddress(addressId, AddressFields.CITY, getUserInput("city name"))
+                AddressField.CITY -> {
+                    userAccountActivities.updateAddress(addressId, AddressField.CITY, getUserInput("city name"))
                 }
-                AddressFields.STATE -> {
-                    userAccountActivities.updateAddress(addressId, AddressFields.STATE, getUserInput("state name"))
+                AddressField.STATE -> {
+                    userAccountActivities.updateAddress(addressId, AddressField.STATE, getUserInput("state name"))
                 }
-                AddressFields.PINCODE -> {
-                    userAccountActivities.updateAddress(addressId, AddressFields.PINCODE, getPincode())
+                AddressField.PINCODE -> {
+                    userAccountActivities.updateAddress(addressId, AddressField.PINCODE, getPincode())
                 }
-                AddressFields.BACK -> {
+                AddressField.BACK -> {
                     break
                 }
             }

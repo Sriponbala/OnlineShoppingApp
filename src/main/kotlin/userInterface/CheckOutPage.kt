@@ -5,6 +5,7 @@ import data.*
 import enums.CheckOutPageDashboard
 import enums.Payment
 import enums.ProductQuantityManagement
+import enums.StockStatus
 import interfaces.DashboardServices
 import utils.Helper
 import java.time.LocalDate
@@ -14,14 +15,14 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     private lateinit var addressPage: AddressPage
     private lateinit var paymentPage: PaymentPage
     private var finalizedListOfItems = mutableListOf<LineItem>()
-    private lateinit var finalizedItems: MutableList<Pair<ProductSku, Filters.StatusFilters>>
+    private lateinit var finalizedItems: MutableList<Pair<ProductSku, StockStatus>>
     private var shippingAddress: Address? = null
     private var quantity = 1
     private lateinit var orderedDate: LocalDate
     private lateinit var payment: Payment
     private lateinit var accountInfo: AccountInfo
     private lateinit var item: LineItem
-    private lateinit var items: MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>
+    private lateinit var items: MutableList<Triple<CartItem, ProductSku, StockStatus>>
     private var totalBill: Float = 0f
     private var isNavigatedFromCartPage: Boolean = false
 
@@ -33,7 +34,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
         finalizedListOfItems = checkOutActivities.createItemToBuy(skuId, orderedDate, 1, update = false)
     }
 
-    fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, items: MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>, accountInfo: AccountInfo) {
+    fun initializer(addressPage: AddressPage, paymentPage: PaymentPage, items: MutableList<Triple<CartItem, ProductSku, StockStatus>>, accountInfo: AccountInfo) {
         this.addressPage = addressPage
         this.paymentPage = paymentPage
         this.accountInfo = accountInfo
@@ -97,7 +98,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                                 totalBill = checkOutActivities.getTotalBill(finalizedItems)
                                 checkOutActivities.addAllLineItemsToDb()
                                 checkOutActivities.updateStatusOfProducts()
-                                checkOutActivities.createOrder(accountInfo.ordersHistoryId, orderedDate, shippingAddress!!, payment)
+                                checkOutActivities.createOrder(accountInfo.userId, orderedDate, shippingAddress!!, payment)
                                 checkOutActivities.createOrderAndLineItemMapping(finalizedListOfItems)
                                 paymentPage.pay(totalBill)
                                 if(!isNavigatedFromCartPage) {
@@ -133,7 +134,7 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
     }
 
     private fun displayItemDetails(
-        finalizedItems: MutableList<Pair<ProductSku, Filters.StatusFilters>>
+        finalizedItems: MutableList<Pair<ProductSku, StockStatus>>
     ) {
         finalizedItems.forEachIndexed { index, item ->
             println("""${index + 1}. Item Name        : ${item.first.productName}

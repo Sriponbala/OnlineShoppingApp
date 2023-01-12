@@ -16,7 +16,7 @@ class WishListsData(private val userName: String = "root",
         for(wishList in database.usersWishList) {
             if(wishListId == wishList.wishListId) {
                 for(wishListItem in database.wishListItems) {
-                    for(productSku in database.productsSku) {
+                    for(productSku in database.productSkus) {
                         if(wishListItem.skuId == productSku.skuId) {
                             productsList.add(productSku)
                             break

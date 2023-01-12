@@ -1,12 +1,13 @@
 package interfaces
 
 import data.*
+import enums.StockStatus
 
 interface CartDao {
 
     fun createAndGetCartId(userId: String): String
 
-    fun retrieveCartItems(cartId: String): MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>
+    fun retrieveCartItems(cartId: String, productsDao: ProductsDao): MutableList<Triple<CartItem, ProductSku, StockStatus>>
 
     fun addToCart(cartId: String, skuId: String)
 

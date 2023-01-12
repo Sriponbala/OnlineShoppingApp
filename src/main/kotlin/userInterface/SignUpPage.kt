@@ -1,15 +1,14 @@
 package userInterface
 
 import backend.CartActivities
-import backend.OrdersHistoryActivities
 import backend.UserAccountActivities
 import backend.WishListsActivities
 import data.AccountInfo
-import interfaces.OnboardingServices
+import interfaces.OnboardingService
 import interfaces.UtilityDao
 import utils.Helper
 
-class SignUpPage: OnboardingServices {
+class SignUpPage: OnboardingService {
 
     private var name: String = ""
     private var mobile: String = ""
@@ -18,7 +17,6 @@ class SignUpPage: OnboardingServices {
     private var confirmPassword: String = ""
     private lateinit var cartId: String
     private lateinit var wishListId: String
-    private lateinit var ordersHistoryId: String
     private lateinit var userId: String
     private var accountInfo: AccountInfo? = null
 
@@ -27,7 +25,6 @@ class SignUpPage: OnboardingServices {
         userAccountActivities: UserAccountActivities,
         wishListsActivities: WishListsActivities,
         cartActivities: CartActivities,
-        ordersHistoryActivities: OrdersHistoryActivities,
         utility: UtilityDao,
         shopPage: ShopPage,
         cartPage: CartPage,
@@ -54,8 +51,7 @@ class SignUpPage: OnboardingServices {
                                     userAccountActivities.getUser(userId)
                                     wishListId = wishListsActivities.createAndGetWishListId(userId)
                                     cartId = cartActivities.createAndGetCartId(userId)
-                                    ordersHistoryId = ordersHistoryActivities.createAndGetOrdersHistoryId(userId)
-                                    if(userAccountActivities.createAccountInfo(userId, cartId, wishListId, ordersHistoryId)) {
+                                    if(userAccountActivities.createAccountInfo(userId, cartId, wishListId)) {
                                         accountInfo = userAccountActivities.getAccountInfo(userId)
                                         if(accountInfo != null) {
                                             println("SignUp Successful!")

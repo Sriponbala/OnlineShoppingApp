@@ -3,14 +3,13 @@ package interfaces
 import data.AccountInfo
 import data.Address
 import data.User
-import data.UserAddress
-import enums.AddressFields
+import enums.AddressField
 
 interface UserDao {
 
     fun createAndGetUserId(userName: String, userMobile: String, userEmail: String, password: String): String
 
-    fun createUserAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String)
+    fun createUserAccountInfo(userId: String, cartId: String, wishListId: String)
 
     fun retrieveAccountInfo(userId: String): AccountInfo
 
@@ -20,8 +19,6 @@ interface UserDao {
 
     fun addAddress(address: Address)
 
-    fun addNewAddress(userAddress: UserAddress)
-
     fun updateName(userId: String, name: String)
 
     fun updateEmail(userId: String, email: String)
@@ -30,6 +27,6 @@ interface UserDao {
 
     fun deleteAddress(addressId: String)
 
-    fun updateAddress(userId: String, addressId: String, field: AddressFields, value: String)
+    fun updateAddress(addressId: String, field: AddressField, value: String)
 
 }

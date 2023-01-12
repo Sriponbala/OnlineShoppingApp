@@ -5,14 +5,8 @@ import java.time.format.DateTimeFormatter
 
 class OrdersPage(private val ordersHistoryActivities: OrdersHistoryActivities) {
 
-    private lateinit var ordersHistoryId: String
-
-    fun initializer(ordersHistoryId: String) {
-        this.ordersHistoryId = ordersHistoryId
-    }
-
-    fun displayOrdersHistory() {
-        val ordersHistory = ordersHistoryActivities.getOrdersHistory(ordersHistoryId)
+    fun displayOrdersHistory(userId: String) {
+        val ordersHistory = ordersHistoryActivities.getOrdersHistory(userId)
         println("-----------------ORDERS HISTORY---------------------")
         if(ordersHistory.isEmpty()){
             println("         No orders found         ")

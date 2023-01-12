@@ -2,6 +2,7 @@ package backend
 
 import data.*
 import enums.Payment
+import enums.StockStatus
 import java.time.LocalDate
 
 class CheckOutActivities(
@@ -20,14 +21,14 @@ class CheckOutActivities(
         return cartActivities.removeFromCart(cartId, lineItem.skuId, quantity)
     }
 
-    fun clearCartItems(cartId: String, cartItems: MutableList<Pair<ProductSku, Filters.StatusFilters>>) {
+    fun clearCartItems(cartId: String, cartItems: MutableList<Pair<ProductSku, StockStatus>>) {
         for(cartItem in cartItems) {
             cartActivities.removeFromCart(cartId, cartItem.first.skuId, getLineItemQuantity(cartItem.first.skuId))
         }
     }
 
     fun createItemToBuy(skuId: String, orderedDate: LocalDate, quantity: Int, update: Boolean): MutableList<LineItem> {
-        val productDetails: MutableList<ProductDetails> = if(update) {
+        val productDetails: MutableList<ProductInfo> = if(update) {
             productActivities.getProducts(skuId, quantity, lineItems)
         } else {
             productActivities.getProducts(skuId, quantity)
@@ -41,9 +42,9 @@ class CheckOutActivities(
         return tempLineItems
     }
 
-    fun getProductDetails(items: MutableList<LineItem>): MutableList<Pair<ProductSku, Filters.StatusFilters>> {
-        val finalizedSet: MutableSet<Pair<ProductSku, Filters.StatusFilters>> = mutableSetOf()
-        val finalizedItems: MutableList<Pair<ProductSku, Filters.StatusFilters>> = mutableListOf()
+    fun getProductDetails(items: MutableList<LineItem>): MutableList<Pair<ProductSku, StockStatus>> {
+        val finalizedSet: MutableSet<Pair<ProductSku, StockStatus>> = mutableSetOf()
+        val finalizedItems: MutableList<Pair<ProductSku, StockStatus>> = mutableListOf()
         for(item in items) {
             finalizedSet.add(productActivities.getProductDetails(item.skuId))
         }
@@ -57,7 +58,7 @@ class CheckOutActivities(
         return productActivities.getAvailableQuantityOfProduct(skuId)
     }
 
-    fun getTotalBill(finalizedItems: MutableList<Pair<ProductSku, Filters.StatusFilters>>): Float {
+    fun getTotalBill(finalizedItems: MutableList<Pair<ProductSku, StockStatus>>): Float {
         var totalBill = 0f
         for(item in finalizedItems) {
             totalBill += (item.first.price * getLineItemQuantity(item.first.skuId))
@@ -105,8 +106,8 @@ class CheckOutActivities(
         ordersHistoryActivities.addLineItemsToDb(lineItems)
     }
 
-    fun createOrder(ordersHistoryId: String, orderedDate: LocalDate, shippingAddress: Address, payment: Payment) {
-        ordersHistoryActivities.createOrder(ordersHistoryId, orderedDate, shippingAddress, payment)
+    fun createOrder(userId: String, orderedDate: LocalDate, shippingAddress: Address, payment: Payment) {
+        ordersHistoryActivities.createOrder(userId, orderedDate, shippingAddress, payment)
     }
 
     fun createOrderAndLineItemMapping(finalizedListOfItems: MutableList<LineItem>) {

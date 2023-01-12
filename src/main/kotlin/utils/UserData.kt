@@ -2,7 +2,7 @@ package utils
 
 import data.*
 import database.*
-import enums.AddressFields
+import enums.AddressField
 import interfaces.UserDao
 
 class UserData(private val userName: String = "root",
@@ -18,8 +18,8 @@ class UserData(private val userName: String = "root",
         return user.userId
     }
 
-    override fun createUserAccountInfo(userId: String, cartId: String, wishListId: String, ordersHistoryId: String) {
-        val accountInfo = AccountInfo(userId, cartId, wishListId, ordersHistoryId)
+    override fun createUserAccountInfo(userId: String, cartId: String, wishListId: String) {
+        val accountInfo = AccountInfo(userId, cartId, wishListId)
         database.usersAccountInfo.add(accountInfo)
     }
 
@@ -58,10 +58,6 @@ class UserData(private val userName: String = "root",
         database.addresses.add(address)
     }
 
-    override fun addNewAddress(userAddress: UserAddress) {
-        database.usersAddress.add(userAddress)
-    }
-
     override fun updateName(userId: String, name: String) {
         for(user in database.users) {
             if(userId == user.userId) {
@@ -80,13 +76,9 @@ class UserData(private val userName: String = "root",
 
     override fun getUserAddresses(userId: String): MutableList<Address> {
         val addresses: MutableList<Address> = mutableListOf()
-        for(userAddress in database.usersAddress) {
-            if(userId == userAddress.userId) {
-                for(address in database.addresses) {
-                    if(userAddress.addressId == address.addressId) {
-                        addresses.add(address)
-                    }
-                }
+        for(address in database.addresses) {
+            if(userId == address.userId) {
+                addresses.add(address)
             }
         }
         return addresses
@@ -99,74 +91,75 @@ class UserData(private val userName: String = "root",
                 break
             }
         }
-        for(userAddress in database.usersAddress) {
-            if(addressId == userAddress.addressId) {
-                database.usersAddress.remove(userAddress)
-                break
-            }
-        }
     }
 
-    override fun updateAddress(userId: String, addressId: String, field: AddressFields, value: String) {
-            when(field) {
-                AddressFields.DOORNUMBER -> {
-                    for(address in database.addresses) {
-                        if(addressId == address.addressId) {
-                            address.doorNo = value
-                            break
-                        }
+    override fun updateAddress(addressId: String, field: AddressField, value: String) {
+        when (field) {
+            AddressField.DOORNUMBER -> {
+                for (address in database.addresses) {
+                    if (addressId == address.addressId) {
+                        address.doorNo = value
+                        break
                     }
                 }
-                AddressFields.FLATNAME -> {
-                    for(address in database.addresses) {
-                        if(addressId == address.addressId) {
-                            address.flatName = value
-                            break
-                        }
-                    }
-                }
-                AddressFields.STREET -> {
-                    for(address in database.addresses) {
-                        if(addressId == address.addressId) {
-                            address.street = value
-                            break
-                        }
-                    }
-                }
-                AddressFields.AREA -> {
-                    for(address in database.addresses) {
-                        if(addressId == address.addressId) {
-                            address.area = value
-                            break
-                        }
-                    }
-                }
-                AddressFields.CITY -> {
-                    for(address in database.addresses) {
-                        if(addressId == address.addressId) {
-                            address.city = value
-                            break
-                        }
-                    }
-                }
-                AddressFields.STATE -> {
-                    for(address in database.addresses) {
-                        if(addressId == address.addressId) {
-                            address.state = value
-                            break
-                        }
-                    }
-                }
-                AddressFields.PINCODE -> {
-                    for(address in database.addresses) {
-                        if(addressId == address.addressId) {
-                            address.pincode = value
-                            break
-                        }
-                    }
-                }
-                else -> {}
             }
+
+            AddressField.FLATNAME -> {
+                for (address in database.addresses) {
+                    if (addressId == address.addressId) {
+                        address.flatName = value
+                        break
+                    }
+                }
+            }
+
+            AddressField.STREET -> {
+                for (address in database.addresses) {
+                    if (addressId == address.addressId) {
+                        address.street = value
+                        break
+                    }
+                }
+            }
+
+            AddressField.AREA -> {
+                for (address in database.addresses) {
+                    if (addressId == address.addressId) {
+                        address.area = value
+                        break
+                    }
+                }
+            }
+
+            AddressField.CITY -> {
+                for (address in database.addresses) {
+                    if (addressId == address.addressId) {
+                        address.city = value
+                        break
+                    }
+                }
+            }
+
+            AddressField.STATE -> {
+                for (address in database.addresses) {
+                    if (addressId == address.addressId) {
+                        address.state = value
+                        break
+                    }
+                }
+            }
+
+            AddressField.PINCODE -> {
+                for (address in database.addresses) {
+                    if (addressId == address.addressId) {
+                        address.pincode = value
+                        break
+                    }
+                }
+            }
+
+            AddressField.BACK -> {}
+        }
     }
 
 }

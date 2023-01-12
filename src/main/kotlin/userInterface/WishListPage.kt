@@ -9,7 +9,7 @@ import utils.Helper
 
 class WishListPage(private val wishListsActivities: WishListsActivities): DashboardServices {
 
-    private lateinit var wishListProducts : ArrayList<ProductSku>
+    private lateinit var wishListProductSkus : ArrayList<ProductSku>
     private var isEmptyWishList: Boolean = true
     private lateinit var wishListId: String
     private lateinit var shopPage: ShopPage
@@ -21,8 +21,8 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
 
     fun openWishListPage() {
         while(true) {
-            wishListProducts = wishListsActivities.getWishListProducts(wishListId)
-            checkIfWishListIsEmpty(wishListProducts)
+            wishListProductSkus = wishListsActivities.getWishListProducts(wishListId)
+            checkIfWishListIsEmpty(wishListProductSkus)
             displayWishListProducts(isEmptyWishList)
             if(Helper.confirm()) {
                 if(!isEmptyWishList) {
@@ -63,8 +63,8 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
             try{
                 val userInput = readLine()!!
                 option = userInput.toInt()
-                if(Helper.checkValidRecord(option,wishListProducts.size)) {
-                    selectedProduct = wishListProducts[option - 1].skuId
+                if(Helper.checkValidRecord(option,wishListProductSkus.size)) {
+                    selectedProduct = wishListProductSkus[option - 1].skuId
                 }
                 break
             } catch(exception: Exception) {
@@ -79,13 +79,13 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
         if(isEmptyWishList) {
             println("        No items found        ")
         } else {
-            wishListProducts.forEachIndexed { index, productSku ->
+            wishListProductSkus.forEachIndexed { index, productSku ->
                 println("${index + 1}. ${productSku.productName} - ${productSku.price}")
             }
         }
     }
 
-    private fun checkIfWishListIsEmpty(wishListProducts: ArrayList<ProductSku>?) {
-        isEmptyWishList = wishListProducts?.isEmpty() == true
+    private fun checkIfWishListIsEmpty(wishListProductSkus: ArrayList<ProductSku>?) {
+        isEmptyWishList = wishListProductSkus?.isEmpty() == true
     }
 }

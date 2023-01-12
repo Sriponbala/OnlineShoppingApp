@@ -99,24 +99,13 @@ class Utility(private val userName: String = "root",
 
     override fun checkIfProductExists(skuId: String): Boolean {
         var isProductExists = false
-        for(productSku in database.productsSku) {
+        for(productSku in database.productSkus) {
             if(skuId == productSku.skuId) {
                 isProductExists = true
                 break
             }
         }
         return isProductExists
-    }
-
-    override fun checkIfOrdersHistoryExists(ordersHistoryId: String): Boolean {
-        var flag = false
-        for(ordersHistory in database.usersOrdersHistory) {
-            if(ordersHistoryId == ordersHistory.ordersHistoryId) {
-                flag = true
-                break
-            }
-        }
-        return flag
     }
 
     override fun checkIfCartExists(cartId: String): Boolean {

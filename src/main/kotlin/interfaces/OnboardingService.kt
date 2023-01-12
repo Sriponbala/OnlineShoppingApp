@@ -1,6 +1,6 @@
 package interfaces
 
-interface OnboardingServices {
+interface OnboardingService {
 
     fun getUserInputs()
 

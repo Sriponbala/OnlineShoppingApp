@@ -1,10 +1,10 @@
 package utils
 
-import data.Filters
 import data.LineItem
-import data.ProductDetails
+import data.ProductInfo
 import data.ProductSku
 import database.*
+import enums.StockStatus
 import interfaces.ProductsDao
 
 class ProductsData(private val userName: String = "root",
@@ -12,19 +12,19 @@ class ProductsData(private val userName: String = "root",
 
     private val database: Database = Database.getConnection(this.userName, this.password)!!
 
-    override fun retrieveAllProducts(): MutableList<Pair<ProductSku, Filters.StatusFilters>> {
-        val productsList: MutableList<Pair<ProductSku, Filters.StatusFilters>> = mutableListOf()
-        for(productSku in database.productsSku) {
+    override fun retrieveAllProducts(): MutableList<Pair<ProductSku, StockStatus>> {
+        val productsList: MutableList<Pair<ProductSku, StockStatus>> = mutableListOf()
+        for(productSku in database.productSkus) {
             if(productsList.isEmpty()) {
-                var status: Filters.StatusFilters = Filters.StatusFilters.OutOfStock()
-                for(productDetails in database.productsDetails) {
-                    if(productSku.skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
-                        status = Filters.StatusFilters.InStock()
+                var status: StockStatus = StockStatus.OUTOFSTOCK
+                for(productInfo in database.productsInfo) {
+                    if(productSku.skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
+                        status = StockStatus.INSTOCK
                         break
                     }
                 }
-                val productDetails = Pair(productSku, status)
-                productsList.add(productDetails)
+                val productInfo = Pair(productSku, status)
+                productsList.add(productInfo)
             } else {
                 var isProductAlreadyEntered = false
                 for(product in productsList) {
@@ -34,15 +34,15 @@ class ProductsData(private val userName: String = "root",
                     }
                 }
                 if(!isProductAlreadyEntered) {
-                    var status: Filters.StatusFilters = Filters.StatusFilters.OutOfStock()
-                    for(productDetails in database.productsDetails) {
-                        if(productSku.skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
-                            status = Filters.StatusFilters.InStock()
+                    var status: StockStatus = StockStatus.OUTOFSTOCK
+                    for(productInfo in database.productsInfo) {
+                        if(productSku.skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
+                            status = StockStatus.INSTOCK
                             break
                         }
                     }
-                    val productDetails = Pair(productSku, status)
-                    productsList.add(productDetails)
+                    val productInfo = Pair(productSku, status)
+                    productsList.add(productInfo)
                 }
             }
         }
@@ -51,8 +51,8 @@ class ProductsData(private val userName: String = "root",
 
     override fun retrieveAvailableQuantityOfProduct(skuId: String): Int {
         var availableQuantity = 0
-        for(productDetails in database.productsDetails) {
-            if(skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
+        for(productInfo in database.productsInfo) {
+            if(skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
                 availableQuantity += 1
             }
         }
@@ -60,50 +60,50 @@ class ProductsData(private val userName: String = "root",
     }
 
     override fun updateStatusOfProduct(lineItem: LineItem) {
-        for(productDetails in database.productsDetails) {
-            if(lineItem.skuId == productDetails.skuId && lineItem.productId == productDetails.productId) {
-                productDetails.status = Filters.StatusFilters.OutOfStock()
+        for(productInfo in database.productsInfo) {
+            if(lineItem.skuId == productInfo.skuId && lineItem.productId == productInfo.productId) {
+                productInfo.status = StockStatus.OUTOFSTOCK
                 updateAvailableQuantityOfProduct(lineItem.skuId)
             }
         }
     }
 
-    override fun retrieveAProduct(skuId: String): ProductDetails {
-        lateinit var productData: ProductDetails
-        for(productDetails in database.productsDetails) {
-            if(skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
-                productData = productDetails
+    override fun retrieveAProduct(skuId: String): ProductInfo {
+        lateinit var productData: ProductInfo
+        for(productInfo in database.productsInfo) {
+            if(skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
+                productData = productInfo
                 break
             }
         }
         return productData
     }
 
-    override fun retrieveProductDetails(skuId: String): Pair<ProductSku, Filters.StatusFilters> {
-        var product: Pair<ProductSku, Filters.StatusFilters>? = null
-        for(localProductSku in database.productsSku) {
+    override fun retrieveProductDetails(skuId: String): Pair<ProductSku, StockStatus> {
+        var productSku: Pair<ProductSku, StockStatus>? = null
+        for(localProductSku in database.productSkus) {
             if(skuId == localProductSku.skuId) {
-                for(productDetails in database.productsDetails) {
-                    if(skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
-                        product = Pair(localProductSku, Filters.StatusFilters.InStock())
+                for(productInfo in database.productsInfo) {
+                    if(skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
+                        productSku = Pair(localProductSku, StockStatus.INSTOCK)
                         break
                     } else {
-                        product = Pair(localProductSku, Filters.StatusFilters.OutOfStock())
+                        productSku = Pair(localProductSku, StockStatus.OUTOFSTOCK)
                     }
                 }
                 break
             }
         }
-        return product!!
+        return productSku!!
     }
 
     override fun addProductDetails() {
         var count = 0
-        for (productSku in database.productsSku) {
+        for (productSku in database.productSkus) {
             val availableQuantity = getAvailableQuantityOfProduct(productSku.skuId)
             while(count < availableQuantity) {
-                val productDetails = ProductDetails(productSku.skuId, Filters.StatusFilters.InStock())
-                database.productsDetails.add(productDetails)
+                val productInfo = ProductInfo(productSku.skuId, StockStatus.INSTOCK)
+                database.productsInfo.add(productInfo)
                 count++
             }
             count = 0
@@ -130,27 +130,27 @@ class ProductsData(private val userName: String = "root",
         }
     }
 
-    override fun getProducts(skuId: String, quantity: Int): MutableList<ProductDetails> {
-        val products = mutableListOf<ProductDetails>()
+    override fun getProducts(skuId: String, quantity: Int): MutableList<ProductInfo> {
+        val products = mutableListOf<ProductInfo>()
         var count = 0
-        for(productDetails in database.productsDetails) {
+        for(productInfo in database.productsInfo) {
             var present = false
-            if(skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
+            if(skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
                 if(count == quantity) {
                     break
                 } else {
                     if(products.isEmpty()) {
-                        products.add(productDetails)
+                        products.add(productInfo)
                         count++
                     } else {
                         for(product in products) {
-                            if(productDetails.productId == product.productId) {
+                            if(productInfo.productId == product.productId) {
                                 present = true
                                 break
                             }
                         }
                         if(!present) {
-                            products.add(productDetails)
+                            products.add(productInfo)
                             count++
                         }
                     }
@@ -160,35 +160,35 @@ class ProductsData(private val userName: String = "root",
         return products
     }
 
-    override fun getProducts(skuId: String, quantity: Int, lineItems: MutableList<LineItem>): MutableList<ProductDetails> {
-        val products = mutableListOf<ProductDetails>()
+    override fun getProducts(skuId: String, quantity: Int, lineItems: MutableList<LineItem>): MutableList<ProductInfo> {
+        val products = mutableListOf<ProductInfo>()
         var count = 0
-            for(productDetails in database.productsDetails) {
+            for(productInfo in database.productsInfo) {
                 var present = false
                 if(lineItems.isEmpty()) {
-                    if(skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
-                        products.add(productDetails)
+                    if(skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
+                        products.add(productInfo)
                         count++
                     }
                 }
                 if(count == quantity) {
                     break
                 } else {
-                    if(skuId == productDetails.skuId && productDetails.status == Filters.StatusFilters.InStock()) {
+                    if(skuId == productInfo.skuId && productInfo.status == StockStatus.INSTOCK) {
                         for(lineItem in lineItems) {
-                            if(lineItem.productId == productDetails.productId) {
+                            if(lineItem.productId == productInfo.productId) {
                                 present = true
                                 break
                             }
                         }
                         if(!present) {
                             if(products.isEmpty()) {
-                                products.add(productDetails)
+                                products.add(productInfo)
                                 count++
                             } else {
                                 for(product in products) {
-                                    if(product.productId != productDetails.productId) {
-                                        products.add(productDetails)
+                                    if(product.productId != productInfo.productId) {
+                                        products.add(productInfo)
                                         count++
                                         break
                                     }

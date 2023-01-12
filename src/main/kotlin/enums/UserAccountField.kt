@@ -1,6 +1,6 @@
 package enums
 
-enum class UserAccountFields {
+enum class UserAccountField {
     Name,
     Email,
     Addresses,

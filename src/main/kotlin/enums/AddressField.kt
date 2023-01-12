@@ -1,6 +1,6 @@
 package enums
 
-enum class AddressFields {
+enum class AddressField {
     DOORNUMBER,
     FLATNAME,
     STREET,

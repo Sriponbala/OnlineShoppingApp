@@ -4,13 +4,14 @@ import backend.CartActivities
 import data.*
 import enums.CartActivitiesDashboard
 import enums.ProductQuantityManagement
+import enums.StockStatus
 import interfaces.DashboardServices
 import utils.Helper
 
 class CartPage(private val cartActivities: CartActivities): DashboardServices {
 
     private var isCartEmpty = false
-    private lateinit var cartItems: MutableList<Triple<CartItem, ProductSku, Filters.StatusFilters>>
+    private lateinit var cartItems: MutableList<Triple<CartItem, ProductSku, StockStatus>>
     private lateinit var cartId: String
 
     fun initializer(cartId: String) {
@@ -31,9 +32,9 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                         doActivitiesOnSelectedItem(cartItem)
                     }
                     CartActivitiesDashboard.PROCEED_TO_BUY -> {
-                        val items = mutableListOf<Triple<CartItem, ProductSku, Filters.StatusFilters>>()
+                        val items = mutableListOf<Triple<CartItem, ProductSku, StockStatus>>()
                         for(cartItem in cartItems) {
-                            if(cartItem.third != Filters.StatusFilters.OutOfStock()) {
+                            if(cartItem.third != StockStatus.OUTOFSTOCK) {
                                 items.add(cartItem)
                             }
                         }
@@ -62,13 +63,13 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
         println("   Subtotal: ${cartActivities.calculateAndUpdateSubtotal(cartId, cartItems)}")
     }
 
-    private fun doActivitiesOnSelectedItem(cartItem: Triple<CartItem, ProductSku, Filters.StatusFilters>) {
+    private fun doActivitiesOnSelectedItem(cartItem: Triple<CartItem, ProductSku, StockStatus>) {
         val productQuantityManagement = ProductQuantityManagement.values()
         while(true) {
             super.showDashboard("ACTIVITIES ON SELECTED PRODUCT", productQuantityManagement)
             when(super.getUserChoice(productQuantityManagement)) {
                 ProductQuantityManagement.CHANGE_QUANTITY -> {
-                    if(cartItem.third == Filters.StatusFilters.InStock()) {
+                    if(cartItem.third == StockStatus.INSTOCK) {
                         val quantity = getQuantity(cartItem.first.skuId)
                         if(Helper.confirm()) {
                             if(cartActivities.changeQuantityOfCartItem(cartId, cartItem.first.skuId, quantity)) {
@@ -98,9 +99,9 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
         }
     }
 
-    private fun selectACartItem(): Triple<CartItem, ProductSku, Filters.StatusFilters> {
+    private fun selectACartItem(): Triple<CartItem, ProductSku, StockStatus> {
         var option: Int
-        var selectedItem: Triple<CartItem, ProductSku, Filters.StatusFilters>
+        var selectedItem: Triple<CartItem, ProductSku, StockStatus>
         while(true){
             println("SELECT AN ITEM: ")
             try{
