@@ -4,11 +4,10 @@ import backend.CartActivities
 import backend.UserAccountActivities
 import backend.WishListsActivities
 import data.AccountInfo
-import interfaces.OnboardingService
 import interfaces.UtilityDao
 import utils.Helper
 
-class SignUpPage: OnboardingService {
+class SignUpPage {
 
     private var name: String = ""
     private var mobile: String = ""
@@ -90,7 +89,7 @@ class SignUpPage: OnboardingService {
         }
     }
 
-    override fun getUserInputs() {
+    private fun getUserInputs() {
         do{
             println("ENTER NAME: ")
             name = readLine()!!

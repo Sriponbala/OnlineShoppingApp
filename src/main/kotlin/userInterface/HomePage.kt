@@ -11,7 +11,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
     private lateinit var accountInfo: AccountInfo
     private var isLoggedIn: Boolean = false
 
-    fun initializer(accountInfo: AccountInfo) {
+    fun initializer(accountInfo: AccountInfo,) {
         this.accountInfo = accountInfo
         this.isLoggedIn = true
     }

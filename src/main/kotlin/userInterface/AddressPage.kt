@@ -6,10 +6,9 @@ import enums.AddressField
 import enums.AddressManagement
 import enums.AddressSelection
 import interfaces.DashboardServices
-import interfaces.OnboardingService
 import utils.Helper
 
-class AddressPage(private val userAccountActivities: UserAccountActivities): DashboardServices, OnboardingService {
+class AddressPage(private val userAccountActivities: UserAccountActivities): DashboardServices {
 
     private lateinit var addresses: List<Address>
     private var doorNo = ""
@@ -186,7 +185,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     }
 
 
-    override fun getUserInputs() {
+    private fun getUserInputs() {
         println("FILL ADDRESS FIELDS: ")
 
         do{

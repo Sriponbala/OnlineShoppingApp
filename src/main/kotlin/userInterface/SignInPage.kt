@@ -2,11 +2,10 @@ package userInterface
 
 import backend.UserAccountActivities
 import data.AccountInfo
-import interfaces.OnboardingService
 import interfaces.UtilityDao
 import utils.Helper
 
-class SignInPage: OnboardingService {
+class SignInPage {
 
     private var mobile: String = ""
     private var password: String = ""
@@ -64,7 +63,7 @@ class SignInPage: OnboardingService {
         }
     }
 
-    override fun getUserInputs() {
+    private fun getUserInputs() {
         do {
             println("""ENTER MOBILE NUMBER:
                 |[Should contain 10 digits] 
