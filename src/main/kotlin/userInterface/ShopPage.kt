@@ -114,13 +114,6 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                             }
                         }
                     }
-//                    if(productsList.isEmpty()) break@label
-//                    if(Helper.confirm()) {
-//                        val skuId = selectAProduct()
-//                        if(Helper.confirm()) {
-//                            productActivities(skuId)
-//                        }
-//                    } else break@label
                 }
             }
         }
