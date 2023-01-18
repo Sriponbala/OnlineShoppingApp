@@ -72,7 +72,6 @@ class ProductActivities(private val utility: UtilityDao, private val productsDao
                     FilterBy.BRAND -> {
                         val filter : Filter.BrandFilter = finalFilter as Filter.BrandFilter
                         productsList.filter { it.first.category == ProductCategory.MOBILE && (it.first as ProductSku.Mobile).brand.brandName == filter.brandName}
-
                     }
                     else -> { emptyList() }
                 }

@@ -2,10 +2,7 @@ package userInterface
 
 import backend.CheckOutActivities
 import data.*
-import enums.CheckOutPageDashboard
-import enums.Payment
-import enums.ProductQuantityManagement
-import enums.StockStatus
+import enums.*
 import interfaces.DashboardServices
 import utils.Helper
 import java.time.LocalDate
@@ -53,10 +50,10 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
         while(true) {
             this.finalizedItems = checkOutActivities.getProductDetails(finalizedListOfItems)
             displayItemDetails(finalizedItems)
-            val checkOutPageDashboard = CheckOutPageDashboard.values()
+            val checkOutPageDashboard = ProductsManagement.values()
             super.showDashboard("CHECK OUT PAGE", checkOutPageDashboard)
             when(super.getUserChoice(checkOutPageDashboard)) {
-                CheckOutPageDashboard.SELECT_A_PRODUCT -> {
+                ProductsManagement.SELECT_A_PRODUCT -> {
                     if(finalizedItems.isNotEmpty()) {
                         val lineItem = selectAnItem()
                         doActivitiesOnSelectedItem(lineItem)
@@ -64,14 +61,14 @@ class CheckOutPage(private val checkOutActivities: CheckOutActivities): Dashboar
                         println("No items selected to buy!")
                     }
                 }
-                CheckOutPageDashboard.PROCEED_TO_BUY -> {
+                ProductsManagement.PROCEED_TO_BUY -> {
                     if(finalizedItems.isNotEmpty()) {
                         proceedToBuy()
                     } else {
                         println("No items selected to buy!")
                     }
                 }
-                CheckOutPageDashboard.GO_BACK -> {
+                ProductsManagement.GO_BACK -> {
                     finalizedListOfItems.clear()
                     checkOutActivities.clearLineItems()
                     finalizedItems.clear()

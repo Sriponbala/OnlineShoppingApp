@@ -1,6 +1,6 @@
 package enums
 
-enum class CheckOutPageDashboard {
+enum class ProductsManagement {
     SELECT_A_PRODUCT,
     PROCEED_TO_BUY,
     GO_BACK

@@ -2,8 +2,8 @@ package userInterface
 
 import backend.CartActivities
 import data.*
-import enums.CartActivitiesDashboard
 import enums.ProductQuantityManagement
+import enums.ProductsManagement
 import enums.StockStatus
 import interfaces.DashboardServices
 import utils.Helper
@@ -24,14 +24,14 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
             if(!isCartEmpty) {
                 cartItems = cartActivities.getCartItems(cartId)
                 displayCartItems()
-                val cartActivitiesDashboard = CartActivitiesDashboard.values()
+                val cartActivitiesDashboard = ProductsManagement.values()
                 super.showDashboard("CART DASHBOARD", cartActivitiesDashboard)
                 when(super.getUserChoice(cartActivitiesDashboard)) {
-                    CartActivitiesDashboard.SELECT_A_PRODUCT -> {
+                    ProductsManagement.SELECT_A_PRODUCT -> {
                         val cartItem = selectACartItem()
                         doActivitiesOnSelectedItem(cartItem)
                     }
-                    CartActivitiesDashboard.PROCEED_TO_BUY -> {
+                    ProductsManagement.PROCEED_TO_BUY -> {
                         val items = mutableListOf<Triple<CartItem, ProductSku, StockStatus>>()
                         for(cartItem in cartItems) {
                             if(cartItem.third != StockStatus.OUTOFSTOCK) {
@@ -41,7 +41,7 @@ class CartPage(private val cartActivities: CartActivities): DashboardServices {
                         checkOutPage.initializer(addressPage, paymentPage, items, accountInfo)
                         checkOutPage.openCheckOutPage()
                     }
-                    CartActivitiesDashboard.GO_BACK -> {
+                    ProductsManagement.GO_BACK -> {
                         break
                     }
                 }
