@@ -11,7 +11,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
     private lateinit var accountInfo: AccountInfo
     private var isLoggedIn: Boolean = false
 
-    fun initializer(accountInfo: AccountInfo,) {
+    fun initializer(accountInfo: AccountInfo) {
         this.accountInfo = accountInfo
         this.isLoggedIn = true
     }
@@ -26,7 +26,11 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
         checkOutPage: CheckOutPage,
         paymentPage: PaymentPage
     ) {
-        val homePageDashboard = HomePageDashboard.values()
+        val homePageDashboard: Array<HomePageDashboard> = if(isLoggedIn) {
+            arrayOf(HomePageDashboard.VIEW_PRODUCTS, HomePageDashboard.VIEW_CART, HomePageDashboard.YOUR_ACCOUNT, HomePageDashboard.SIGN_OUT)
+        } else {
+            HomePageDashboard.values().copyOfRange(0,4)
+        }
         while(true) {
             super.showDashboard("HOME PAGE", homePageDashboard)
             when(super.getUserChoice(homePageDashboard)) {
@@ -44,7 +48,7 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
                         cartPage.initializer(accountInfo.cartId)
                         cartPage.openCartPage(addressPage, paymentPage, checkOutPage, accountInfo)
                     } else {
-                        println("No items found in cart! Login to add items!")
+                        println("Login to add items in cart!")
                     }
                 }
                 HomePageDashboard.YOUR_ACCOUNT -> {
@@ -56,14 +60,11 @@ class HomePage(private val cartActivities: CartActivities, private val wishLists
                     }
                 }
                 HomePageDashboard.SIGN_OUT -> {
-                    if(isLoggedIn) {
-                        isLoggedIn = false
-                        println("Signed out...")
-                    } else {
-                        println("Login to your account!")
-                    }
+                    isLoggedIn = false
+                    println("Signed out...")
                     break
                 }
+                HomePageDashboard.BACK -> break
             }
         }
     }

@@ -24,6 +24,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
     private var isLoggedIn = false
     private lateinit var filterOption: FilterBy
     private lateinit var filter: Filter
+    private var isFilterApplied = false
 
     fun initializer(
         accountInfo: AccountInfo,
@@ -74,30 +75,52 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                                         super.showDashboard("CATEGORIES", categories)
                                         category = super.getUserChoice(categories)
                                         productsList = productActivities.getProductsList(category)
-                                        println("Do you want to apply filters?")
+                                        println("Do you want to apply one more filter for ${category.category}s?")
                                         if(Helper.confirm()) {
                                             applyFilter(category)
-                                            println("Filter applied!")
+                                            isFilterApplied = true
                                             break
-                                        } else break
-                                    } else break
+                                        } else {
+                                            println("Filtered by the category ${category.category}!")
+                                            isFilterApplied = true
+                                            break
+                                        }
+                                    } else {
+                                        isFilterApplied = false
+                                        break
+                                    }
                                 }
                             }
                             FilterDashboard.CLEAR_FILTER -> {
-                                productsList = productActivities.getProductsList()
+                                if(isFilterApplied) {
+                                    productsList = productActivities.getProductsList()
+                                    isFilterApplied = false
+                                } else {
+                                    println("Clear filter option disabled since no filter is applied!")
+                                }
+                            }
+                            FilterDashboard.SELECT_A_PRODUCT -> {
+                                if(productsList.isEmpty()) {
+                                    println("No products found, so select option disabled!")
+                                } else {
+                                    val skuId = selectAProduct()
+                                    if(Helper.confirm()) {
+                                        productActivities(skuId)
+                                    }
+                                }
                             }
                             FilterDashboard.BACK -> {
-                                break
+                                break@label
                             }
                         }
                     }
-                    if(productsList.isEmpty()) break@label
-                    if(Helper.confirm()) {
-                        val skuId = selectAProduct()
-                        if(Helper.confirm()) {
-                            productActivities(skuId)
-                        }
-                    } else break@label
+//                    if(productsList.isEmpty()) break@label
+//                    if(Helper.confirm()) {
+//                        val skuId = selectAProduct()
+//                        if(Helper.confirm()) {
+//                            productActivities(skuId)
+//                        }
+//                    } else break@label
                 }
             }
         }
@@ -135,7 +158,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                                 println("Product Out of Stock! Can't add to cart!")
                             }
                         } else {
-                            println("Login to your account!")
+                            println("Add to cart button disabled! Login to your account!")
                         }
                     }
 
@@ -147,7 +170,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                                 println("Product already added to wishlist!")
                             }
                         } else {
-                            println("Login to your account!")
+                            println("Wishlist button disabled! Login to your account!")
                         }
                     }
 
@@ -159,7 +182,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                                 println("Product not yet added to wishlist!")
                             }
                         } else {
-                            println("Login to your account!")
+                            println("Wishlist button disabled! Login to your account!")
                         }
                     }
 
@@ -172,7 +195,7 @@ class ShopPage(private val productActivities: ProductActivities) : DashboardServ
                                 println("Product out of stock!")
                             }
                         } else {
-                            println("Login to your account!")
+                            println("Buy now button disabled! Login to your account!")
                         }
                     }
 

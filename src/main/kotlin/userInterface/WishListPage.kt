@@ -24,8 +24,8 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
             wishListProductSkus = wishListsActivities.getWishListProducts(wishListId)
             checkIfWishListIsEmpty(wishListProductSkus)
             displayWishListProducts(isEmptyWishList)
-            if(Helper.confirm()) {
-                if(!isEmptyWishList) {
+            if(!isEmptyWishList) {
+                if(Helper.confirm()) {
                     val selectedProduct = selectAProduct()
                     val wishListDashboard = WishListDashboard.values()
                     while(true) {
@@ -48,6 +48,8 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
                             }
                         }
                     }
+                } else {
+                    break
                 }
             } else {
                 break
@@ -89,3 +91,46 @@ class WishListPage(private val wishListsActivities: WishListsActivities): Dashbo
         isEmptyWishList = wishListProductSkus?.isEmpty() == true
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*if(Helper.confirm()) {
+                if(!isEmptyWishList) {
+                    val selectedProduct = selectAProduct()
+                    val wishListDashboard = WishListDashboard.values()
+                    while(true) {
+                        super.showDashboard("WISHLIST DASHBOARD", wishListDashboard)
+                        when(super.getUserChoice(wishListDashboard)) {
+
+                            WishListDashboard.VIEW_PRODUCT -> {
+                                println(selectedProduct)
+                                shopPage.productActivities(selectedProduct)
+                                break
+                            }
+
+                            WishListDashboard.DELETE_PRODUCT -> {
+                                wishListsActivities.removeProductFromWishList(wishListId, selectedProduct)
+                                break
+                            }
+
+                            WishListDashboard.GO_BACK -> {
+                                break
+                            }
+                        }
+                    }
+                }
+            } else {
+                break
+            }*/

@@ -39,7 +39,11 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     fun openAddressPage() {
         this.addresses = userAccountActivities.getUserAddresses()
         displayAllAddresses()
-        val addressSelectionOptions = AddressSelection.values()
+        val addressSelectionOptions: Array<AddressSelection> = if(selectAddress) {
+            AddressSelection.values()
+        } else {
+            arrayOf(AddressSelection.ADD_NEW_ADDRESS, AddressSelection.SELECT_FROM_SAVED_ADDRESS, AddressSelection.GO_BACK)
+        }
         while(true) {
             super.showDashboard("ADDRESS PAGE DASHBOARD", addressSelectionOptions)
             when(super.getUserChoice(addressSelectionOptions)) {
@@ -51,7 +55,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
                     }
                 }
 
-                AddressSelection.SAVED_ADDRESS -> {
+                AddressSelection.SELECT_FROM_SAVED_ADDRESS -> {
                     this.addresses = userAccountActivities.getUserAddresses()
                     while(true) {
                         displayAllAddresses()
@@ -72,6 +76,15 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
                 AddressSelection.GO_BACK -> {
                     selectAddress = false
                     break
+                }
+
+                AddressSelection.NEXT -> {
+                    if(shippingAddress == null) {
+                        println("Select an address to proceed!")
+                    } else {
+                        selectAddress = false
+                        break
+                    }
                 }
             }
         }
@@ -189,37 +202,42 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
         println("FILL ADDRESS FIELDS: ")
 
         do{
-            println("ENTER DOOR NUMBER: ")
+            println("ENTER DOOR NUMBER: [Should not be empty]")
             doorNo = readLine()!!
         } while(Helper.fieldValidation(doorNo) || !Helper.validateAddressFields(doorNo))
 
         do{
-            println("ENTER FLAT  NAME: ")
+            println("ENTER FLAT NAME: [Should not be empty]")
             flatName = readLine()!!
         } while(Helper.fieldValidation(flatName) || !Helper.validateAddressFields(flatName))
 
         do{
-            println("ENTER STREET NAME: ")
+            println("ENTER STREET NAME: [Should not be empty]")
             street = readLine()!!
         } while(Helper.fieldValidation(street) || !Helper.validateAddressFields(street))
 
         do{
-            println("ENTER AREA NAME: ")
+            println("ENTER AREA NAME: [Should not be empty]")
             area = readLine()!!
         } while(Helper.fieldValidation(area) || !Helper.validateAddressFields(area))
 
         do{
-            println("ENTER CITY NAME: ")
+            println("ENTER CITY NAME: [Should not be empty]")
             city = readLine()!!
         } while(Helper.fieldValidation(city) || !Helper.validateAddressFields(city))
 
         do{
-            println("ENTER STATE NAME: ")
+            println("ENTER STATE NAME: [Should not be empty]")
             state = readLine()!!
         } while(Helper.fieldValidation(state) || !Helper.validateAddressFields(state))
 
         do{
-            println("ENTER PINCODE: ")
+            println("""ENTER PINCODE: 
+                |[Should not be empty,
+                |Should start with number > 0,
+                |must contain 6 digits,
+                |Format: 600062 OR 600 062]
+            """.trimMargin())
             pincode = readLine()!!
         } while(Helper.fieldValidation(pincode) || !Helper.validatePincode(pincode))
     }
@@ -227,7 +245,7 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     private fun getUserInput(message: String = ""): String {
         var userInput: String
         do {
-            println("ENTER ${message.uppercase()}: ")
+            println("ENTER ${message.uppercase()}: [Should not be empty]")
             userInput = readLine()!!
         } while(Helper.fieldValidation(userInput) || !Helper.validateAddressFields(userInput))
         return userInput
@@ -236,7 +254,12 @@ class AddressPage(private val userAccountActivities: UserAccountActivities): Das
     private fun getPincode(): String {
         var pincode: String
         do {
-            println("ENTER PINCODE: ")
+            println("""ENTER PINCODE: 
+                |[Should not be empty,
+                |Should start with number > 0,
+                |must contain 6 digits,
+                |Format: 600062 OR 600 062]
+            """.trimMargin())
             pincode = readLine()!!
         } while(Helper.fieldValidation(pincode) || !Helper.validatePincode(pincode))
         return pincode
